@@ -67,7 +67,8 @@ setwd(paste(workspace,'Scripts/',sep=''))
 # =========================================================
 # Snow water equivalent in spring...
 
-file.path <- 'D:/PNWCCVA_Data1/bioclimate/annual/CRU_TS2.1_1901-2000/'
+# file.path <- 'D:/PNWCCVA_Data1/bioclimate/annual/CRU_TS2.1_1901-2000/'
+file.path <- 'E:/bioclimate/annual/CRU_TS2.1_1901-2000/'
 file.name <- '/wna30sec_CRU_TS_2.10_'
 
 variable.folders <- 'snowfall_swe_balance'
