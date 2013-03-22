@@ -3,7 +3,7 @@ library(rgdal)
 library(raster)
 library(foreign)
 
-nc.2.hxn <- function(variable, nc.file, hex.grid, theCentroids, max.value, hexsim.wksp, spp.wksp)
+nc.2.hxn <- function(variable, nc.file, hex.grid, theCentroids, max.value, hexsim.wksp, hexsim.wksp2, spp.folder)
 {
 	
 	startTime <- Sys.time()

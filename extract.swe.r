@@ -5,6 +5,7 @@ extract.swe <- function(file.path,file.name,variable.folders,month)
 	full.file.paths <- list()
 
 	for (j in 5:100) # Begin in 1905
+	# for (j in 7)
 	{
 		the.months <- c('jan','feb','march','april','may','june','july','aug','sept','oct','nov','dec','max')
 		full.file.path <- paste(file.path,variable.folders,file.name,variable.folders,'_first_day_of_month_',(1900+j),'.nc',sep='')
@@ -12,7 +13,6 @@ extract.swe <- function(file.path,file.name,variable.folders,month)
 		swe.all.months <- brick(full.file.path)
 		# print(swe.all.months)
 		# return(swe.all.months); stop('cbw')
-		if (j==7) { plot.stack(swe.all.months); stop('cbw') }
 		
 		if (month==13)
 		{
@@ -32,8 +32,9 @@ extract.swe <- function(file.path,file.name,variable.folders,month)
 			# plot(swe.single)
 		}
 		
+		swe.single[swe.single > 5000] <- 5000
 		writeRaster(swe.single, paste(file.path,variable.folders,'/swe_',the.months[month],'_',(1900+j),'.nc',sep=''),overwrite=TRUE, varname=paste('swe_',the.months[month],sep=''))
-		
+		plot(swe.single)
 		cat('year',1900+j,'\n')
 		# return(swe.single)
 		# stop('cbw')

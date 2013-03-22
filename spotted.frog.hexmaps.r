@@ -44,14 +44,15 @@ extract.swe(file.path=file.path,file.name=file.name,variable.folders=variable.fo
 temp <- calc.swe(file.path=file.path,file.name=file.name,variable.folders=variable.folders,month=13); plot.stack(temp, picks='3'); stop('cbw')
 # calc.swe(file.path=file.path,file.name=file.name,variable.folders=variable.folders,month=13)
 
+
 # Create the HexMap
 nc.2.hxn(
 	variable='swe.march', 
-	nc.file="E:/bioclimate/annual/CRU_TS2.1_1901-2000/snowfall_swe_balance", # "D:/PNWCCVA_Data1/bioclimate/annual/CRU_TS2.1_1901-2000/snowfall_swe_balance/mean_swe_march.nc"
+	nc.file="E:/bioclimate/annual/CRU_TS2.1_1901-2000/snowfall_swe_balance/mean_swe_march.nc", # "D:/PNWCCVA_Data1/bioclimate/annual/CRU_TS2.1_1901-2000/snowfall_swe_balance/mean_swe_march.nc"
 	hex.grid=hex.grid[[2]], 
 	theCentroids=hex.grid[[1]],
 	max.value=2000, 
-	hexsim.wksp='C:/Users/cbwilsey/Documents/PostDoc/HexSim', #'F:/PNWCCVA_Data2/HexSim/scratch_workspace/',
+	hexsim.wksp='C:/Users/cbwilsey/Documents/PostDoc/HexSim/', #'F:/PNWCCVA_Data2/HexSim/scratch_workspace/',
 	hexsim.wksp2='C:\\Users\\cbwilsey\\Documents\\Postdoc\\HexSim', #'F:\\PNWCCVA_Data2\\HexSim\\'
 	spp.folder='spotted_frog_v2'
 	)
