@@ -14,7 +14,7 @@ load.hex.grid <- function(centroid.file, file.format, proj4)
 	# print(head(theCentroids)); stop('cbw')
 
 	hex.grid <- SpatialPoints(coords=theCentroids[,c('POINT_X','POINT_Y')], proj4string=CRS(proj4))
-	return(hex.grid)
+	return(list(theCentroids,hex.grid))
 }
 
 # WGS 84

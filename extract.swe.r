@@ -8,20 +8,28 @@ extract.swe <- function(file.path,file.name,variable.folders,month)
 	{
 		the.months <- c('jan','feb','march','april','may','june','july','aug','sept','oct','nov','dec','max')
 		full.file.path <- paste(file.path,variable.folders,file.name,variable.folders,'_first_day_of_month_',(1900+j),'.nc',sep='')
-		swe.all.months <- stack(full.file.path)
+		# swe.all.months <- stack(full.file.path)
+		swe.all.months <- brick(full.file.path)
+		# print(swe.all.months)
+		# return(swe.all.months); stop('cbw')
+		if (j==7) { plot.stack(swe.all.months); stop('cbw') }
 		
 		if (month==13)
 		{
-			swe.single <- calc(swe.all.months, max, na.rm=TRUE)
-			print(swe.single)
+			swe.single <- calc(swe.all.months, max, na.rm=TRUE) 
+			# This step results in 4 warnings: In FUN(newX[, i], ...) : no non-missing arguments to max; returning -Inf.
+			# I can't find any -Inf in the output, so I'm ignoring it.
+			# print(swe.single)
+			# plot(swe.single)
 		}
 		else
 		{
 			drop.months <- seq(1,12,1)[-month]
-			print(drop.months)
+			# print(drop.months)
 			
 			swe.single <- dropLayer(swe.all.months, drop.months)
-			print(swe.single)
+			# print(swe.single)
+			# plot(swe.single)
 		}
 		
 		writeRaster(swe.single, paste(file.path,variable.folders,'/swe_',the.months[month],'_',(1900+j),'.nc',sep=''),overwrite=TRUE, varname=paste('swe_',the.months[month],sep=''))
@@ -40,10 +48,11 @@ calc.swe <- function(file.path=file.path,file.name=file.name,variable.folders=va
 	for (j in 1:96) { full.file.paths[[j]] <- paste(file.path,variable.folders,'/swe_',the.months[month],'_',(1904+j),'.nc',sep='') }
 	swe.all <- stack(full.file.paths)
 	print('swe.all'); print(Sys.time()-startTime)
-	print(swe.all) # ; stop('cbw')
+	return(swe.all)
 
 	the.mean <- mean(swe.all, na.rm=TRUE)
 	plot(the.mean)
+	return(the.mean)
 	print('mean'); print(Sys.time()-startTime)
 	
 	writeRaster(the.mean, paste(file.path,variable.folders,'/mean_swe_',the.months[month],'.nc',sep=''),overwrite=TRUE, varname=paste('mean_swe_',the.months[month],sep=''))
@@ -60,11 +69,13 @@ calc.swe <- function(file.path=file.path,file.name=file.name,variable.folders=va
 
 
 # file.path <- 'D:/PNWCCVA_Data1/bioclimate/annual/CRU_TS2.1_1901-2000/'
-file.path <- 'E:/bioclimate/annual/CRU_TS2.1_1901-2000/'
-file.name <- '/wna30sec_CRU_TS_2.10_'
-variable.folders <- 'snowfall_swe_balance'
-startTime <- Sys.time()
+# file.path <- 'E:/bioclimate/annual/CRU_TS2.1_1901-2000/'
+# file.name <- '/wna30sec_CRU_TS_2.10_'
+# variable.folders <- 'snowfall_swe_balance'
+# startTime <- Sys.time()
 
-temp <- extract.swe(file.path=file.path,file.name=file.name,variable.folders=variable.folders,month=13)
-plot(temp)
-calc.swe(file.path=file.path,file.name=file.name,variable.folders=variable.folders,month=13)
+# temp <- extract.swe(file.path=file.path,file.name=file.name,variable.folders=variable.folders,month=13)
+# plot(temp)
+# extract.swe(file.path=file.path,file.name=file.name,variable.folders=variable.folders,month=13)
+
+# calc.swe(file.path=file.path,file.name=file.name,variable.folders=variable.folders,month=13)
