@@ -7,6 +7,6 @@ plot.stack <- function(the.stack, picks='all')
 	else { all.layers <- picks }
 	for (i in all.layers) 
 	{
-		plot(dropLayer(the.stack,seq(1:n.layers)[-i])) 
+		plot(dropLayer(the.stack,seq(1:n.layers)[-i]),main=paste('keep',i)) 
 	}
 }

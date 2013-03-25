@@ -41,7 +41,12 @@ extract.swe <- function(file.path,file.name,variable.folders,month)
 	}
 }
 
-calc.swe <- function(file.path=file.path,file.name=file.name,variable.folders=variable.folders,month=13)
+calc.swe <- function(
+	file.path=file.path,
+	file.name=file.name,
+	variable.folders=variable.folders,
+	month=13
+	)
 {
 	# March...
 	the.months <- c('jan','feb','march','april','may','june','july','aug','sept','oct','nov','dec','max')
@@ -49,21 +54,22 @@ calc.swe <- function(file.path=file.path,file.name=file.name,variable.folders=va
 	for (j in 1:96) { full.file.paths[[j]] <- paste(file.path,variable.folders,'/swe_',the.months[month],'_',(1904+j),'.nc',sep='') }
 	swe.all <- stack(full.file.paths)
 	print('swe.all'); print(Sys.time()-startTime)
-	return(swe.all)
+	# return(swe.all)
 
 	the.mean <- mean(swe.all, na.rm=TRUE)
-	plot(the.mean)
-	return(the.mean)
+	plot(the.mean,main='Mean')
+	# return(the.mean)
 	print('mean'); print(Sys.time()-startTime)
 	
 	writeRaster(the.mean, paste(file.path,variable.folders,'/mean_swe_',the.months[month],'.nc',sep=''),overwrite=TRUE, varname=paste('mean_swe_',the.months[month],sep=''))
-	# rm(mean.p.pet.mam)
+	rm(the.mean)
 
 	the.sd <- calc(swe.all, sd, na.rm=TRUE)
-	plot(the.sd)
+	plot(the.sd, main='SD')
 	print('sd'); print(Sys.time()-startTime)
+	plot(the.sd, main='SD')
 	writeRaster(the.sd, paste(file.path,variable.folders,'/sd_swe_',the.months[month],'.nc',sep=''),overwrite=TRUE, varname=paste('sd_swe_',the.months[month],sep=''))
-	# rm(sd.p.pet.mam)
+	rm(the.sd)
 
 	print('files written'); print(Sys.time()-startTime)
 }
