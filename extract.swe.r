@@ -3,9 +3,8 @@
 extract.swe <- function(file.path.in, file.path.out, month, max.value)
 {
 		the.months <- c('jan','feb','march','april','may','june','july','aug','sept','oct','nov','dec','max')
-		full.file.path <- paste(file.path,variable.folders,file.name,variable.folders,'_first_day_of_month_',(1900+j),'.nc',sep='')
-		# swe.all.months <- stack(full.file.path)
-		swe.all.months <- brick(file.path)
+		# swe.all.months <- stack(file.path.in)
+		swe.all.months <- brick(file.path.in)
 		# print(swe.all.months)
 		# return(swe.all.months); stop('cbw')
 		
@@ -27,27 +26,25 @@ extract.swe <- function(file.path.in, file.path.out, month, max.value)
 			# plot(swe.single)
 		}
 		
-		swe.single[swe.single > 5000] <- 5000
-		writeRaster(swe.single, paste(file.path,variable.folders,'/swe_',the.months[month],'_',(1900+j),'.nc',sep=''),overwrite=TRUE, varname=paste('swe_',the.months[month],sep=''))
+		swe.single[swe.single > max.value] <- max.value
+		writeRaster(swe.single, file.path.out,overwrite=TRUE, varname=paste('swe_',the.months[month],sep=''))
 		plot(swe.single)
 		cat('year',1900+j,'\n')
 		# return(swe.single)
 		# stop('cbw')
-
 }
 
 calc.swe <- function(
-	file.path=file.path,
-	file.name=file.name,
-	variable.folders=variable.folders,
+	all.file.paths.in,
+	file.path.out,
+	variable,
 	month=13
 	)
 {
-	# March...
+	startTime <- Sys.time()
 	the.months <- c('jan','feb','march','april','may','june','july','aug','sept','oct','nov','dec','max')
-	full.file.paths <- list()
-	for (j in 1:96) { full.file.paths[[j]] <- paste(file.path,variable.folders,'/swe_',the.months[month],'_',(1904+j),'.nc',sep='') }
-	swe.all <- stack(full.file.paths)
+	
+	swe.all <- stack(all.file.paths.in)
 	print('swe.all'); print(Sys.time()-startTime)
 	# return(swe.all)
 
@@ -56,28 +53,15 @@ calc.swe <- function(
 	# return(the.mean)
 	print('mean'); print(Sys.time()-startTime)
 	
-	writeRaster(the.mean, paste(file.path,variable.folders,'/mean_swe_',the.months[month],'.nc',sep=''),overwrite=TRUE, varname=paste('mean_swe_',the.months[month],sep=''))
+	writeRaster(the.mean, paste(file.path.out,'/mean_',variable,'_',the.months[month],'.nc',sep=''),overwrite=TRUE, varname=paste('mean_',variable,'_',the.months[month],sep=''))
 	rm(the.mean)
 
 	the.sd <- calc(swe.all, sd, na.rm=TRUE)
 	plot(the.sd, main='SD')
 	print('sd'); print(Sys.time()-startTime)
 	plot(the.sd, main='SD')
-	writeRaster(the.sd, paste(file.path,variable.folders,'/sd_swe_',the.months[month],'.nc',sep=''),overwrite=TRUE, varname=paste('sd_swe_',the.months[month],sep=''))
+	writeRaster(the.sd, paste(file.path.out,'/sd_',variable,'_',the.months[month],'.nc',sep=''),overwrite=TRUE, varname=paste('sd_',variable,'_',the.months[month],sep=''))
 	rm(the.sd)
 
 	print('files written'); print(Sys.time()-startTime)
 }
-
-
-# file.path <- 'D:/PNWCCVA_Data1/bioclimate/annual/CRU_TS2.1_1901-2000/'
-# file.path <- 'E:/bioclimate/annual/CRU_TS2.1_1901-2000/'
-# file.name <- '/wna30sec_CRU_TS_2.10_'
-# variable.folders <- 'snowfall_swe_balance'
-# startTime <- Sys.time()
-
-# temp <- extract.swe(file.path=file.path,file.name=file.name,variable.folders=variable.folders,month=13)
-# plot(temp)
-# extract.swe(file.path=file.path,file.name=file.name,variable.folders=variable.folders,month=13)
-
-# calc.swe(file.path=file.path,file.name=file.name,variable.folders=variable.folders,month=13)

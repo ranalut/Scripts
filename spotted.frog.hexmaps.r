@@ -25,11 +25,15 @@ spp.folder <- 'spotted_frog_v2'
 
 run.hex.grid <- 		'n'
 run.historical.swe <- 	'n'
-run.stream <- 			'n'
+run.streams <- 			'n'
 run.initial <- 			'n'
 run.future.swe <- 		'y'
 
 startTime <- Sys.time()
+
+# Used for visualization of outputs...
+# plot(raster('e:/bioclimate/annual/CRU_TS2.1_1901-2000/snowfall_swe_balance/swe_max_1906.nc'),main='1906')
+# plot(raster('e:/bioclimate/annual/a2/snowfall_swe_balance_first_day_of_month_a2/swe_max_2001.nc'),main='2001')
 
 # ==========================================================================================
 # Load WGS 84 hex.grid for extracting spatial data
@@ -45,19 +49,34 @@ if (run.hex.grid=='y')
 # ==============================================================================================================
 # Historical SWE
 
-# file.path <- 'D:/PNWCCVA_Data1/bioclimate/annual/CRU_TS2.1_1901-2000/'
-file.path <- 'E:/bioclimate/annual/CRU_TS2.1_1901-2000/'
-file.name <- '/wna30sec_CRU_TS_2.10_'
-variable.folders <- 'snowfall_swe_balance'
-
 if (run.historical.swe=='y')
 {
-	# Calculate historical stats
-	# temp <- extract.swe(file.path=file.path,file.name=file.name,variable.folders=variable.folders,month=13); plot(temp); stop('cbw')
-	extract.swe(file.path=file.path,file.name=file.name,variable.folders=variable.folders,month=13)
-	# temp <- calc.swe(file.path=file.path,file.name=file.name,variable.folders=variable.folders,month=13); stop('cbw')
-	# plot.stack(temp,pick=1); stop('cbw')
-	calc.swe(file.path=file.path,file.name=file.name,variable.folders=variable.folders,month=13)
+	file.path <- 'E:/bioclimate/annual/CRU_TS2.1_1901-2000/' # 'D:/PNWCCVA_Data1/bioclimate/annual/CRU_TS2.1_1901-2000/'
+	file.name <- '/wna30sec_CRU_TS_2.10_'
+	variable.folders <- 'snowfall_swe_balance'
+
+	for (j in 5:100)
+	{
+		extract.swe(
+			file.path.in=paste(file.path,variable.folders,file.name,variable.folders,'_first_day_of_month_',(1900+j),'.nc',sep=''),
+			file.path.out=paste(file.path,variable.folders,'/swe_max_',(1900+j),'.nc',sep=''),
+			month=13,
+			max.value=5000
+			)
+		# stop('cbw')
+	}
+	
+	all.file.paths <- list()
+	for (j in 1:96) { all.file.paths[[j]] <- paste(file.path,variable.folders,'/swe_max_',(1904+j),'.nc',sep='') }
+	
+	# calc.swe(file.path=file.path,file.name=file.name,variable.folders=variable.folders,month=13)
+	calc.swe(
+		all.file.paths.in=all.file.paths,
+		file.path.out=paste(file.path,variable.folders,sep=''),
+		variable='swe',
+		month=13
+		)
+	
 	# stop('cbw')
 
 	# Create the HexMap
@@ -123,34 +142,46 @@ if (run.initial=='y')
 if (run.future.swe=='y')
 {
 	theGCMs <- c('CCSM3','CGCM3.1_t47','GISS-ER','MIROC3.2_medres','UKMO-HadCM3')
-	# file.path <- 'D:/PNWCCVA_Data1/bioclimate/annual/CRU_TS2.1_1901-2000/'
-	file.path <- 'E:/bioclimate/annual/a2/'
-	file.name <- '/wna30sec_CRU_TS_2.10_'
+	file.path <- 'E:/bioclimate/annual/a2/' # file.path <- 'D:/PNWCCVA_Data1/bioclimate/annual/CRU_TS2.1_1901-2000/'
+	file.name <- c('/wna30sec_a2_','_snowfall_swe_balance_first_day_of_month_')
 	variable.folders <- 'snowfall_swe_balance_first_day_of_month_a2'
 
 	for (i in 5)
 	{
-
 		startTime <- Sys.time()
 
 		for (j in 1:99)
 		{
-			extract.swe(file.path=file.path,file.name=file.name,variable.folders=variable.folders,month=13)
-						
+			# extract.swe(
+				# file.path.in=paste(file.path,variable.folders,file.name[1],theGCMs[i],file.name[2],(2000+j),'.nc',sep=''),
+				# file.path.out=paste(file.path,variable.folders,'/',theGCMs[i],'_swe_max_',(2000+j),'.nc',sep=''),
+				# month=13,
+				# max.value=5000
+				# )
+			# stop('cbw')
+			
 			nc.2.hxn(
-			variable='swe_max', 
-			nc.file=paste("E:/bioclimate/annual/a2/wna30sec_a2_",theGCMs[i],"_snowfall_swe_balance_first_day_of_month_",2000+j,".nc",sep=''), 
-			hex.grid=hex.grid[[2]], 
-			theCentroids=hex.grid[[1]],
-			max.value=2000, 
-			hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, spp.folder=spp.folder, hexmap.name='initial.dist'
-			)
+				variable='swe_max', 
+				nc.file=paste(file.path,variable.folders,'/',theGCMs[i],'_swe_max_',(2000+j),'.nc',sep=''), 
+				hex.grid=hex.grid[[2]], 
+				theCentroids=hex.grid[[1]],
+				max.value=2000, 
+				hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, spp.folder=spp.folder, hexmap.name=paste(theGCMs[i],'.max.swe',sep='')
+				)
 
-			file.copy(from=paste(hexsim.wksp,'Workspaces/',spp.folder,'/',theGCMs[i],'.deficit/',theGCMs[i],'.deficit.1.hxn',sep=''), to=paste(outWorkspace,theGCMs[i],'.deficit/',theGCMs[i],'.deficit.',(10+j),'.hxn',sep=''))
+			file.copy(
+				from=paste(hexsim.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/',theGCMs[i],'.max.swe/',theGCMs[i],'.max.swe.1.hxn',sep=''), 
+				to=paste(hexsim.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/',theGCMs[i],'.max.swe/',theGCMs[i],'.max.swe.',(10+j),'.hxn',sep='')
+				)
 			cat(Sys.time()-startTime, 'minutes or seconds to create Hexmap', '\n') # 1.09 minutes...
 			
 			stop('cbw')
-
 		}
+		
+		# Replace timestep 1 with historical mean.
+		file.copy(
+			from=paste(hexsim.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/mean.swe.max/mean.swe.max.1.hxn',sep=''), 
+			to=paste(hexsim.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/',theGCMs[i],'.max.swe/',theGCMs[i],'.max.swe.1.hxn',sep='')
+			)
 	}
 }

@@ -20,9 +20,9 @@ nc.2.hxn <- function(variable, nc.file, hex.grid, theCentroids, max.value, hexsi
 	write.csv(dataDump, paste(hexsim.wksp,'scratch_workspace/',hexmap.name,'.csv',sep=''),row.names=FALSE)
 
 	startTime <- Sys.time()
-	workspace2 <- 'F:\\PNWCCVA_Data2\\HexSim\\'
-	dir.create(path=paste(hexsim.wksp,'Workspaces/',spp.folder,"/Spatial Data/Hexagons/",sep=''), recursive=TRUE)
-	command <- paste('cd "',hexsim.wksp2,'\\currentHexSim\\" && HexMapConverter.exe "',hexsim.wksp2,'\\scratch_workspace\\',hexmap.name,'.csv" true true 3131 2075 true "',hexsim.wksp2,'\\Workspaces\\',spp.folder,'\\Spatial Data\\Hexagons\\',hexmap.name,'"',sep='')
+	dir.create(path=paste(hexsim.wksp,'Workspaces/',spp.folder,"/Spatial Data/Hexagons/",hexmap.name,sep=''), recursive=TRUE)
+	command <- paste('cd "',hexsim.wksp2,'\\currentHexSim" && HexMapConverter.exe "',hexsim.wksp2,'\\scratch_workspace\\',hexmap.name,'.csv" true true 3131 2075 true "',hexsim.wksp2,'\\Workspaces\\',spp.folder,'\\Spatial Data\\Hexagons\\',hexmap.name,'"',sep='')
+	print(command)
 	shell(command)
 }
 
