@@ -1,16 +1,11 @@
 # Snow water equivalent...
 
-extract.swe <- function(file.path,file.name,variable.folders,month)
+extract.swe <- function(file.path.in, file.path.out, month, max.value)
 {
-	full.file.paths <- list()
-
-	for (j in 5:100) # Begin in 1905
-	# for (j in 7)
-	{
 		the.months <- c('jan','feb','march','april','may','june','july','aug','sept','oct','nov','dec','max')
 		full.file.path <- paste(file.path,variable.folders,file.name,variable.folders,'_first_day_of_month_',(1900+j),'.nc',sep='')
 		# swe.all.months <- stack(full.file.path)
-		swe.all.months <- brick(full.file.path)
+		swe.all.months <- brick(file.path)
 		# print(swe.all.months)
 		# return(swe.all.months); stop('cbw')
 		
@@ -38,7 +33,7 @@ extract.swe <- function(file.path,file.name,variable.folders,month)
 		cat('year',1900+j,'\n')
 		# return(swe.single)
 		# stop('cbw')
-	}
+
 }
 
 calc.swe <- function(
