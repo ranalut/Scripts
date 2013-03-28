@@ -19,8 +19,11 @@ source('netcdf.2.hexmap.r')
 source('plot.raster.stack.r')
 
 # Settings for this run.
-hexsim.wksp <- 'E:/HexSim/' # 'C:/Users/cbwilsey/Documents/PostDoc/HexSim/' #'F:/PNWCCVA_Data2/HexSim/scratch_workspace/',
-hexsim.wksp2 <- 'E:\\HexSim' # 'C:\\Users\\cbwilsey\\Documents\\Postdoc\\HexSim' #'F:\\PNWCCVA_Data2\\HexSim\\'
+
+hexsim.wksp <- 'C:/Users/cbwilsey/Documents/PostDoc/HexSim/' #'F:/PNWCCVA_Data2/HexSim/scratch_workspace/',
+hexsim.wksp2 <- 'C:\\Users\\cbwilsey\\Documents\\Postdoc\\HexSim' #'F:\\PNWCCVA_Data2\\HexSim\\'
+output.wksp <- 'E:/HexSim/'
+output.wksp2 <- 'E:\\HexSim'
 spp.folder <- 'spotted_frog_v2'
 
 run.hex.grid <- 		'n'
@@ -86,7 +89,7 @@ if (run.historical.swe=='y')
 		hex.grid=hex.grid[[2]], 
 		theCentroids=hex.grid[[1]],
 		max.value=2000, 
-		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, spp.folder=spp.folder, hexmap.name='mean.swe.max'
+		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='mean.swe.max'
 		)
 
 	nc.2.hxn(
@@ -95,7 +98,7 @@ if (run.historical.swe=='y')
 		hex.grid=hex.grid[[2]], 
 		theCentroids=hex.grid[[1]],
 		max.value=2000, 
-		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, spp.folder=spp.folder, hexmap.name='sd.swe.max'
+		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='sd.swe.max'
 		)
 }
 # stop('cbw')
@@ -111,7 +114,7 @@ if (run.streams=='y')
 		hex.grid=hex.grid[[2]], 
 		theCentroids=hex.grid[[1]],
 		max.value=Inf, 
-		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, spp.folder=spp.folder, hexmap.name='streams'
+		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='streams'
 		)
 }
 # ==========================================================================================================
@@ -125,7 +128,7 @@ if (run.initial=='y')
 		hex.grid=hex.grid[[2]], 
 		theCentroids=hex.grid[[1]],
 		max.value=Inf, 
-		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, spp.folder=spp.folder, hexmap.name='initial.dist'
+		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='initial.dist'
 		)
 }	
 # stop('cbw')
@@ -152,12 +155,12 @@ if (run.future.swe=='y')
 
 		for (j in 1:99)
 		{
-			# extract.swe(
-				# file.path.in=paste(file.path,variable.folders,file.name[1],theGCMs[i],file.name[2],(2000+j),'.nc',sep=''),
-				# file.path.out=paste(file.path,variable.folders,'/',theGCMs[i],'_swe_max_',(2000+j),'.nc',sep=''),
-				# month=13,
-				# max.value=5000
-				# )
+			extract.swe(
+				file.path.in=paste(file.path,variable.folders,file.name[1],theGCMs[i],file.name[2],(2000+j),'.nc',sep=''),
+				file.path.out=paste(file.path,variable.folders,'/',theGCMs[i],'_swe_max_',(2000+j),'.nc',sep=''),
+				month=13,
+				max.value=5000
+				)
 			# stop('cbw')
 			
 			nc.2.hxn(
@@ -166,12 +169,14 @@ if (run.future.swe=='y')
 				hex.grid=hex.grid[[2]], 
 				theCentroids=hex.grid[[1]],
 				max.value=2000, 
-				hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, spp.folder=spp.folder, hexmap.name=paste(theGCMs[i],'.max.swe',sep='')
+				hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, 
+				hexmap.name=paste(theGCMs[i],'.max.swe',sep='')
 				)
 
 			file.copy(
-				from=paste(hexsim.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/',theGCMs[i],'.max.swe/',theGCMs[i],'.max.swe.1.hxn',sep=''), 
-				to=paste(hexsim.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/',theGCMs[i],'.max.swe/',theGCMs[i],'.max.swe.',(10+j),'.hxn',sep='')
+				from=paste(output.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/',theGCMs[i],'.max.swe/',theGCMs[i],'.max.swe.1.hxn',sep=''), 
+				to=paste(output.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/',theGCMs[i],'.max.swe/',theGCMs[i],'.max.swe.',(10+j),'.hxn',sep=''),
+				overwrite=TRUE
 				)
 			cat(Sys.time()-startTime, 'minutes or seconds to create Hexmap', '\n') # 1.09 minutes...
 			
@@ -180,8 +185,9 @@ if (run.future.swe=='y')
 		
 		# Replace timestep 1 with historical mean.
 		file.copy(
-			from=paste(hexsim.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/mean.swe.max/mean.swe.max.1.hxn',sep=''), 
-			to=paste(hexsim.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/',theGCMs[i],'.max.swe/',theGCMs[i],'.max.swe.1.hxn',sep='')
+			from=paste(output.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/mean.swe.max/mean.swe.max.1.hxn',sep=''), 
+			to=paste(output.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/',theGCMs[i],'.max.swe/',theGCMs[i],'.max.swe.1.hxn',sep=''),
+			overwrite=TRUE
 			)
 	}
 }

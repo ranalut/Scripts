@@ -3,16 +3,16 @@ library(rgdal)
 library(raster)
 library(foreign)
 
-nc.2.hxn <- function(variable, nc.file, hex.grid, theCentroids, max.value, hexsim.wksp, hexsim.wksp2, hexmap.name, spp.folder)
+nc.2.hxn <- function(variable, nc.file, hex.grid, theCentroids, max.value, hexsim.wksp, hexsim.wksp2, output.wksp, output.wksp2, hexmap.name, spp.folder)
 {
 	
 	startTime <- Sys.time()
-	theData <- raster(nc.file)
+	theData <- raster(nc.file, varname=variable)
 	
 	extractedData <- extract(theData, hex.grid)
 	extractedData[is.na(extractedData)==TRUE] <- 0
 	extractedData[extractedData > max.value] <- max.value
-	cat(Sys.time()-startTime, 'minutes to extract data', '\n') # 1.5 minutes...
+	cat(Sys.time()-startTime, 'minutes or seconds to extract data', '\n') # 1.5 minutes...
 	# print(head(extractedData)); stop('cbw')
 
 	dataDump <- data.frame(hex_id=theCentroids$Hex_ID, extractedData)
@@ -20,20 +20,14 @@ nc.2.hxn <- function(variable, nc.file, hex.grid, theCentroids, max.value, hexsi
 	write.csv(dataDump, paste(hexsim.wksp,'scratch_workspace/',hexmap.name,'.csv',sep=''),row.names=FALSE)
 
 	startTime <- Sys.time()
-	dir.create(path=paste(hexsim.wksp,'Workspaces/',spp.folder,"/Spatial Data/Hexagons/",hexmap.name,sep=''), recursive=TRUE)
-	command <- paste('cd "',hexsim.wksp2,'\\currentHexSim" && HexMapConverter.exe "',hexsim.wksp2,'\\scratch_workspace\\',hexmap.name,'.csv" true true 3131 2075 true "',hexsim.wksp2,'\\Workspaces\\',spp.folder,'\\Spatial Data\\Hexagons\\',hexmap.name,'"',sep='')
-	print(command)
+	dir.create(path=paste(output.wksp,'Workspaces/',spp.folder,"/Spatial Data/Hexagons/",hexmap.name,sep=''), recursive=TRUE)
+	
+	command <- paste('cd "',hexsim.wksp2,'\\currentHexSim" && HexMapConverter.exe "',hexsim.wksp2,'\\scratch_workspace\\',hexmap.name,'.csv" true true 3131 2075 true "',output.wksp2,'\\Workspaces\\',spp.folder,'\\Spatial Data\\Hexagons\\',hexmap.name,'"',sep='')
+	# This only works when the HexSim folder and scratch workspace is on C: or some non-periferal drive.  
+	# I could not get it to work with HexMapConverter.exe on a periferal.
+	# The command line syntax quoted below works...
+	# 'cd "C:\Users\cbwilsey\Documents\PostDoc\HexSim\currentHexSim\" && HexMapConverter.exe "C:\users\cbwilsey\documents\postdoc\hexsim\scratch_workspace\initial.dist.csv" true true 3131 2075 true "E:\HexSim\Workspaces\spotted_frog_v2\Spatial Data\Hexagons\initial.dist"'
+	
+	# print(command)
 	shell(command)
 }
-
-# nc.2.hxn(
-	# variable='swe.march', 
-	# nc.file="E:/bioclimate/annual/CRU_TS2.1_1901-2000/snowfall_swe_balance", # "D:/PNWCCVA_Data1/bioclimate/annual/CRU_TS2.1_1901-2000/snowfall_swe_balance/mean_swe_march.nc"
-	# hex.grid=hex.grid[[2]], 
-	# theCentroids=hex.grid[[1]],
-	# max.value=2000, 
-	# hexsim.wksp= 'C:/Users/cbwilsey/Documents/PostDoc/HexSim', #'F:/PNWCCVA_Data2/HexSim/scratch_workspace/',
-	# hexsim.wksp2= 'C:\\Users\\cbwilsey\\Documents\\Postdoc\\HexSim', #'F:\\PNWCCVA_Data2\\HexSim\\'
-	# spp.folder= 'spotted_frog_v2'
-	# )
-
