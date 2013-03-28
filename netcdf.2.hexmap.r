@@ -22,11 +22,9 @@ nc.2.hxn <- function(variable, nc.file, hex.grid, theCentroids, max.value, hexsi
 	startTime <- Sys.time()
 	dir.create(path=paste(output.wksp,'Workspaces/',spp.folder,"/Spatial Data/Hexagons/",hexmap.name,sep=''), recursive=TRUE)
 	
-	command <- paste('cd "',hexsim.wksp2,'\\currentHexSim" && HexMapConverter.exe "',hexsim.wksp2,'\\scratch_workspace\\',hexmap.name,'.csv" true true 3131 2075 true "',output.wksp2,'\\Workspaces\\',spp.folder,'\\Spatial Data\\Hexagons\\',hexmap.name,'"',sep='')
-	# This only works when the HexSim folder and scratch workspace is on C: or some non-periferal drive.  
-	# I could not get it to work with HexMapConverter.exe on a periferal.
+	command <- paste(substr(hexsim.wksp2,1,2),' && cd "',hexsim.wksp2,'\\currentHexSim" && HexMapConverter.exe "',hexsim.wksp2,'\\scratch_workspace\\',hexmap.name,'.csv" true true 3131 2075 true "',output.wksp2,'\\Workspaces\\',spp.folder,'\\Spatial Data\\Hexagons\\',hexmap.name,'"',sep='')
 	# The command line syntax quoted below works...
-	# 'cd "C:\Users\cbwilsey\Documents\PostDoc\HexSim\currentHexSim\" && HexMapConverter.exe "C:\users\cbwilsey\documents\postdoc\hexsim\scratch_workspace\initial.dist.csv" true true 3131 2075 true "E:\HexSim\Workspaces\spotted_frog_v2\Spatial Data\Hexagons\initial.dist"'
+	# 'C: && cd "C:\Users\cbwilsey\Documents\PostDoc\HexSim\currentHexSim\" && HexMapConverter.exe "C:\users\cbwilsey\documents\postdoc\hexsim\scratch_workspace\initial.dist.csv" true true 3131 2075 true "E:\HexSim\Workspaces\spotted_frog_v2\Spatial Data\Hexagons\initial.dist"'
 	
 	# print(command)
 	shell(command)

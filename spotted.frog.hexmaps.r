@@ -11,7 +11,8 @@ library(raster)
 library(foreign)
 
 # setwd('F:/PNWCCVA_Data2/Scripts/')
-setwd('C:/Users/cbwilsey/Documents/PostDoc/Scripts/')
+# setwd('C:/Users/cbwilsey/Documents/PostDoc/Scripts/')
+setwd('C:/Users/cbwilsey/Documents/GitHub/Scripts/')
 
 source('extract.swe.r')
 source('load.hex.grid.r')
@@ -20,10 +21,10 @@ source('plot.raster.stack.r')
 
 # Settings for this run.
 
-hexsim.wksp <- 'C:/Users/cbwilsey/Documents/PostDoc/HexSim/' #'F:/PNWCCVA_Data2/HexSim/scratch_workspace/',
-hexsim.wksp2 <- 'C:\\Users\\cbwilsey\\Documents\\Postdoc\\HexSim' #'F:\\PNWCCVA_Data2\\HexSim\\'
-output.wksp <- 'E:/HexSim/'
-output.wksp2 <- 'E:\\HexSim'
+hexsim.wksp <- 'F:/PNWCCVA_Data2/HexSim/' # 'C:/Users/cbwilsey/Documents/PostDoc/HexSim/'
+hexsim.wksp2 <- 'F:\\PNWCCVA_Data2\\HexSim' # 'C:\\Users\\cbwilsey\\Documents\\Postdoc\\HexSim'
+output.wksp <- 'H:/HexSim/' #'E:/HexSim/'
+output.wksp2 <- 'H:\\HexSim' # 'E:\\HexSim'
 spp.folder <- 'spotted_frog_v2'
 
 run.hex.grid <- 		'n'
@@ -44,7 +45,7 @@ startTime <- Sys.time()
 if (run.hex.grid=='y')
 {
 	hex.grid <- load.hex.grid(
-		centroid.file='C:/Users/cbwilsey/Documents/PostDoc/HexSim/Workspaces/centroids84.txt',  # 'F:/PNWCCVA_Data2/HexSim/Workspaces/centroids84.txt'
+		centroid.file='F:/PNWCCVA_Data2/HexSim/Workspaces/centroids84.txt', #'C:/Users/cbwilsey/Documents/PostDoc/HexSim/Workspaces/centroids84.txt',  
 		file.format='txt',
 		proj4='+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0'
 		)
@@ -145,15 +146,16 @@ if (run.initial=='y')
 if (run.future.swe=='y')
 {
 	theGCMs <- c('CCSM3','CGCM3.1_t47','GISS-ER','MIROC3.2_medres','UKMO-HadCM3')
-	file.path <- 'E:/bioclimate/annual/a2/' # file.path <- 'D:/PNWCCVA_Data1/bioclimate/annual/CRU_TS2.1_1901-2000/'
+	file.path <- 'H:/bioclimate/annual/a2/' # 'E:/bioclimate/annual/a2/' # file.path <- 'D:/PNWCCVA_Data1/bioclimate/annual/CRU_TS2.1_1901-2000/'
 	file.name <- c('/wna30sec_a2_','_snowfall_swe_balance_first_day_of_month_')
 	variable.folders <- 'snowfall_swe_balance_first_day_of_month_a2'
 
-	for (i in 5)
+	for (i in 1:5)
 	{
 		startTime <- Sys.time()
 
 		for (j in 1:99)
+		# for (j in 1)
 		{
 			extract.swe(
 				file.path.in=paste(file.path,variable.folders,file.name[1],theGCMs[i],file.name[2],(2000+j),'.nc',sep=''),
@@ -180,7 +182,7 @@ if (run.future.swe=='y')
 				)
 			cat(Sys.time()-startTime, 'minutes or seconds to create Hexmap', '\n') # 1.09 minutes...
 			
-			stop('cbw')
+			# stop('cbw')
 		}
 		
 		# Replace timestep 1 with historical mean.

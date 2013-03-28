@@ -28,7 +28,7 @@ extract.swe <- function(file.path.in, file.path.out, month, max.value)
 		
 		swe.single[swe.single > max.value] <- max.value
 		writeRaster(swe.single, file.path.out,overwrite=TRUE, varname=paste('swe_',the.months[month],sep=''))
-		plot(swe.single)
+		# plot(swe.single)
 		cat('year',1900+j,'\n')
 		# return(swe.single)
 		# stop('cbw')
