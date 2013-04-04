@@ -17,17 +17,17 @@ run.hexsim.report <- function(report,hexsim.wksp,hexsim.wksp2,spp.folder,scenari
 hexsim.wksp='F:/PNWCCVA_Data2/HexSim/'
 hexsim.wksp2='F:\\PNWCCVA_Data2\\HexSim'
 spp.folder='spotted_frog_v2'
-scenario.name='rana.lut.65b3'
+scenario.name='rana.lut.66'
 
 run.hexsim.report(
-	report='-births',
+	report='-movement',
 	yrs=c(10,15),
 	hexsim.wksp=hexsim.wksp,
 	hexsim.wksp2=hexsim.wksp2,
-	spp.folder=scenario.name,
+	spp.folder=spp.folder,
 	scenario.name=scenario.name
 	)
 
-theData <- read.csv(paste(hexsim.wksp,'Workspaces/',spp.folder,'/Results/',scenario.name,'/',scenario.name,'-[1]/',scenario.name,'_REPORT_births_rana_lut.csv',sep=''),stringsAsFactors=FALSE)
+theData <- read.csv(paste(hexsim.wksp,'Workspaces/',spp.folder,'/Results/',scenario.name,'/',scenario.name,'-[1]/',scenario.name,'_REPORT_move_rana_lut.csv',sep=''),stringsAsFactors=FALSE)
 	
 	

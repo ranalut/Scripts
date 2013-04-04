@@ -16,10 +16,10 @@ move.report <- function(in.file,outcome)
 hexsim.wksp <- 'F:/PNWCCVA_Data2/HexSim/'
 hexsim.wksp2 <- 'F:\\PNWCCVA_Data2\\HexSim'
 spp.folder <- 'spotted_frog_v2'
-scenario.name <- 'rana.lut.65b3'
+scenario.name <- 'rana.lut.66'
 
 run.hexsim.report(
-	report='-movement'
+	report='-movement',
 	hexsim.wksp=hexsim.wksp,
 	hexsim.wksp2=hexsim.wksp2,
 	spp.folder=spp.folder,
