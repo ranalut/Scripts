@@ -3,15 +3,17 @@ library(rgdal)
 library(raster)
 library(foreign)
 
-nc.2.hxn <- function(variable, nc.file, hex.grid, theCentroids, max.value, hexsim.wksp, hexsim.wksp2, output.wksp, output.wksp2, hexmap.name, spp.folder)
+nc.2.hxn <- function(variable, nc.file, hex.grid, theCentroids, max.value, hexsim.wksp, hexsim.wksp2, output.wksp, output.wksp2, hexmap.name, spp.folder, changeTable=NA)
 {
 	
 	startTime <- Sys.time()
 	theData <- raster(nc.file, varname=variable)
+	if (is.na(changeTable)==FALSE) { theData <- subs(theData, changeTable) }
 	
 	extractedData <- extract(theData, hex.grid)
 	extractedData[is.na(extractedData)==TRUE] <- 0
 	extractedData[extractedData > max.value] <- max.value
+	
 	cat(Sys.time()-startTime, 'minutes or seconds to extract data', '\n') # 1.5 minutes...
 	# print(head(extractedData)); stop('cbw')
 
@@ -26,6 +28,6 @@ nc.2.hxn <- function(variable, nc.file, hex.grid, theCentroids, max.value, hexsi
 	# The command line syntax quoted below works...
 	# 'C: && cd "C:\Users\cbwilsey\Documents\PostDoc\HexSim\currentHexSim\" && HexMapConverter.exe "C:\users\cbwilsey\documents\postdoc\hexsim\scratch_workspace\initial.dist.csv" true true 3131 2075 true "E:\HexSim\Workspaces\spotted_frog_v2\Spatial Data\Hexagons\initial.dist"'
 	
-	# print(command)
+	print(command)
 	shell(command)
 }

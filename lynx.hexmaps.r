@@ -1,6 +1,6 @@
 
 # =========================================================================================
-# Generate HexMaps from spatial data layers for the spotted frog workspace.
+# Generate HexMaps from spatial data layers for the lynx workspace.
 # =========================================================================================
 
 # ========================================================================================
@@ -23,15 +23,17 @@ source('plot.raster.stack.r')
 
 hexsim.wksp <- 'F:/PNWCCVA_Data2/HexSim/' # 'C:/Users/cbwilsey/Documents/PostDoc/HexSim/'
 hexsim.wksp2 <- 'F:\\PNWCCVA_Data2\\HexSim' # 'C:\\Users\\cbwilsey\\Documents\\Postdoc\\HexSim'
-output.wksp <- 'H:/HexSim/' #'E:/HexSim/'
-output.wksp2 <- 'H:\\HexSim' # 'E:\\HexSim'
-spp.folder <- 'spotted_frog_v2'
+output.wksp <- 'F:/HexSim/' #'E:/HexSim/'
+output.wksp2 <- 'F:\\HexSim' # 'E:\\HexSim'
+spp.folder <- 'lynx_v1'
 
 run.hex.grid <- 		'n'
-run.historical.swe <- 	'n'
+run.historical.swe <- 	'y'
+run.biomes <- 			'n'
 run.streams <- 			'n'
 run.initial <- 			'n'
-run.future.swe <- 		'y'
+run.exclusion <- 		'n'
+run.future.swe <- 		'n'
 
 startTime <- Sys.time()
 
@@ -55,30 +57,19 @@ if (run.hex.grid=='y')
 
 if (run.historical.swe=='y')
 {
-	file.path <- 'E:/bioclimate/annual/CRU_TS2.1_1901-2000/' # 'D:/PNWCCVA_Data1/bioclimate/annual/CRU_TS2.1_1901-2000/'
+	file.path <- 'H:/bioclimate/annual/CRU_TS2.1_1901-2000/' # 'D:/PNWCCVA_Data1/bioclimate/annual/CRU_TS2.1_1901-2000/'
 	file.name <- '/wna30sec_CRU_TS_2.10_'
-	variable.folders <- 'snowfall_swe_balance'
-
-	for (j in 5:100)
-	{
-		extract.swe(
-			file.path.in=paste(file.path,variable.folders,file.name,variable.folders,'_first_day_of_month_',(1900+j),'.nc',sep=''),
-			file.path.out=paste(file.path,variable.folders,'/swe_max_',(1900+j),'.nc',sep=''),
-			month=13,
-			max.value=5000
-			)
-		# stop('cbw')
-	}
+	variable.folders <- 'snowfall_swe_ann'
 	
 	all.file.paths <- list()
-	for (j in 1:96) { all.file.paths[[j]] <- paste(file.path,variable.folders,'/swe_max_',(1904+j),'.nc',sep='') }
+	for (j in 1:100) { all.file.paths[[j]] <- paste(file.path,variable.folders,file.name,variable.folders,'_',(1900+j),'.nc',sep='') }
 	
 	# calc.swe(file.path=file.path,file.name=file.name,variable.folders=variable.folders,month=13)
 	calc.swe(
 		all.file.paths.in=all.file.paths,
 		file.path.out=paste(file.path,variable.folders,sep=''),
 		variable='swe',
-		month='max'
+		month='ann'
 		)
 	
 	# stop('cbw')
@@ -86,20 +77,20 @@ if (run.historical.swe=='y')
 	# Create the HexMap
 	nc.2.hxn(
 		variable='mean.swe.max', 
-		nc.file="E:/bioclimate/annual/CRU_TS2.1_1901-2000/snowfall_swe_balance/mean_swe_max.nc", # "D:/PNWCCVA_Data1/bioclimate/annual/CRU_TS2.1_1901-2000/snowfall_swe_balance/mean_swe_march.nc"
+		nc.file="H:/bioclimate/annual/CRU_TS2.1_1901-2000/snowfall_swe_ann/mean_swe_ann.nc", # "D:/PNWCCVA_Data1/bioclimate/annual/CRU_TS2.1_1901-2000/snowfall_swe_balance/mean_swe_march.nc"
 		hex.grid=hex.grid[[2]], 
 		theCentroids=hex.grid[[1]],
-		max.value=2000, 
-		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='mean.swe.max'
+		max.value=Inf, 
+		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='mean.swe.ann'
 		)
 
 	nc.2.hxn(
 		variable='sd.swe.max', 
-		nc.file="E:/bioclimate/annual/CRU_TS2.1_1901-2000/snowfall_swe_balance/sd_swe_max.nc", # "D:/PNWCCVA_Data1/bioclimate/annual/CRU_TS2.1_1901-2000/snowfall_swe_balance/mean_swe_march.nc"
+		nc.file="H:/bioclimate/annual/CRU_TS2.1_1901-2000/snowfall_swe_ann/sd_swe_ann.nc", # "D:/PNWCCVA_Data1/bioclimate/annual/CRU_TS2.1_1901-2000/snowfall_swe_balance/mean_swe_march.nc"
 		hex.grid=hex.grid[[2]], 
 		theCentroids=hex.grid[[1]],
-		max.value=2000, 
-		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='sd.swe.max'
+		max.value=Inf, 
+		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='sd.swe.ann'
 		)
 }
 # stop('cbw')
@@ -118,6 +109,23 @@ if (run.streams=='y')
 		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='streams'
 		)
 }
+
+# ==========================================================================================================
+# Biomes
+
+if (run.biomes=='y')
+{
+	nc.2.hxn(
+		variable='biome', 
+		nc.file="H:/vegetation/wna30sec_1961-1990_biomes_DRAFT_v1.nc", 
+		hex.grid=hex.grid[[2]], 
+		theCentroids=hex.grid[[1]],
+		max.value=Inf,
+		changeTable=data.frame(matrix(c(seq(1,7,1),c(1,2,0,1,0,0,0)),ncol=2)),
+		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='biomes'
+		)
+}	
+
 # ==========================================================================================================
 # Initial Dist Map
 
@@ -125,7 +133,7 @@ if (run.initial=='y')
 {
 	nc.2.hxn(
 		variable='presence', 
-		nc.file="C:/Users/cbwilsey/Documents/PostDoc/HexSim/Workspaces/spotted_frog_v2/Spatial Data/initial_dist.nc", 
+		nc.file="F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1/Spatial Data/initial_dist.nc", 
 		hex.grid=hex.grid[[2]], 
 		theCentroids=hex.grid[[1]],
 		max.value=Inf, 
@@ -133,6 +141,21 @@ if (run.initial=='y')
 		)
 }	
 # stop('cbw')
+
+# ==========================================================================================================
+# Exclusion SW Range
+
+if (run.exclusion=='y')
+{
+	nc.2.hxn(
+		variable='sw_range', 
+		nc.file="F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1/Spatial Data/sw_range.nc", 
+		hex.grid=hex.grid[[2]], 
+		theCentroids=hex.grid[[1]],
+		max.value=Inf, 
+		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='sw.range'
+		)
+}	
 
 # ========================================================================================================
 # Calculating Deficit from AET and PET and writing deficit to netCDF files...

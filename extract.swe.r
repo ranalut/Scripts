@@ -38,12 +38,11 @@ calc.swe <- function(
 	all.file.paths.in,
 	file.path.out,
 	variable,
-	month=13
+	month='max'
 	)
 {
 	startTime <- Sys.time()
-	the.months <- c('jan','feb','march','april','may','june','july','aug','sept','oct','nov','dec','max')
-	
+		
 	swe.all <- stack(all.file.paths.in)
 	print('swe.all'); print(Sys.time()-startTime)
 	# return(swe.all)
@@ -53,14 +52,14 @@ calc.swe <- function(
 	# return(the.mean)
 	print('mean'); print(Sys.time()-startTime)
 	
-	writeRaster(the.mean, paste(file.path.out,'/mean_',variable,'_',the.months[month],'.nc',sep=''),overwrite=TRUE, varname=paste('mean_',variable,'_',the.months[month],sep=''))
+	writeRaster(the.mean, paste(file.path.out,'/mean_',variable,'_',month,'.nc',sep=''),overwrite=TRUE, varname=paste('mean_',variable,'_',month,sep=''))
 	rm(the.mean)
 
 	the.sd <- calc(swe.all, sd, na.rm=TRUE)
 	plot(the.sd, main='SD')
 	print('sd'); print(Sys.time()-startTime)
 	plot(the.sd, main='SD')
-	writeRaster(the.sd, paste(file.path.out,'/sd_',variable,'_',the.months[month],'.nc',sep=''),overwrite=TRUE, varname=paste('sd_',variable,'_',the.months[month],sep=''))
+	writeRaster(the.sd, paste(file.path.out,'/sd_',variable,'_',month,'.nc',sep=''),overwrite=TRUE, varname=paste('sd_',variable,'_',month,sep=''))
 	rm(the.sd)
 
 	print('files written'); print(Sys.time()-startTime)

@@ -30,4 +30,4 @@ run.hexsim.report(
 
 theData <- read.csv(paste(hexsim.wksp,'Workspaces/',spp.folder,'/Results/',scenario.name,'/',scenario.name,'-[1]/',scenario.name,'_REPORT_move_rana_lut.csv',sep=''),stringsAsFactors=FALSE)
 	
-	
+# shell("f:/pnwccva_data2/hexsim/currenthexsim/batchrunner.exe 2 f:/pnwccva_data2/hexsim/workspaces/spotted_frog_v2/batchFile_scenarios.xml")	
