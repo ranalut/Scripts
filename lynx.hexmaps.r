@@ -23,13 +23,13 @@ source('plot.raster.stack.r')
 
 hexsim.wksp <- 'F:/PNWCCVA_Data2/HexSim/' # 'C:/Users/cbwilsey/Documents/PostDoc/HexSim/'
 hexsim.wksp2 <- 'F:\\PNWCCVA_Data2\\HexSim' # 'C:\\Users\\cbwilsey\\Documents\\Postdoc\\HexSim'
-output.wksp <- 'F:/HexSim/' #'E:/HexSim/'
-output.wksp2 <- 'F:\\HexSim' # 'E:\\HexSim'
+output.wksp <- 'F:/PNWCCVA_Data2/HexSim/' #'E:/HexSim/'
+output.wksp2 <- 'F:\\PNWCCVA_Data2\\HexSim' # 'E:\\HexSim'
 spp.folder <- 'lynx_v1'
 
 run.hex.grid <- 		'n'
-run.historical.swe <- 	'y'
-run.biomes <- 			'n'
+run.historical.swe <- 	'n'
+run.biomes <- 			'y'
 run.streams <- 			'n'
 run.initial <- 			'n'
 run.exclusion <- 		'n'
@@ -76,7 +76,7 @@ if (run.historical.swe=='y')
 
 	# Create the HexMap
 	nc.2.hxn(
-		variable='mean.swe.max', 
+		variable='mean_swe_ann', 
 		nc.file="H:/bioclimate/annual/CRU_TS2.1_1901-2000/snowfall_swe_ann/mean_swe_ann.nc", # "D:/PNWCCVA_Data1/bioclimate/annual/CRU_TS2.1_1901-2000/snowfall_swe_balance/mean_swe_march.nc"
 		hex.grid=hex.grid[[2]], 
 		theCentroids=hex.grid[[1]],
@@ -85,7 +85,7 @@ if (run.historical.swe=='y')
 		)
 
 	nc.2.hxn(
-		variable='sd.swe.max', 
+		variable='sd_swe_ann', 
 		nc.file="H:/bioclimate/annual/CRU_TS2.1_1901-2000/snowfall_swe_ann/sd_swe_ann.nc", # "D:/PNWCCVA_Data1/bioclimate/annual/CRU_TS2.1_1901-2000/snowfall_swe_balance/mean_swe_march.nc"
 		hex.grid=hex.grid[[2]], 
 		theCentroids=hex.grid[[1]],
@@ -121,7 +121,7 @@ if (run.biomes=='y')
 		hex.grid=hex.grid[[2]], 
 		theCentroids=hex.grid[[1]],
 		max.value=Inf,
-		changeTable=data.frame(matrix(c(seq(1,7,1),c(1,2,0,1,0,0,0)),ncol=2)),
+		changeTable=data.frame(matrix(c(seq(1,7,1),c(1,1,0,1,0,0,0)),ncol=2)),
 		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='biomes'
 		)
 }	
