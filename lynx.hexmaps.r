@@ -29,10 +29,11 @@ spp.folder <- 'lynx_v1'
 
 run.hex.grid <- 		'n'
 run.historical.swe <- 	'n'
-run.biomes <- 			'y'
+run.biomes <- 			'n'
 run.streams <- 			'n'
 run.initial <- 			'n'
 run.exclusion <- 		'n'
+run.coastal <- 			'y'
 run.future.swe <- 		'n'
 
 startTime <- Sys.time()
@@ -141,6 +142,21 @@ if (run.initial=='y')
 		)
 }	
 # stop('cbw')
+
+# ==========================================================================================================
+# Coastal vs. Interior Map
+
+if (run.coastal=='y')
+{
+	nc.2.hxn(
+		variable='presence', 
+		nc.file="F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1/Spatial Data/coast_interior.nc", 
+		hex.grid=hex.grid[[2]], 
+		theCentroids=hex.grid[[1]],
+		max.value=Inf, 
+		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='coast.interior'
+		)
+}	
 
 # ==========================================================================================================
 # Exclusion SW Range

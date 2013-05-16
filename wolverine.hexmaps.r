@@ -27,12 +27,12 @@ output.wksp <- 'F:/PNWCCVA_Data2/HexSim/' #'E:/HexSim/'
 output.wksp2 <- 'F:\\PNWCCVA_Data2\\HexSim' # 'E:\\HexSim'
 spp.folder <- 'wolverine_v1'
 
-run.hex.grid <- 		'n'
+run.hex.grid <- 		'y'
 run.historical.swe <- 	'n'
-run.historical.mtwa <-  'n'
+run.historical.mtwa <-  'y'
 run.biomes <- 			'n'
 run.initial <- 			'n'
-run.exclusion <- 		'y'
+run.exclusion <- 		'n'
 run.future.swe <- 		'n'
 
 startTime <- Sys.time()
@@ -161,49 +161,38 @@ if (run.historical.mtwa=='y')
 {
 	file.path <- 'H:/bioclimate/annual/CRU_TS2.1_1901-2000/' # 'D:/PNWCCVA_Data1/bioclimate/annual/CRU_TS2.1_1901-2000/'
 	file.name <- '/wna30sec_CRU_TS_2.10_'
-	variable.folders <- 'snowfall_swe_balance'
-
-	for (j in 5:100)
-	{
-		extract.swe(
-			file.path.in=paste(file.path,variable.folders,file.name,variable.folders,'_first_day_of_month_',(1900+j),'.nc',sep=''),
-			file.path.out=paste(file.path,variable.folders,'/swe_may_',(1900+j),'.nc',sep=''),
-			month=5,
-			max.value=5000
-			)
-		# stop('cbw')
-	}
+	variable.folders <- 'mtwa'
 	
 	all.file.paths <- list()
-	for (j in 1:96) { all.file.paths[[j]] <- paste(file.path,variable.folders,'/swe_may_',(1904+j),'.nc',sep='') }
+	for (j in 1:100) { all.file.paths[[j]] <- paste(file.path,variable.folders,file.name,variable.folders,'_',(1900+j),'.nc',sep='') }
 	
 	# calc.swe(file.path=file.path,file.name=file.name,variable.folders=variable.folders,month=13)
 	calc.swe(
 		all.file.paths.in=all.file.paths,
 		file.path.out=paste(file.path,variable.folders,sep=''),
-		variable='swe',
-		month='may'
+		variable='mtwa',
+		month='ann'
 		)
 	
 	# stop('cbw')
 
-		# Create the HexMap
+	# Create the HexMap
 	nc.2.hxn(
-		variable='mean_swe_may', 
-		nc.file="H:/bioclimate/annual/CRU_TS2.1_1901-2000/snowfall_swe_balance/mean_swe_may.nc", # "D:/PNWCCVA_Data1/bioclimate/annual/CRU_TS2.1_1901-2000/snowfall_swe_balance/mean_swe_march.nc"
+		variable='mean_mtwa_ann', 
+		nc.file="H:/bioclimate/annual/CRU_TS2.1_1901-2000/mtwa/mean_mtwa_ann.nc", # "D:/PNWCCVA_Data1/bioclimate/annual/CRU_TS2.1_1901-2000/snowfall_swe_balance/mean_swe_march.nc"
 		hex.grid=hex.grid[[2]], 
 		theCentroids=hex.grid[[1]],
-		max.value=2000, 
-		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='mean.swe.may'
+		max.value=Inf, 
+		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='mean.mtwa'
 		)
 
 	nc.2.hxn(
-		variable='sd_swe_may', 
-		nc.file="H:/bioclimate/annual/CRU_TS2.1_1901-2000/snowfall_swe_balance/sd_swe_may.nc", # "D:/PNWCCVA_Data1/bioclimate/annual/CRU_TS2.1_1901-2000/snowfall_swe_balance/mean_swe_march.nc"
+		variable='sd_mtwa_ann', 
+		nc.file="H:/bioclimate/annual/CRU_TS2.1_1901-2000/mtwa/sd_mtwa_ann.nc", # "D:/PNWCCVA_Data1/bioclimate/annual/CRU_TS2.1_1901-2000/snowfall_swe_balance/mean_swe_march.nc"
 		hex.grid=hex.grid[[2]], 
 		theCentroids=hex.grid[[1]],
-		max.value=2000, 
-		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='sd.swe.may'
+		max.value=Inf, 
+		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='sd.mtwa'
 		)
 }
 # stop('cbw')
