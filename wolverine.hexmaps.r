@@ -29,7 +29,7 @@ spp.folder <- 'wolverine_v1'
 
 run.hex.grid <- 		'y'
 run.historical.swe <- 	'n'
-run.historical.mtwa <-  'y'
+run.historical.mtwa <-  'n'
 run.biomes <- 			'n'
 run.initial <- 			'n'
 run.exclusion <- 		'n'

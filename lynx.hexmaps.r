@@ -29,11 +29,12 @@ spp.folder <- 'lynx_v1'
 
 run.hex.grid <- 		'n'
 run.historical.swe <- 	'n'
+run.historical.fire <- 	'n'
 run.biomes <- 			'n'
 run.streams <- 			'n'
 run.initial <- 			'n'
-run.exclusion <- 		'n'
-run.coastal <- 			'y'
+run.exclusion <- 		'y'
+run.coastal <- 			'n'
 run.future.swe <- 		'n'
 
 startTime <- Sys.time()
@@ -53,6 +54,49 @@ if (run.hex.grid=='y')
 		proj4='+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0'
 		)
 }
+# ==============================================================================================================
+# Historical Fire Fraction
+
+if (run.historical.fire=='y')
+{
+	file.path <- 'H:/bioclimate/annual/CRU_TS2.1_1901-2000/' # 'D:/PNWCCVA_Data1/bioclimate/annual/CRU_TS2.1_1901-2000/'
+	file.name <- '/wna30sec_CRU_TS2.1_lpj_'
+	variable.folders <- 'afirefrac'
+	
+	all.file.paths <- list()
+	for (j in 1:100) { all.file.paths[[j]] <- paste(file.path,variable.folders,file.name,variable.folders,'_',(1900+j),'.nc',sep='') }
+	
+	# calc.swe(file.path=file.path,file.name=file.name,variable.folders=variable.folders,month=13)
+	calc.swe(
+		all.file.paths.in=all.file.paths,
+		file.path.out=paste(file.path,variable.folders,sep=''),
+		variable='firefrac',
+		month='ann'
+		)
+	
+	# stop('cbw')
+
+	# Create the HexMap
+	nc.2.hxn(
+		variable='mean_firefrac_ann', 
+		nc.file="H:/bioclimate/annual/CRU_TS2.1_1901-2000/afirefrac/mean_firefrac_ann.nc", # "D:/PNWCCVA_Data1/bioclimate/annual/CRU_TS2.1_1901-2000/snowfall_swe_balance/mean_swe_march.nc"
+		hex.grid=hex.grid[[2]], 
+		theCentroids=hex.grid[[1]],
+		max.value=Inf, 
+		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='mean.fire.ann'
+		)
+
+	nc.2.hxn(
+		variable='sd_firefrac_ann', 
+		nc.file="H:/bioclimate/annual/CRU_TS2.1_1901-2000/afirefrac/sd_firefrac_ann.nc", # "D:/PNWCCVA_Data1/bioclimate/annual/CRU_TS2.1_1901-2000/snowfall_swe_balance/mean_swe_march.nc"
+		hex.grid=hex.grid[[2]], 
+		theCentroids=hex.grid[[1]],
+		max.value=Inf, 
+		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='sd.fire.ann'
+		)
+}
+# stop('cbw')
+
 # ==============================================================================================================
 # Historical SWE
 
@@ -95,6 +139,7 @@ if (run.historical.swe=='y')
 		)
 }
 # stop('cbw')
+
 
 # ==========================================================================================================
 # Streams Map
@@ -165,11 +210,11 @@ if (run.exclusion=='y')
 {
 	nc.2.hxn(
 		variable='sw_range', 
-		nc.file="F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1/Spatial Data/sw_range.nc", 
+		nc.file="F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1/Spatial Data/sw_range2.nc", 
 		hex.grid=hex.grid[[2]], 
 		theCentroids=hex.grid[[1]],
 		max.value=Inf, 
-		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='sw.range'
+		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='sw.range2'
 		)
 }	
 

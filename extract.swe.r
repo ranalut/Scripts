@@ -48,7 +48,7 @@ calc.swe <- function(
 	# return(swe.all)
 
 	the.mean <- mean(swe.all, na.rm=TRUE)
-	plot(the.mean,main='Mean')
+	# plot(the.mean,main='Mean')
 	# return(the.mean)
 	print('mean'); print(Sys.time()-startTime)
 	
@@ -56,9 +56,9 @@ calc.swe <- function(
 	rm(the.mean)
 
 	the.sd <- calc(swe.all, sd, na.rm=TRUE)
-	plot(the.sd, main='SD')
+	# plot(the.sd, main='SD')
 	print('sd'); print(Sys.time()-startTime)
-	plot(the.sd, main='SD')
+	# plot(the.sd, main='SD')
 	writeRaster(the.sd, paste(file.path.out,'/sd_',variable,'_',month,'.nc',sep=''),overwrite=TRUE, varname=paste('sd_',variable,'_',month,sep=''))
 	rm(the.sd)
 
