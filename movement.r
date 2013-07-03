@@ -9,8 +9,8 @@ move <- function(workspace,scenario,event,outcome,breaks,time.step=NA)
 	theData <- read.csv(file.name,header=TRUE,stringsAsFactors=FALSE)
 	# print(head(theData))
 	
-	# print(unique(theData$Event.Name))
-	# print(unique(theData$Outcome))
+	print(unique(theData$Event.Name))
+	print(unique(theData$Outcome))
 	# print(grep(event,theData$Event.Name,value=FALSE,ignore.case=TRUE))
 	# print(grep(outcome,theData$Outcome,value=FALSE),ignore.case=TRUE))
 	
@@ -24,10 +24,10 @@ move <- function(workspace,scenario,event,outcome,breaks,time.step=NA)
 }
 
 par(mfrow=c(2,2))
-move(workspace='F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1',scenario='lynx.007',event='subadult',outcome='floater',time.step=10,breaks=seq(0,1000,50))
-# stop('cbw')
-move(workspace='F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1',scenario='lynx.007',event='subadult',outcome='join',time.step=10,breaks=seq(0,1000,50))
-move(workspace='F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1',scenario='lynx.007',event='subadult',outcome='start',time.step=10,breaks=seq(0,1000,50))
+move(workspace='F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1',scenario='lynx.012',event='adult',outcome='floater',time.step=40,breaks=seq(0,1000,50))
+move(workspace='F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1',scenario='lynx.012',event='adult',outcome='join',time.step=40,breaks=seq(0,1000,50))
+move(workspace='F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1',scenario='lynx.012',event='adult',outcome='start',time.step=40,breaks=seq(0,1000,50))
+stop('cbw')
 
 for (i in c('a','b','c'))
 {

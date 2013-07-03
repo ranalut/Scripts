@@ -27,7 +27,7 @@ output.wksp <- 'F:/PNWCCVA_Data2/HexSim/' #'E:/HexSim/'
 output.wksp2 <- 'F:\\PNWCCVA_Data2\\HexSim' # 'E:\\HexSim'
 spp.folder <- 'lynx_v1'
 
-run.hex.grid <- 		'n'
+run.hex.grid <- 		'y'
 run.historical.swe <- 	'n'
 run.historical.fire <- 	'n'
 run.biomes <- 			'n'
@@ -210,11 +210,11 @@ if (run.exclusion=='y')
 {
 	nc.2.hxn(
 		variable='sw_range', 
-		nc.file="F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1/Spatial Data/sw_range2.nc", 
+		nc.file="F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1/Spatial Data/sw_range3.nc", 
 		hex.grid=hex.grid[[2]], 
 		theCentroids=hex.grid[[1]],
 		max.value=Inf, 
-		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='sw.range2'
+		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='sw.range3'
 		)
 }	
 

@@ -28,5 +28,21 @@ density.est <- function(census,trait.col=list(),areas,time.step)
 # print(area.1); print(area.2)
 
 # calculating densities from census files
-lynx.dens <- density.est(census='F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1/Results/lynx.007/lynx.007-[1]/lynx.007.0.csv',trait.col=list(seq(7,11,1),seq(12,16,1)),areas=c(area.1,area.2),time.step=13)
-print(lynx.dens)
+# lynx.dens <- density.est(census='F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1/Results/lynx.007/lynx.007-[1]/lynx.007.0.csv',
+							# trait.col=list(seq(7,11,1),seq(12,16,1)),
+							# areas=c(area.1,area.2),
+							# time.step=13
+							# )
+# print(lynx.dens)
+
+scenario <- 'lynx.012'
+
+for (y in 30:40)
+{
+	lynx.dens <- density.est(census=paste('F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1/Results/',scenario,'/',scenario,'-[1]/',scenario,'.0.csv',sep=''),
+								trait.col=list(seq(7,11,1),seq(12,16,1)),
+								areas=c(area.1,area.2),
+								time.step=y
+								)
+	cat('year',y,'south then north',round(lynx.dens*100,1),'\n')
+}
