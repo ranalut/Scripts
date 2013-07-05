@@ -20,22 +20,18 @@ move <- function(workspace,scenario,event,outcome,breaks,time.step=NA)
 	subData <- subData / 1000
 	# print(head(subData))
 	
-	hist(subData,freq=FALSE,breaks=breaks,xlab='distance (km)',main=paste(event,outcome))
+	hist(subData,freq=FALSE,breaks=breaks,xlab='distance (km)',main=paste(event,outcome,'\nmax =',max(subData,na.rm=TRUE)))
 }
 
+scenarios <- 'lynx.011'
 par(mfrow=c(2,2))
-move(workspace='F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1',scenario='lynx.012',event='adult',outcome='floater',time.step=40,breaks=seq(0,1000,50))
-move(workspace='F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1',scenario='lynx.012',event='adult',outcome='join',time.step=40,breaks=seq(0,1000,50))
-move(workspace='F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1',scenario='lynx.012',event='adult',outcome='start',time.step=40,breaks=seq(0,1000,50))
-stop('cbw')
-
-for (i in c('a','b','c'))
+events <- c('ranges','young','subadult')
+outcomes <- list('start','join',c('start','floater'))
+for (i in 3:3) # Dispersal distances for adults and young were all 1.
 {
-	scenario <- paste('lynx.007',i,sep='')
-	par(mfrow=c(2,2))
-	move(workspace='F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1',scenario=scenario,event='subadult',outcome='floater',time.step=15,breaks=seq(0,1000,50))
-	# stop('cbw')
-	move(workspace='F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1',scenario=scenario,event='subadult',outcome='join',time.step=15,breaks=seq(0,1000,50))
-	move(workspace='F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1',scenario=scenario,event='subadult',outcome='start',time.step=15,breaks=seq(0,1000,50))
+	for (j in outcomes[[i]])
+	{
+		move(workspace='F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1',scenario=scenarios,event=events[i],outcome=j,time.step=30,breaks=seq(0,1000,50))
+	}
 }
 
