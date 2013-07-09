@@ -19,9 +19,9 @@ density.est <- function(census,trait.col=list(),areas,time.step)
 
 ha.hex <- 86.6 # ha, divide by 100 to get km2
 
-n.s <- read.csv('F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1/Analysis/north.south.50.csv',header=TRUE)
-sw.range3 <- read.csv('F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1/Analysis/sw.range3.csv',header=TRUE)
-hab.qual <- read.csv('F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1/Analysis/hab.qual.15.csv',header=TRUE)
+# n.s <- read.csv('F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1/Analysis/north.south.50.csv',header=TRUE)
+# sw.range3 <- read.csv('F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1/Analysis/sw.range3.csv',header=TRUE)
+# hab.qual <- read.csv('F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1/Analysis/hab.qual.15.csv',header=TRUE)
 
 area.1 <- length(n.s$Step_1[n.s$Step_1==1 & sw.range3$Step_1==1 & hab.qual$Score >= 0.25]) * ha.hex / 100
 area.2 <- length(n.s$Step_1[n.s$Step_1==2 & sw.range3$Step_1==1 & hab.qual$Score >= 0.25]) * ha.hex / 100
@@ -35,14 +35,17 @@ print(area.1); print(area.2)
 							# )
 # print(lynx.dens)
 
-scenario <- 'lynx.013'
-
-for (y in 30:40)
+scenario <- 'lynx.027'
+cat(scenario,'\n')
+plot(1~1,ylim=c(1,4000),xlim=c(1,50))
+for (y in 1:40)
 {
 	lynx.dens <- density.est(census=paste('F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1/Results/',scenario,'/',scenario,'-[1]/',scenario,'.0.csv',sep=''),
-								trait.col=list(seq(7,11,1),seq(12,16,1)),
+								trait.col=list(seq(7,12,1),seq(13,18,1)),
 								areas=c(area.1,area.2),
 								time.step=y
 								)
 	cat('year',y,'south then north',round(lynx.dens*100,1),'\n')
+	points(lynx.dens[1]*area.1 ~ y,pch=1)
+	points(lynx.dens[2]*area.2 ~ y,pch=2)
 }
