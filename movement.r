@@ -21,7 +21,7 @@ move <- function(workspace,scenario,event,outcome,breaks,time.step=NA,population
 	subData <- subData / 1000
 	# print(head(subData))
 	
-	hist(subData,freq=FALSE,breaks=breaks,xlab='distance (km)',main=paste(scenario,event,outcome,'\nmedian =',round(median(subData,na.rm=TRUE)),'max =',round(max(subData,na.rm=TRUE))))
+	hist(subData,freq=FALSE,breaks=breaks,xlab='distance (km)',main=paste(scenario,event,outcome,time.step,'\nmedian =',round(median(subData,na.rm=TRUE)),'max =',round(max(subData,na.rm=TRUE))))
 }
 
 # # Lynx
@@ -39,8 +39,8 @@ move <- function(workspace,scenario,event,outcome,breaks,time.step=NA,population
 run.report <- 'y'
 population <- 'wolverine'
 workspace <- 'F:/PNWCCVA_Data2/HexSim/Workspaces/wolverine_v1'
-scenario <- 'gulo.005b'
-breaks <- seq(0,1000,100)
+scenario <- 'gulo.006c'
+breaks <- seq(0,2000,100)
 par(mfrow=c(2,2))
 events <- 'annual'
 outcomes <- list(c('start','floater'))
