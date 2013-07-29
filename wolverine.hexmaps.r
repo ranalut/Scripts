@@ -27,10 +27,10 @@ output.wksp <- 'F:/PNWCCVA_Data2/HexSim/' #'E:/HexSim/'
 output.wksp2 <- 'F:\\PNWCCVA_Data2\\HexSim' # 'E:\\HexSim'
 spp.folder <- 'wolverine_v1'
 
-run.hex.grid <- 		'y'
+run.hex.grid <- 		'n'
 run.historical.swe <- 	'n'
 run.historical.mtwa <-  'n'
-run.biomes <- 			'n'
+run.biomes <- 			'y'
 run.initial <- 			'n'
 run.exclusion <- 		'n'
 run.future.swe <- 		'n'
@@ -59,13 +59,13 @@ if (run.hex.grid=='y')
 if (run.biomes=='y')
 {
 	nc.2.hxn(
-		variable='biome', 
-		nc.file="H:/vegetation/wna30sec_1961-1990_biomes_DRAFT_v1.nc", 
+		variable='biome_modal_30yr', 
+		nc.file='h:/vegetation/biome_modal_30yr_CRU_TS_2.10/wna30sec_CRU_TS_2.10_biome_modal_30yr_2000.nc', # "H:/vegetation/wna30sec_1961-1990_biomes_DRAFT_v1.nc", 
 		hex.grid=hex.grid[[2]], 
 		theCentroids=hex.grid[[1]],
 		max.value=Inf,
-		changeTable=data.frame(matrix(c(seq(1,7,1),c(1,1,0,1,0,0,0)),ncol=2)),
-		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='biomes'
+		changeTable=data.frame(matrix(c(seq(1,12,1),c(2,2,1,0,2,1,0,0,0,0,0,0)),ncol=2)),
+		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='biomes2'
 		)
 }	
 

@@ -3,12 +3,12 @@ library(rgdal)
 library(raster)
 library(foreign)
 
-nc.2.hxn <- function(variable, nc.file, hex.grid, theCentroids, max.value, hexsim.wksp, hexsim.wksp2, output.wksp, output.wksp2, hexmap.name, spp.folder, changeTable=NA)
+nc.2.hxn <- function(variable, nc.file, hex.grid, theCentroids, max.value, hexsim.wksp, hexsim.wksp2, output.wksp, output.wksp2, hexmap.name, spp.folder, changeTable=NA, dimensions=c(3131,2075))
 {
 	
 	startTime <- Sys.time()
 	theData <- raster(nc.file, varname=variable)
-	if (is.na(changeTable)==FALSE) { theData <- subs(theData, changeTable) }
+	if (is.na(changeTable)[1]==FALSE) { theData <- subs(theData, changeTable) }
 	
 	extractedData <- extract(theData, hex.grid)
 	extractedData[is.na(extractedData)==TRUE] <- 0
@@ -24,7 +24,7 @@ nc.2.hxn <- function(variable, nc.file, hex.grid, theCentroids, max.value, hexsi
 	startTime <- Sys.time()
 	dir.create(path=paste(output.wksp,'Workspaces/',spp.folder,"/Spatial Data/Hexagons/",hexmap.name,sep=''), recursive=TRUE)
 	
-	command <- paste(substr(hexsim.wksp2,1,2),' && cd "',hexsim.wksp2,'\\currentHexSim" && HexMapConverter.exe "',hexsim.wksp2,'\\scratch_workspace\\',hexmap.name,'.csv" true true 3131 2075 true "',output.wksp2,'\\Workspaces\\',spp.folder,'\\Spatial Data\\Hexagons\\',hexmap.name,'"',sep='')
+	command <- paste(substr(hexsim.wksp2,1,2),' && cd "',hexsim.wksp2,'\\currentHexSim" && HexMapConverter.exe "',hexsim.wksp2,'\\scratch_workspace\\',hexmap.name,'.csv" true true ',dimensions[1],' ',dimensions[2],' true "',output.wksp2,'\\Workspaces\\',spp.folder,'\\Spatial Data\\Hexagons\\',hexmap.name,'"',sep='')
 	# The command line syntax quoted below works...
 	# 'C: && cd "C:\Users\cbwilsey\Documents\PostDoc\HexSim\currentHexSim\" && HexMapConverter.exe "C:\users\cbwilsey\documents\postdoc\hexsim\scratch_workspace\initial.dist.csv" true true 3131 2075 true "E:\HexSim\Workspaces\spotted_frog_v2\Spatial Data\Hexagons\initial.dist"'
 	

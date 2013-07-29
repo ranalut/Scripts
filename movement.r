@@ -17,11 +17,12 @@ move <- function(workspace,scenario,event,outcome,breaks,time.step=NA,population
 	if (is.na(time.step)==FALSE) { theData <- theData[theData$Time.Step==time.step,] }
 	# print(head(theData))
 	subData <- theData[grep(event,theData$Event.Name,value=FALSE,ignore.case=TRUE),] 
-	subData <- as.vector(subData[grep(outcome,theData$Outcome,value=FALSE,ignore.case=TRUE),'Meters.Displaced'])
+	if (is.na(outcome)==FALSE) { subData <- subData[grep(outcome,theData$Outcome,value=FALSE,ignore.case=TRUE),] }
+	subData <- as.vector(subData[,'Meters.Displaced'])
 	subData <- subData / 1000
 	# print(head(subData))
 	
-	hist(subData,freq=FALSE,breaks=breaks,xlab='distance (km)',main=paste(scenario,event,outcome,time.step,'\nmedian =',round(median(subData,na.rm=TRUE)),'max =',round(max(subData,na.rm=TRUE))))
+	hist(subData,freq=FALSE,breaks=breaks,xlab='distance (km)',main=paste(scenario,event,outcome,time.step,'\nmedian =',round(median(subData,na.rm=TRUE)),'max =',round(max(subData,na.rm=TRUE)),'n =',length(subData)))
 }
 
 # # Lynx
@@ -39,11 +40,11 @@ move <- function(workspace,scenario,event,outcome,breaks,time.step=NA,population
 run.report <- 'y'
 population <- 'wolverine'
 workspace <- 'F:/PNWCCVA_Data2/HexSim/Workspaces/wolverine_v1'
-scenario <- 'gulo.006c'
-breaks <- seq(0,2000,100)
-par(mfrow=c(2,2))
+scenario <- 'gulo.012b'
+breaks <- seq(0,750,50)
+par(mfrow=c(3,3))
 events <- 'annual'
-outcomes <- list(c('start','floater'))
+outcomes <- list(c(NA,'start','floater'))
 time.steps <- seq(11,15,1)
 
 command <- paste('F:/pnwccva_data2/hexsim/currenthexsim/OutputTransformer.exe -movement ',workspace,'/Results/',scenario,'/',scenario,'-[1]/',scenario,'.log',sep='')
