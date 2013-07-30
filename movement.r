@@ -37,15 +37,15 @@ move <- function(workspace,scenario,event,outcome,breaks,time.step=NA,population
 # time.steps <- seq(6,15,1)
 
 # # Wolverine
-run.report <- 'y'
 population <- 'wolverine'
 workspace <- 'F:/PNWCCVA_Data2/HexSim/Workspaces/wolverine_v1'
-scenario <- 'gulo.012b'
+scenario <- 'gulo.013'
+run.report <- 'n'
 breaks <- seq(0,750,50)
 par(mfrow=c(3,3))
 events <- 'annual'
 outcomes <- list(c(NA,'start','floater'))
-time.steps <- seq(11,15,1)
+time.steps <- seq(18,20,1)
 
 command <- paste('F:/pnwccva_data2/hexsim/currenthexsim/OutputTransformer.exe -movement ',workspace,'/Results/',scenario,'/',scenario,'-[1]/',scenario,'.log',sep='')
 if (run.report=='y') { shell(command) }
