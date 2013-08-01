@@ -27,13 +27,13 @@ output.wksp <- 'F:/PNWCCVA_Data2/HexSim/' #'E:/HexSim/'
 output.wksp2 <- 'F:\\PNWCCVA_Data2\\HexSim' # 'E:\\HexSim'
 spp.folder <- 'wolverine_v1'
 
-run.hex.grid <- 		'n'
+run.hex.grid <- 		'y'
 run.historical.swe <- 	'n'
 run.historical.mtwa <-  'n'
-run.biomes <- 			'y'
+run.biomes <- 			'n'
 run.initial <- 			'n'
 run.exclusion <- 		'n'
-run.future.swe <- 		'n'
+run.future.swe <- 		'y'
 
 startTime <- Sys.time()
 
@@ -55,19 +55,71 @@ if (run.hex.grid=='y')
 
 # ==========================================================================================================
 # Biomes
-
 if (run.biomes=='y')
 {
-	nc.2.hxn(
-		variable='biome_modal_30yr', 
-		nc.file='h:/vegetation/biome_modal_30yr_CRU_TS_2.10/wna30sec_CRU_TS_2.10_biome_modal_30yr_2000.nc', # "H:/vegetation/wna30sec_1961-1990_biomes_DRAFT_v1.nc", 
-		hex.grid=hex.grid[[2]], 
-		theCentroids=hex.grid[[1]],
-		max.value=Inf,
-		changeTable=data.frame(matrix(c(seq(1,12,1),c(2,2,1,0,2,1,0,0,0,0,0,0)),ncol=2)),
-		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='biomes2'
-		)
-}	
+	theGCMs <- c('CCSM3','CGCM3.1_t47','GISS-ER','MIROC3.2_medres','UKMO-HadCM3')
+	file.path <- 'H:/vegetation/26jul13_outputs/biome_modal_30yr_a2/'
+	file.name <- c('wna30sec_a2_','_biome_30-year_mean_')
+	# variable.folders <- 'snowfall_swe_balance_first_day_of_month_a2'
+
+	for (i in 1:5)
+	# for (i in 1)
+	{
+		startTime <- Sys.time()
+
+		for (j in 1:99)
+		# for (j in 1)
+		{
+			test <- file.exists(paste(output.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/',theGCMs[i],'.biomes.a2/',theGCMs[i],'.biomes.a2.',(10+j),'.hxn',sep=''))
+			if(test==TRUE) { cat(theGCMs[i],j,'\n'); next(j) }
+			
+			nc.2.hxn(
+				variable='biome', 
+				nc.file=paste(file.path,file.name[1],theGCMs[i],file.name[2],(2000+j),'.nc',sep=''), 
+				hex.grid=hex.grid[[2]], 
+				theCentroids=hex.grid[[1]],
+				max.value=Inf,
+				changeTable=data.frame(matrix(c(seq(1,12,1),c(2,2,1,0,2,1,0,0,0,0,0,0)),ncol=2)),
+				hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, 
+				hexmap.name=paste(theGCMs[i],'.biomes.a2',sep='')
+				)
+
+			file.copy(
+				from=paste(output.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/',theGCMs[i],'.biomes.a2/',theGCMs[i],'.biomes.a2.1.hxn',sep=''), 
+				to=paste(output.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/',theGCMs[i],'.biomes.a2/',theGCMs[i],'.biomes.a2.',(10+j),'.hxn',sep=''),
+				overwrite=TRUE
+				)
+			cat('Year',j,Sys.time()-startTime, 'minutes or seconds to create Hexmap', '\n') # 1.09 minutes...
+			# stop('cbw')
+		}
+		
+		# Present-day
+		nc.2.hxn(
+			variable='biome', 
+			nc.file="H:/vegetation/26jul13_outputs/biome_modal_30yr_CRU_TS_2.10/wna30sec_CRU_TS_2.10_biome_30-year_mean_2000.nc", 
+			hex.grid=hex.grid[[2]], 
+			theCentroids=hex.grid[[1]],
+			max.value=Inf,
+			changeTable=data.frame(matrix(c(seq(1,12,1),c(2,2,1,0,2,1,0,0,0,0,0,0)),ncol=2)),
+			hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name=paste(theGCMs[i],'.biomes.a2',sep='')
+			)
+	}
+}
+# # ==========================================================================================================
+# # Biomes
+
+# if (run.biomes=='y')
+# {
+	# nc.2.hxn(
+		# variable='biome_modal_30yr', 
+		# nc.file='h:/vegetation/biome_modal_30yr_CRU_TS_2.10/wna30sec_CRU_TS_2.10_biome_modal_30yr_2000.nc', # "H:/vegetation/wna30sec_1961-1990_biomes_DRAFT_v1.nc", 
+		# hex.grid=hex.grid[[2]], 
+		# theCentroids=hex.grid[[1]],
+		# max.value=Inf,
+		# changeTable=data.frame(matrix(c(seq(1,12,1),c(2,2,1,0,2,1,0,0,0,0,0,0)),ncol=2)),
+		# hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='biomes2'
+		# )
+# }	
 
 # ==========================================================================================================
 # Initial Dist Map

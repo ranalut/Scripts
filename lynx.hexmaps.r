@@ -29,13 +29,14 @@ spp.folder <- 'lynx_v1'
 
 run.hex.grid <- 		'n'
 run.historical.swe <- 	'n'
-run.historical.fire <- 	'n'
-run.biomes <- 			'y'
-run.streams <- 			'n'
+run.historical.fire <- 	'n'	# Not going to include this
+run.biomes <- 			'n'
+run.streams <- 			'n' # Not including this
 run.initial <- 			'n'
 run.exclusion <- 		'n'
 run.coastal <- 			'n'
-run.future.swe <- 		'n'
+run.future.swe <- 		'n'	# Copied these hexmaps from Spotted Frog workspace.
+run.water.excl <-		'y'
 
 startTime <- Sys.time()
 
@@ -97,22 +98,6 @@ if (run.historical.swe=='y')
 		)
 }
 # stop('cbw')
-
-
-# ==========================================================================================================
-# Streams Map
-
-if (run.streams=='y')
-{
-	nc.2.hxn(
-		variable='streams', 
-		nc.file="C:/Users/cbwilsey/Documents/PostDoc/HexSim/Workspaces/spotted_frog_v2/Spatial Data/streams_v2.nc", 
-		hex.grid=hex.grid[[2]], 
-		theCentroids=hex.grid[[1]],
-		max.value=Inf, 
-		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='streams'
-		)
-}
 
 # ==========================================================================================================
 # Biomes
@@ -197,6 +182,21 @@ if (run.coastal=='y')
 		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='coast.interior'
 		)
 }	
+
+# ==========================================================================================================
+# Water Exclusion
+
+if (run.water.excl=='y')
+{
+	nc.2.hxn(
+		variable='lakes', 
+		nc.file="F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1/Spatial Data/lakes_wgs84.nc",
+		hex.grid=hex.grid[[2]], 
+		theCentroids=hex.grid[[1]],
+		max.value=Inf, 
+		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='lakes'
+		)
+}
 
 # ==========================================================================================================
 # Exclusion SW Range

@@ -25,27 +25,27 @@ move <- function(workspace,scenario,event,outcome,breaks,time.step=NA,population
 	hist(subData,freq=FALSE,breaks=breaks,xlab='distance (km)',main=paste(scenario,event,outcome,time.step,'\nmedian =',round(median(subData,na.rm=TRUE)),'max =',round(max(subData,na.rm=TRUE)),'n =',length(subData)))
 }
 
-# # Lynx
-# run.report <- 'n'
-# population <- 'lynx'
-# workspace <- 'F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1'
-# scenario <- 'lynx.035c'
-# breaks <- seq(0,1000,100)
-# par(mfrow=c(2,2))
-# events <- 'subadult' # previously c('ranges','young','subadult')
-# outcomes <- list(c('start','floater')) # previously list('start','join',c('start','floater'))
-# time.steps <- seq(6,15,1)
+# Lynx
+run.report <- 'y'
+population <- 'lynx'
+workspace <- 'F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1'
+scenario <- 'lynx.035f'
+breaks <- seq(0,1000,100)
+par(mfrow=c(3,3))
+events <- 'subadult' # previously c('ranges','young','subadult')
+outcomes <- list(c(NA,'start','floater')) # previously list('start','join',c('start','floater'))
+time.steps <- seq(6,15,1)
 
 # # Wolverine
-population <- 'wolverine'
-workspace <- 'F:/PNWCCVA_Data2/HexSim/Workspaces/wolverine_v1'
-scenario <- 'gulo.013'
-run.report <- 'n'
-breaks <- seq(0,750,50)
-par(mfrow=c(3,3))
-events <- 'annual'
-outcomes <- list(c(NA,'start','floater'))
-time.steps <- seq(18,20,1)
+# population <- 'wolverine'
+# workspace <- 'F:/PNWCCVA_Data2/HexSim/Workspaces/wolverine_v1'
+# scenario <- 'gulo.013'
+# run.report <- 'n'
+# breaks <- seq(0,750,50)
+# par(mfrow=c(3,3))
+# events <- 'annual'
+# outcomes <- list(c(NA,'start','floater'))
+# time.steps <- seq(18,20,1)
 
 command <- paste('F:/pnwccva_data2/hexsim/currenthexsim/OutputTransformer.exe -movement ',workspace,'/Results/',scenario,'/',scenario,'-[1]/',scenario,'.log',sep='')
 if (run.report=='y') { shell(command) }
