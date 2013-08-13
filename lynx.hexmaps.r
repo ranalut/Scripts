@@ -27,15 +27,17 @@ output.wksp <- 'F:/PNWCCVA_Data2/HexSim/' #'E:/HexSim/'
 output.wksp2 <- 'F:\\PNWCCVA_Data2\\HexSim' # 'E:\\HexSim'
 spp.folder <- 'lynx_v1'
 
-run.hex.grid <- 		'n'
+run.hex.grid <- 		'y'
 run.historical.swe <- 	'n'
-run.historical.fire <- 	'n'
+run.historical.fire <- 	'n'	# Not going to include this
 run.biomes <- 			'n'
-run.streams <- 			'n'
+run.streams <- 			'n' # Not including this
 run.initial <- 			'n'
-run.exclusion <- 		'y'
+run.exclusion <- 		'n'
 run.coastal <- 			'n'
-run.future.swe <- 		'n'
+run.future.swe <- 		'n'	# Copied these hexmaps from Spotted Frog workspace.
+run.water.excl <-		'n'
+run.eco.reg <- 			'y'
 
 startTime <- Sys.time()
 
@@ -54,48 +56,6 @@ if (run.hex.grid=='y')
 		proj4='+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0'
 		)
 }
-# ==============================================================================================================
-# Historical Fire Fraction
-
-if (run.historical.fire=='y')
-{
-	file.path <- 'H:/bioclimate/annual/CRU_TS2.1_1901-2000/' # 'D:/PNWCCVA_Data1/bioclimate/annual/CRU_TS2.1_1901-2000/'
-	file.name <- '/wna30sec_CRU_TS2.1_lpj_'
-	variable.folders <- 'afirefrac'
-	
-	all.file.paths <- list()
-	for (j in 1:100) { all.file.paths[[j]] <- paste(file.path,variable.folders,file.name,variable.folders,'_',(1900+j),'.nc',sep='') }
-	
-	# calc.swe(file.path=file.path,file.name=file.name,variable.folders=variable.folders,month=13)
-	calc.swe(
-		all.file.paths.in=all.file.paths,
-		file.path.out=paste(file.path,variable.folders,sep=''),
-		variable='firefrac',
-		month='ann'
-		)
-	
-	# stop('cbw')
-
-	# Create the HexMap
-	nc.2.hxn(
-		variable='mean_firefrac_ann', 
-		nc.file="H:/bioclimate/annual/CRU_TS2.1_1901-2000/afirefrac/mean_firefrac_ann.nc", # "D:/PNWCCVA_Data1/bioclimate/annual/CRU_TS2.1_1901-2000/snowfall_swe_balance/mean_swe_march.nc"
-		hex.grid=hex.grid[[2]], 
-		theCentroids=hex.grid[[1]],
-		max.value=Inf, 
-		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='mean.fire.ann'
-		)
-
-	nc.2.hxn(
-		variable='sd_firefrac_ann', 
-		nc.file="H:/bioclimate/annual/CRU_TS2.1_1901-2000/afirefrac/sd_firefrac_ann.nc", # "D:/PNWCCVA_Data1/bioclimate/annual/CRU_TS2.1_1901-2000/snowfall_swe_balance/mean_swe_march.nc"
-		hex.grid=hex.grid[[2]], 
-		theCentroids=hex.grid[[1]],
-		max.value=Inf, 
-		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='sd.fire.ann'
-		)
-}
-# stop('cbw')
 
 # ==============================================================================================================
 # Historical SWE
@@ -140,37 +100,58 @@ if (run.historical.swe=='y')
 }
 # stop('cbw')
 
-
-# ==========================================================================================================
-# Streams Map
-
-if (run.streams=='y')
-{
-	nc.2.hxn(
-		variable='streams', 
-		nc.file="C:/Users/cbwilsey/Documents/PostDoc/HexSim/Workspaces/spotted_frog_v2/Spatial Data/streams_v2.nc", 
-		hex.grid=hex.grid[[2]], 
-		theCentroids=hex.grid[[1]],
-		max.value=Inf, 
-		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='streams'
-		)
-}
-
 # ==========================================================================================================
 # Biomes
-
 if (run.biomes=='y')
 {
-	nc.2.hxn(
-		variable='biome', 
-		nc.file="H:/vegetation/wna30sec_1961-1990_biomes_DRAFT_v1.nc", 
-		hex.grid=hex.grid[[2]], 
-		theCentroids=hex.grid[[1]],
-		max.value=Inf,
-		changeTable=data.frame(matrix(c(seq(1,7,1),c(1,1,0,1,0,0,0)),ncol=2)),
-		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='biomes'
-		)
-}	
+	theGCMs <- c('CCSM3','CGCM3.1_t47','GISS-ER','MIROC3.2_medres','UKMO-HadCM3')
+	file.path <- 'H:/vegetation/26jul13_outputs/biome_modal_30yr_a2/'
+	file.name <- c('wna30sec_a2_','_biome_30-year_mean_')
+	# variable.folders <- 'snowfall_swe_balance_first_day_of_month_a2'
+
+	for (i in 1:5)
+	# for (i in 1)
+	{
+		startTime <- Sys.time()
+
+		for (j in 1:99)
+		# for (j in 1)
+		{
+			test <- file.exists(paste(output.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/',theGCMs[i],'.biomes.a2/',theGCMs[i],'.biomes.a2.',(10+j),'.hxn',sep=''))
+			if(test==TRUE) { cat(theGCMs[i],j,'\n'); next(j) }
+			
+			nc.2.hxn(
+				variable='biome', 
+				nc.file=paste(file.path,file.name[1],theGCMs[i],file.name[2],(2000+j),'.nc',sep=''), 
+				hex.grid=hex.grid[[2]], 
+				theCentroids=hex.grid[[1]],
+				max.value=Inf,
+				changeTable=data.frame(matrix(c(seq(1,12,1),c(0,1,1,0,1,1,0,0,0,0,0,0)),ncol=2)),
+				hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, 
+				hexmap.name=paste(theGCMs[i],'.biomes.a2',sep='')
+				)
+
+			file.copy(
+				from=paste(output.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/',theGCMs[i],'.biomes.a2/',theGCMs[i],'.biomes.a2.1.hxn',sep=''), 
+				to=paste(output.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/',theGCMs[i],'.biomes.a2/',theGCMs[i],'.biomes.a2.',(10+j),'.hxn',sep=''),
+				overwrite=TRUE
+				)
+			cat('Year',j,Sys.time()-startTime, 'minutes or seconds to create Hexmap', '\n') # 1.09 minutes...
+			# stop('cbw')
+		}
+		
+		# Present-day
+		nc.2.hxn(
+			variable='biome', 
+			nc.file="H:/vegetation/26jul13_outputs/biome_modal_30yr_CRU_TS_2.10/wna30sec_CRU_TS_2.10_biome_30-year_mean_2000.nc", 
+			hex.grid=hex.grid[[2]], 
+			theCentroids=hex.grid[[1]],
+			max.value=Inf,
+			changeTable=data.frame(matrix(c(seq(1,12,1),c(0,1,1,0,1,1,0,0,0,0,0,0)),ncol=2)),
+			hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name=paste(theGCMs[i],'.biomes.a2',sep='')
+			)
+	}
+}
 
 # ==========================================================================================================
 # Initial Dist Map
@@ -204,17 +185,47 @@ if (run.coastal=='y')
 }	
 
 # ==========================================================================================================
+# Water Exclusion
+
+if (run.water.excl=='y')
+{
+	nc.2.hxn(
+		variable='lakes', 
+		nc.file="F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1/Spatial Data/lakes_wgs84.nc",
+		hex.grid=hex.grid[[2]], 
+		theCentroids=hex.grid[[1]],
+		max.value=Inf, 
+		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='lakes'
+		)
+}
+
+# ==========================================================================================================
+# Ecoregions
+
+if (run.eco.reg=='y')
+{
+	nc.2.hxn(
+		variable='eco_id', 
+		nc.file="F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1/Spatial Data/tnc_eco_v1.nc",
+		hex.grid=hex.grid[[2]], 
+		theCentroids=hex.grid[[1]],
+		max.value=Inf, 
+		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='eco.reg'
+		)
+}
+
+# ==========================================================================================================
 # Exclusion SW Range
 
 if (run.exclusion=='y')
 {
 	nc.2.hxn(
 		variable='sw_range', 
-		nc.file="F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1/Spatial Data/sw_range2.nc", 
+		nc.file="F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1/Spatial Data/sw_range3.nc", 
 		hex.grid=hex.grid[[2]], 
 		theCentroids=hex.grid[[1]],
 		max.value=Inf, 
-		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='sw.range2'
+		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='sw.range3'
 		)
 }	
 
@@ -276,3 +287,47 @@ if (run.future.swe=='y')
 			)
 	}
 }
+
+# ==============================================================================================================
+# Historical Fire Fraction
+
+if (run.historical.fire=='y')
+{
+	file.path <- 'H:/bioclimate/annual/CRU_TS2.1_1901-2000/' # 'D:/PNWCCVA_Data1/bioclimate/annual/CRU_TS2.1_1901-2000/'
+	file.name <- '/wna30sec_CRU_TS2.1_lpj_'
+	variable.folders <- 'afirefrac'
+	
+	all.file.paths <- list()
+	for (j in 1:100) { all.file.paths[[j]] <- paste(file.path,variable.folders,file.name,variable.folders,'_',(1900+j),'.nc',sep='') }
+	
+	# calc.swe(file.path=file.path,file.name=file.name,variable.folders=variable.folders,month=13)
+	calc.swe(
+		all.file.paths.in=all.file.paths,
+		file.path.out=paste(file.path,variable.folders,sep=''),
+		variable='firefrac',
+		month='ann'
+		)
+	
+	# stop('cbw')
+
+	# Create the HexMap
+	nc.2.hxn(
+		variable='mean_firefrac_ann', 
+		nc.file="H:/bioclimate/annual/CRU_TS2.1_1901-2000/afirefrac/mean_firefrac_ann.nc", # "D:/PNWCCVA_Data1/bioclimate/annual/CRU_TS2.1_1901-2000/snowfall_swe_balance/mean_swe_march.nc"
+		hex.grid=hex.grid[[2]], 
+		theCentroids=hex.grid[[1]],
+		max.value=Inf, 
+		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='mean.fire.ann'
+		)
+
+	nc.2.hxn(
+		variable='sd_firefrac_ann', 
+		nc.file="H:/bioclimate/annual/CRU_TS2.1_1901-2000/afirefrac/sd_firefrac_ann.nc", # "D:/PNWCCVA_Data1/bioclimate/annual/CRU_TS2.1_1901-2000/snowfall_swe_balance/mean_swe_march.nc"
+		hex.grid=hex.grid[[2]], 
+		theCentroids=hex.grid[[1]],
+		max.value=Inf, 
+		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='sd.fire.ann'
+		)
+}
+# stop('cbw')
+
