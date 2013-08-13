@@ -31,7 +31,10 @@ run.hex.grid <- 		'n'
 run.historical.swe <- 	'n'
 run.streams <- 			'n'
 run.initial <- 			'n'
-run.future.swe <- 		'y'
+run.future.swe <- 		'n'
+run.hist.aet.mam <- 	'n'
+run.hist.aet.jja <- 	'n'
+run.future.aet <-		c('y','mam')
 
 startTime <- Sys.time()
 
@@ -134,6 +137,90 @@ if (run.initial=='y')
 }	
 # stop('cbw')
 
+# ==============================================================================================================
+# Historical AET MAM
+
+if (run.hist.aet.mam=='y')
+{
+	file.path <- 'H:/bioclimate/annual/CRU_TS2.1_1901-2000/' # 'D:/PNWCCVA_Data1/bioclimate/annual/CRU_TS2.1_1901-2000/'
+	file.name <- '/wna30sec_CRU_TS_2.10_'
+	variable.folders <- 'aet_mam_v1'
+	
+	all.file.paths <- list()
+	for (j in 1:100) { all.file.paths[[j]] <- paste(file.path,variable.folders,file.name,variable.folders,'_',(1900+j),'.nc',sep='') }
+	
+	# calc.swe(file.path=file.path,file.name=file.name,variable.folders=variable.folders,month=13)
+	calc.swe(
+		all.file.paths.in=all.file.paths,
+		file.path.out=paste(file.path,variable.folders,sep=''),
+		variable='aet',
+		month='mam'
+		)
+	
+	# stop('cbw')
+
+	# Create the HexMap
+	nc.2.hxn(
+		variable='mean_aet_mam', 
+		nc.file="H:/bioclimate/annual/CRU_TS2.1_1901-2000/aet_mam_v1/mean_aet_mam.nc", # "D:/PNWCCVA_Data1/bioclimate/annual/CRU_TS2.1_1901-2000/snowfall_swe_balance/mean_swe_march.nc"
+		hex.grid=hex.grid[[2]], 
+		theCentroids=hex.grid[[1]],
+		max.value=Inf, 
+		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='mean.aet.mam'
+		)
+
+	nc.2.hxn(
+		variable='sd_aet_mam', 
+		nc.file="H:/bioclimate/annual/CRU_TS2.1_1901-2000/aet_mam_v1/sd_aet_mam.nc", # "D:/PNWCCVA_Data1/bioclimate/annual/CRU_TS2.1_1901-2000/snowfall_swe_balance/mean_swe_march.nc"
+		hex.grid=hex.grid[[2]], 
+		theCentroids=hex.grid[[1]],
+		max.value=Inf, 
+		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='sd.aet.mam'
+		)
+}
+
+# =========================================================================================================
+# Historical AET JJA
+
+if (run.hist.aet.jja=='y')
+{
+	file.path <- 'H:/bioclimate/annual/CRU_TS2.1_1901-2000/' # 'D:/PNWCCVA_Data1/bioclimate/annual/CRU_TS2.1_1901-2000/'
+	file.name <- '/wna30sec_CRU_TS_2.10_'
+	variable.folders <- 'aet_jja_v1'
+	
+	all.file.paths <- list()
+	for (j in 1:100) { all.file.paths[[j]] <- paste(file.path,variable.folders,file.name,variable.folders,'_',(1900+j),'.nc',sep='') }
+	
+	# calc.swe(file.path=file.path,file.name=file.name,variable.folders=variable.folders,month=13)
+	calc.swe(
+		all.file.paths.in=all.file.paths,
+		file.path.out=paste(file.path,variable.folders,sep=''),
+		variable='aet',
+		month='jja'
+		)
+	
+	# stop('cbw')
+
+	# Create the HexMap
+	nc.2.hxn(
+		variable='mean_aet_jja', 
+		nc.file="H:/bioclimate/annual/CRU_TS2.1_1901-2000/aet_jja_v1/mean_aet_jja.nc", # "D:/PNWCCVA_Data1/bioclimate/annual/CRU_TS2.1_1901-2000/snowfall_swe_balance/mean_swe_march.nc"
+		hex.grid=hex.grid[[2]], 
+		theCentroids=hex.grid[[1]],
+		max.value=Inf, 
+		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='mean.aet.jja'
+		)
+
+	nc.2.hxn(
+		variable='sd_aet_jja', 
+		nc.file="H:/bioclimate/annual/CRU_TS2.1_1901-2000/aet_jja_v1/sd_aet_jja.nc", # "D:/PNWCCVA_Data1/bioclimate/annual/CRU_TS2.1_1901-2000/snowfall_swe_balance/mean_swe_march.nc"
+		hex.grid=hex.grid[[2]], 
+		theCentroids=hex.grid[[1]],
+		max.value=Inf, 
+		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='sd.aet.jja'
+		)
+}
+
 # ========================================================================================================
 # Calculating Deficit from AET and PET and writing deficit to netCDF files...
 
@@ -188,6 +275,53 @@ if (run.future.swe=='y')
 		file.copy(
 			from=paste(output.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/mean.swe.max/mean.swe.max.1.hxn',sep=''), 
 			to=paste(output.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/',theGCMs[i],'.max.swe/',theGCMs[i],'.max.swe.1.hxn',sep=''),
+			overwrite=TRUE
+			)
+	}
+}
+
+# ==========================================================================================================
+# Making hexmaps from AET projections
+
+if (run.future.aet[1]=='y')
+{
+	the.months <- run.future.aet[2]
+	theGCMs <- c('CCSM3','CGCM3.1_t47','GISS-ER','MIROC3.2_medres','UKMO-HadCM3')
+	file.path <- 'H:/bioclimate/annual/a2/' # 'E:/bioclimate/annual/a2/' # file.path <- 'D:/PNWCCVA_Data1/bioclimate/annual/CRU_TS2.1_1901-2000/'
+	file.name <- c('wna30sec_a2_',paste('aet_',the.months,'_v1',sep=''))
+	variable.folders <- paste('aet_',the.months,'_a2_v1',sep='')
+
+	for (i in 1:5)
+	{
+		startTime <- Sys.time()
+
+		for (j in 1:99)
+		# for (j in 1)
+		{
+						
+			nc.2.hxn(
+				variable=paste('aet_',the.months,sep=''), 
+				nc.file=paste(file.path,variable.folders,'/',file.name[1],theGCMs[i],'_',file.name[2],'_',(2000+j),'.nc',sep=''), 
+				hex.grid=hex.grid[[2]], 
+				theCentroids=hex.grid[[1]],
+				max.value=2000, 
+				hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, 
+				hexmap.name=paste(theGCMs[i],'.aet.',the.months,sep='')
+				)
+
+			file.copy(
+				from=paste(output.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/',theGCMs[i],'.aet.',the.months,'/',theGCMs[i],'.aet.',the.months,'.1.hxn',sep=''), 
+				to=paste(output.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/',theGCMs[i],'.aet.',the.months,'/',theGCMs[i],'.aet.',the.months,'.',(10+j),'.hxn',sep=''),
+				overwrite=TRUE
+				)
+			cat('Year',j,Sys.time()-startTime, 'minutes or seconds to create Hexmap', '\n') # 1.09 minutes...
+			# stop('cbw')
+		}
+		
+		# Replace timestep 1 with historical mean.
+		file.copy(
+			from=paste(output.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/mean.aet.',the.months,'/mean.aet.',the.months,'.1.hxn',sep=''), 
+			to=paste(output.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/',theGCMs[i],'.aet.',the.months,'/',theGCMs[i],'.aet.',the.months,'.1.hxn',sep=''),
 			overwrite=TRUE
 			)
 	}

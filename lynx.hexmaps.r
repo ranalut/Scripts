@@ -27,7 +27,7 @@ output.wksp <- 'F:/PNWCCVA_Data2/HexSim/' #'E:/HexSim/'
 output.wksp2 <- 'F:\\PNWCCVA_Data2\\HexSim' # 'E:\\HexSim'
 spp.folder <- 'lynx_v1'
 
-run.hex.grid <- 		'n'
+run.hex.grid <- 		'y'
 run.historical.swe <- 	'n'
 run.historical.fire <- 	'n'	# Not going to include this
 run.biomes <- 			'n'
@@ -36,7 +36,8 @@ run.initial <- 			'n'
 run.exclusion <- 		'n'
 run.coastal <- 			'n'
 run.future.swe <- 		'n'	# Copied these hexmaps from Spotted Frog workspace.
-run.water.excl <-		'y'
+run.water.excl <-		'n'
+run.eco.reg <- 			'y'
 
 startTime <- Sys.time()
 
@@ -195,6 +196,21 @@ if (run.water.excl=='y')
 		theCentroids=hex.grid[[1]],
 		max.value=Inf, 
 		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='lakes'
+		)
+}
+
+# ==========================================================================================================
+# Ecoregions
+
+if (run.eco.reg=='y')
+{
+	nc.2.hxn(
+		variable='eco_id', 
+		nc.file="F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1/Spatial Data/tnc_eco_v1.nc",
+		hex.grid=hex.grid[[2]], 
+		theCentroids=hex.grid[[1]],
+		max.value=Inf, 
+		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='eco.reg'
 		)
 }
 
