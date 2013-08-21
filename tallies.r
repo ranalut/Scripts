@@ -18,21 +18,36 @@ tally2 <- function(hexsim.wksp, hexsim.wksp2, spp.folder, scenario.name, tally.t
 tally2(
 	hexsim.wksp <- 'D:/Data/wilsey/',
 	hexsim.wksp2 <- 'D:\\Data\\wilsey',
-	spp.folder <- 'lynx_v1',
-	scenario.name <- 'lynx.041b',
+	spp.folder <- 'wolverine_v1',
+	scenario.name <- 'gulo.017.a2.miroc',
 	tally.type <- 'n',
-	start.year <- 10,
-	stop.year <- 36
+	start.year <- 81,
+	stop.year <- 110
 	)
-
+	
 # tally(
 	# hexsim.wksp <- 'F:/PNWCCVA_Data2/HexSim/',
 	# hexsim.wksp2 <- 'F:\\PNWCCVA_Data2\\HexSim',
-	# spp.folder <- 'spotted_frog_v2',
-	# scenario.name <- 'rana.lut.65b3',
-	# tally.type <- 'd',
-	# start.year <- 14,
-	# stop.year <- 14
+	# spp.folder <- 'lynx_v1',
+	# scenario.name <- i,
+	# tally.type <- 'n',
+	# start.year <- 81,
+	# stop.year <- 108
 	# )
 
+scenarios <- c('lynx.041b.ccsm3','lynx.041b.cgcm3','lynx.041b2.giss-er','lynx.041b.miroc','lynx.041b2.hadcm3')
+	
+for (i in scenarios)
+{
+	tally(
+		hexsim.wksp <- 'F:/PNWCCVA_Data2/HexSim/',
+		hexsim.wksp2 <- 'F:\\PNWCCVA_Data2\\HexSim',
+		spp.folder <- 'lynx_v1',
+		scenario.name <- i,
+		tally.type <- 'n',
+		start.year <- 81,
+		stop.year <- 108
+		)
+	print(i)
+}
 
