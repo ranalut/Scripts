@@ -27,14 +27,14 @@ output.wksp <- 'H:/HexSim/' #'E:/HexSim/'
 output.wksp2 <- 'H:\\HexSim' # 'E:\\HexSim'
 spp.folder <- 'spotted_frog_v2'
 
-run.hex.grid <- 		'n'
+run.hex.grid <- 		'y'
 run.historical.swe <- 	'n'
 run.streams <- 			'n'
 run.initial <- 			'n'
 run.future.swe <- 		'n'
 run.hist.aet.mam <- 	'n'
 run.hist.aet.jja <- 	'n'
-run.future.aet <-		c('y','mam')
+run.future.aet <-		c('y','jja')
 
 startTime <- Sys.time()
 

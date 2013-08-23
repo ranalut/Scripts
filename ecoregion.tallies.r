@@ -25,7 +25,7 @@ eco.tally <- function(hexsim.wksp,spp.folder,scenario,tally.name='BirthsMinusDea
 	output.map <- output.map[,c('Hex_ID','Sum')]
 	
 	write.csv(output.map, paste(hexsim.wksp,'Workspaces/',spp.folder,'/Results/',scenario,'/',scenario,'-[1]/eco.',tally.name,'.csv',sep=''),row.names=FALSE)
-	
+	write.csv(the.sums, paste(hexsim.wksp,'Workspaces/',spp.folder,'/Results/',scenario,'/',scenario,'-[1]/eco.',tally.name,'.table.csv',sep=''),row.names=FALSE)
 	return(the.sums)
 }
 
@@ -34,19 +34,19 @@ eco.reg <- read.csv('f:/pnwccva_data2/hexsim/workspaces/lynx_v1/analysis/ecoregi
 # print(head(eco.reg))
 # cat('load ecoregions\n')
 	
-# baseline.sum <- eco.tally(
-						# hexsim.wksp <- 'F:/PNWCCVA_Data2/HexSim/',
-						# spp.folder='lynx_v1',
-						# scenario='lynx.041b',
-						# tally.name='BirthsMinusDeaths',
-						# eco.reg=eco.reg
-						# )
+baseline.sum <- eco.tally(
+						hexsim.wksp <- 'F:/PNWCCVA_Data2/HexSim/',
+						spp.folder='lynx_v1',
+						scenario='lynx.041b',
+						tally.name='BirthsMinusDeaths',
+						eco.reg=eco.reg
+						)
 
 scenarios <- c('lynx.041b.ccsm3','lynx.041b.cgcm3','lynx.041b2.giss-er','lynx.041b.miroc','lynx.041b2.hadcm3')
 
 for (i in scenarios)
 {
-	baseline.sum <- eco.tally(
+	future.sum <- eco.tally(
 							hexsim.wksp <- 'F:/PNWCCVA_Data2/HexSim/',
 							spp.folder='lynx_v1',
 							scenario=i,
