@@ -2,15 +2,31 @@
 eco.tally <- function(hexsim.wksp,spp.folder,scenario,tally.name='BirthsMinusDeaths',eco.reg)
 {
 	# file.remove(paste(hexsim.wksp,'Workspaces/',spp.folder,'/Results/',scenario,'/',scenario,'-[1]/eco.',tally.name,'.csv',sep=''))
-	
+	print(tally.name)
+	the.data <- list()
 	# Tally
-	file.names <- dir(paste(hexsim.wksp,'Workspaces/',spp.folder,'/Results/',scenario,'/',scenario,'-[1]/',sep=''))
-	the.file <- grep(paste(tally.name,'_TALLY',sep=''),file.names,value=TRUE)
-	the.data <- read.csv(paste(hexsim.wksp,'Workspaces/',spp.folder,'/Results/',scenario,'/',scenario,'-[1]/',the.file,sep=''),header=TRUE)
-	print(head(the.data))
-	cat('load tally\n')
-	# print(head(baseline)); stop('cbw')
-
+	for (i in 1:length(tally.name))
+	{
+		file.names <- dir(paste(hexsim.wksp,'Workspaces/',spp.folder,'/Results/',scenario,'/',scenario,'-[1]/',sep=''))
+		# print(file.names)
+		the.file <- grep(paste('_',tally.name[i],'_TALLY',sep=''),file.names,value=TRUE)
+		# print(the.file)
+		the.data[[i]] <- read.csv(paste(hexsim.wksp,'Workspaces/',spp.folder,'/Results/',scenario,'/',scenario,'-[1]/',the.file,sep=''),header=TRUE)
+		# print(head(the.data[[i]]))
+		cat(i,' load tally\n')
+		# print(head(baseline)); stop('cbw')
+	}
+	
+	if (length(tally.name)==2 & tally.name[1]=='Births' & tally.name[2]=='Deaths')
+	{
+		temp <- the.data[[1]]
+		temp$Value <- the.data[[1]]$Value - the.data[[2]]$Value
+		cat('Subtracted Deaths from Births\n')
+		write.csv(temp, paste(hexsim.wksp,'Workspaces/',spp.folder,'/Results/',scenario,'/',scenario,'-[1]/',paste(tally.name,collapse=''),'.csv',sep=''),row.names=FALSE)
+	}
+	else { temp <- the.data[[1]] }
+	the.data <- temp
+	
 	# the.data <- data.frame(the.data,Eco=eco.reg$Value)
 	the.sums <- aggregate(the.data$Value,by=list(eco.reg$Step_1),FUN=sum)
 	the.sums$x <- round(the.sums$x)
@@ -24,8 +40,8 @@ eco.tally <- function(hexsim.wksp,spp.folder,scenario,tally.name='BirthsMinusDea
 	# print(head(output.map))
 	output.map <- output.map[,c('Hex_ID','Sum')]
 	
-	write.csv(output.map, paste(hexsim.wksp,'Workspaces/',spp.folder,'/Results/',scenario,'/',scenario,'-[1]/eco.',tally.name,'.csv',sep=''),row.names=FALSE)
-	write.csv(the.sums, paste(hexsim.wksp,'Workspaces/',spp.folder,'/Results/',scenario,'/',scenario,'-[1]/eco.',tally.name,'.table.csv',sep=''),row.names=FALSE)
+	write.csv(output.map, paste(hexsim.wksp,'Workspaces/',spp.folder,'/Results/',scenario,'/',scenario,'-[1]/eco.',paste(tally.name,collapse=''),'.csv',sep=''),row.names=FALSE)
+	write.csv(the.sums, paste(hexsim.wksp,'Workspaces/',spp.folder,'/Results/',scenario,'/',scenario,'-[1]/eco.',paste(tally.name,collapse=''),'.table.csv',sep=''),row.names=FALSE)
 	return(the.sums)
 }
 
@@ -38,9 +54,10 @@ baseline.sum <- eco.tally(
 						hexsim.wksp <- 'F:/PNWCCVA_Data2/HexSim/',
 						spp.folder='lynx_v1',
 						scenario='lynx.041b',
-						tally.name='BirthsMinusDeaths',
+						tally.name=c('Births','Deaths'),
 						eco.reg=eco.reg
 						)
+stop('cbw')
 
 scenarios <- c('lynx.041b.ccsm3','lynx.041b.cgcm3','lynx.041b2.giss-er','lynx.041b.miroc','lynx.041b2.hadcm3')
 
@@ -50,7 +67,20 @@ for (i in scenarios)
 							hexsim.wksp <- 'F:/PNWCCVA_Data2/HexSim/',
 							spp.folder='lynx_v1',
 							scenario=i,
-							tally.name='BirthsMinusDeaths',
+							tally.name=c('Births','Deaths'),
+							eco.reg=eco.reg
+							)
+}
+
+scenarios <- c('gulo.017.baseline','gulo.017.a2.ccsm3','gulo.017.a2.cgcm3','gulo.017.a2.giss-er','gulo.017.a2.miroc','gulo.017.a2.hadcm3')
+
+for (i in scenarios)
+{
+	future.sum <- eco.tally(
+							hexsim.wksp <- 'F:/PNWCCVA_Data2/HexSim/',
+							spp.folder='wolverine_v1',
+							scenario=i,
+							tally.name=c('Births','Deaths'),
 							eco.reg=eco.reg
 							)
 }
