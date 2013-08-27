@@ -1,5 +1,5 @@
 
-eco.tally <- function(hexsim.wksp,spp.folder,scenario,tally.name='BirthsMinusDeaths',eco.reg)
+eco.tally <- function(hexsim.wksp,spp.folder,scenario,tally.name,eco.reg)
 {
 	# file.remove(paste(hexsim.wksp,'Workspaces/',spp.folder,'/Results/',scenario,'/',scenario,'-[1]/eco.',tally.name,'.csv',sep=''))
 	print(tally.name)
@@ -50,27 +50,27 @@ eco.reg <- read.csv('f:/pnwccva_data2/hexsim/workspaces/lynx_v1/analysis/ecoregi
 # print(head(eco.reg))
 # cat('load ecoregions\n')
 	
-baseline.sum <- eco.tally(
-						hexsim.wksp <- 'F:/PNWCCVA_Data2/HexSim/',
-						spp.folder='lynx_v1',
-						scenario='lynx.041b',
-						tally.name=c('Births','Deaths'),
-						eco.reg=eco.reg
-						)
-stop('cbw')
+# baseline.sum <- eco.tally(
+						# hexsim.wksp <- 'F:/PNWCCVA_Data2/HexSim/',
+						# spp.folder='lynx_v1',
+						# scenario='lynx.041b',
+						# tally.name=c('Births','Deaths'),
+						# eco.reg=eco.reg
+						# )
+# stop('cbw')
 
-scenarios <- c('lynx.041b.ccsm3','lynx.041b.cgcm3','lynx.041b2.giss-er','lynx.041b.miroc','lynx.041b2.hadcm3')
+# scenarios <- c('lynx.041b.ccsm3','lynx.041b.cgcm3','lynx.041b2.giss-er','lynx.041b.miroc','lynx.041b2.hadcm3')
 
-for (i in scenarios)
-{
-	future.sum <- eco.tally(
-							hexsim.wksp <- 'F:/PNWCCVA_Data2/HexSim/',
-							spp.folder='lynx_v1',
-							scenario=i,
-							tally.name=c('Births','Deaths'),
-							eco.reg=eco.reg
-							)
-}
+# for (i in scenarios)
+# {
+	# future.sum <- eco.tally(
+							# hexsim.wksp <- 'F:/PNWCCVA_Data2/HexSim/',
+							# spp.folder='lynx_v1',
+							# scenario=i,
+							# tally.name=c('Births','Deaths'),
+							# eco.reg=eco.reg
+							# )
+# }
 
 scenarios <- c('gulo.017.baseline','gulo.017.a2.ccsm3','gulo.017.a2.cgcm3','gulo.017.a2.giss-er','gulo.017.a2.miroc','gulo.017.a2.hadcm3')
 

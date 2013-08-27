@@ -24,19 +24,20 @@ plot.census.traits <- function(workspace, max.t, scenario,y.max, low.mean, high.
 	cat(test,'\n')
 	if (test==FALSE) { return('Cannot find file.') }
 	census <- read.csv(paste(workspace,scenario,'/',scenario,'-[1]/',scenario,'.1.csv',sep=''),header=TRUE)
-	
+	print(head(census))
 	census2 <- census[,7:dim(census)[2]]
 	# max.pop <- as.vector(apply(census2, MARGIN=2, FUN=max))
 	# max.pop.test <- max.pop > 50
 	# max.pop.test[is.na(max.pop.test)==TRUE] <- FALSE
 	census2 <- census2[,(merge.table$Trait.Index + 1)]
 	colnames(census2) <- merge.table$ECO_NAME
+	print(head(census2))
 	mean.pop <- as.vector(apply(census2[11:max.t,], MARGIN=2, FUN=mean))
 	mean.pop.test <- mean.pop > low.mean & mean.pop < high.mean
 	mean.pop.test[is.na(mean.pop.test)==TRUE] <- FALSE
 	
 	census3 <- data.frame(census[,1:6],census2[,mean.pop.test==TRUE])
-	
+	print(head(census3))
 	plot(1~1,type='n',ylim=c(0,y.max),xlim=c(11,max.t),ylab='population',xlab='time step',main=main.text)
 	
 	for (i in seq(7,dim(census3)[2],1))
@@ -47,35 +48,46 @@ plot.census.traits <- function(workspace, max.t, scenario,y.max, low.mean, high.
 }
 ecoregion.table <- read.csv('H:/SpatialData/SpatialData/tnc-terr-ecoregions121409/ecoregions.merge.table.csv',header=TRUE,row.names=1)
 
-pdf('f:/pnwccva_data2/hexsim/workspaces/lynx_v1/Analysis/lynx.041b.census.pdf',height=16,width=6,pointsize=8)
+# folder <- 'lynx_v1'
+# scenarios <- c('lynx.041b','lynx.041b.ccsm3','lynx.041b.cgcm3','lynx.041b2.giss-er','lynx.041b.miroc','lynx.041b2.hadcm3')
+# y.max <- c(50000,5000,500)
+# low.mean <- c(2500,500,10)
+# high.mean <- c(50000,2500,500)
+# fig.titles <- c('boreal cycling, CRU','boreal cycling, CCSM3','boreal cycling, CGCM3','boreal cycling, GISS-ER','boreal cycling, MIROC','boreal cycling, HADCM3')
+# max.t <- 108
+
+folder <- 'wolverine_v1'
+scenarios <- c('gulo.017.baseline','gulo.017.a2.ccsm3','gulo.017.a2.cgcm3','gulo.017.a2.giss-er','gulo.017.a2.miroc','gulo.017.a2.hadcm3')
+y.max <- c(10000,500,100)
+low.mean <- c(2500,500,10)
+high.mean <- c(50000,2500,500)
+fig.titles <- c('CRU','CCSM3','CGCM3','GISS-ER','MIROC','HADCM3')
+max.t <- 110
+
+# pdf(paste('f:/pnwccva_data2/hexsim/workspaces/',folder,'/Analysis/lynx.041b.census.2.pdf',sep=''),height=16,width=6,pointsize=8)
+pdf(paste('f:/pnwccva_data2/hexsim/workspaces/',folder,'/Analysis/gulo.017.census.pdf',sep=''),height=16,width=6,pointsize=8)
 	par(mfrow=c(6,3))
-	# CCSM3
-	plot.census.traits(workspace='F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1/Results/', scenario='lynx.041b', max.t=36, y.max=50000, low.mean=2500, high.mean=50000, merge.table=ecoregion.table,main.text='boreal cycling, CRU')
-	plot.census.traits(workspace='F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1/Results/', scenario='lynx.041b', max.t=36, y.max=5000, low.mean=500, high.mean=2500, merge.table=ecoregion.table,main.text='boreal cycling, CRU')
-	plot.census.traits(workspace='F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1/Results/', scenario='lynx.041b', max.t=36, y.max=500, low.mean=10, high.mean=500, merge.table=ecoregion.table,main.text='boreal cycling, CRU')
 	
-	# CCSM3
-	plot.census.traits(workspace='F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1/Results/', scenario='lynx.041b.ccsm3', max.t=108, y.max=50000, low.mean=2500, high.mean=50000, merge.table=ecoregion.table,main.text='boreal cycling, CCSM3')
-	plot.census.traits(workspace='F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1/Results/', scenario='lynx.041b.ccsm3', max.t=108, y.max=5000, low.mean=500, high.mean=2500, merge.table=ecoregion.table,main.text='boreal cycling, CCSM3')
-	plot.census.traits(workspace='F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1/Results/', scenario='lynx.041b.ccsm3', max.t=108, y.max=500, low.mean=10, high.mean=500, merge.table=ecoregion.table,main.text='boreal cycling, CCSM3')
+	# Baseline
+	plot.census.traits(workspace=paste('F:/PNWCCVA_Data2/HexSim/Workspaces/',folder,'/Results/',sep=''), scenario=scenarios[1], max.t=36, y.max=y.max[1], low.mean=low.mean[1], high.mean=high.mean[1], merge.table=ecoregion.table,main.text=fig.titles[1])
+	plot.census.traits(workspace=paste('F:/PNWCCVA_Data2/HexSim/Workspaces/',folder,'/Results/',sep=''), scenario=scenarios[1], max.t=36, y.max=y.max[2], low.mean=low.mean[2], high.mean=high.mean[2], merge.table=ecoregion.table,main.text=fig.titles[1])
+	plot.census.traits(workspace=paste('F:/PNWCCVA_Data2/HexSim/Workspaces/',folder,'/Results/',sep=''), scenario=scenarios[1], max.t=36, y.max=y.max[3], low.mean=low.mean[3], high.mean=high.mean[3], merge.table=ecoregion.table,main.text=fig.titles[1])
 
-	# CGCM3.1
-	plot.census.traits(workspace='F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1/Results/', scenario='lynx.041b.cgcm3', max.t=108, y.max=50000, low.mean=2500, high.mean=50000, merge.table=ecoregion.table,main.text='boreal cycling, CGCM3')
-	plot.census.traits(workspace='F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1/Results/', scenario='lynx.041b.cgcm3', max.t=108, y.max=5000, low.mean=500, high.mean=2500, merge.table=ecoregion.table,main.text='boreal cycling, CGCM3')
-	plot.census.traits(workspace='F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1/Results/', scenario='lynx.041b.cgcm3', max.t=108, y.max=500, low.mean=10, high.mean=500, merge.table=ecoregion.table,main.text='boreal cycling, CGCM3')
-
-	# GISS-ER
-	plot.census.traits(workspace='F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1/Results/', scenario='lynx.041b2.giss-er', max.t=108, y.max=50000, low.mean=2500, high.mean=50000, merge.table=ecoregion.table,main.text='boreal cycling, GISS-ER')
-	plot.census.traits(workspace='F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1/Results/', scenario='lynx.041b2.giss-er', max.t=108, y.max=5000, low.mean=500, high.mean=2500, merge.table=ecoregion.table,main.text='boreal cycling, GISS-ER')
-	plot.census.traits(workspace='F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1/Results/', scenario='lynx.041b2.giss-er', max.t=108, y.max=500, low.mean=10, high.mean=500, merge.table=ecoregion.table,main.text='boreal cycling, GISS-ER')
-
-	# MIROC
-	plot.census.traits(workspace='F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1/Results/', scenario='lynx.041b.miroc', max.t=108, y.max=50000, low.mean=2500, high.mean=50000, merge.table=ecoregion.table,main.text='boreal cycling, MIROC')
-	plot.census.traits(workspace='F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1/Results/', scenario='lynx.041b.miroc', max.t=108, y.max=5000, low.mean=500, high.mean=2500, merge.table=ecoregion.table,main.text='boreal cycling, MIROC')
-	plot.census.traits(workspace='F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1/Results/', scenario='lynx.041b.miroc', max.t=108, y.max=500, low.mean=10, high.mean=500, merge.table=ecoregion.table,main.text='boreal cycling, MIROC')
-
-	# HADCM3
-	plot.census.traits(workspace='F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1/Results/', scenario='lynx.041b2.hadcm3', max.t=108, y.max=50000, low.mean=2500, high.mean=50000, merge.table=ecoregion.table,main.text='boreal cycling, HADCM3')
-	plot.census.traits(workspace='F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1/Results/', scenario='lynx.041b2.hadcm3', max.t=108, y.max=5000, low.mean=500, high.mean=2500, merge.table=ecoregion.table,main.text='boreal cycling, HADM3')
-	plot.census.traits(workspace='F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1/Results/', scenario='lynx.041b2.hadcm3', max.t=108, y.max=500, low.mean=10, high.mean=500, merge.table=ecoregion.table,main.text='boreal cycling, HADM3')
+	for (i in 2:6)
+		{
+			for (j in 1:3)
+			{
+				plot.census.traits(
+					workspace=paste('F:/PNWCCVA_Data2/HexSim/Workspaces/',folder,'/Results/',sep=''), 
+					scenario=scenarios[i], 
+					max.t=max.t, 
+					y.max=y.max[j], 
+					low.mean=low.mean[j], 
+					high.mean=high.mean[j], 
+					merge.table=ecoregion.table,
+					main.text=fig.titles[i]
+					)
+			}
+		}
 dev.off()
+
