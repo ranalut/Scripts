@@ -59,7 +59,7 @@ eco.reg <- read.csv('f:/pnwccva_data2/hexsim/workspaces/lynx_v1/analysis/ecoregi
 						# )
 # stop('cbw')
 
-# scenarios <- c('lynx.041b.ccsm3','lynx.041b.cgcm3','lynx.041b2.giss-er','lynx.041b.miroc','lynx.041b2.hadcm3')
+# scenarios <- c('lynx.041b','lynx.041b.ccsm3','lynx.041b.cgcm3','lynx.041b2.giss-er','lynx.041b.miroc','lynx.041b2.hadcm3')
 
 # for (i in scenarios)
 # {

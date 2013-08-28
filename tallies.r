@@ -22,10 +22,30 @@ tally2(
 	hexsim.wksp <- 'D:/Data/wilsey/',
 	hexsim.wksp2 <- 'D:\\Data\\wilsey',
 	spp.folder <- 'lynx_v1',
+	scenario.name <- 'lynx.041b2.hadcm3',
+	tally.type <- 'b',
+	start.year <- 87,
+	stop.year <- 105
+	)
+cat('done b\n')
+tally2(
+	hexsim.wksp <- 'D:/Data/wilsey/',
+	hexsim.wksp2 <- 'D:\\Data\\wilsey',
+	spp.folder <- 'lynx_v1',
+	scenario.name <- 'lynx.041b2.hadcm3',
+	tally.type <- 'd',
+	start.year <- 88,
+	stop.year <- 106
+	)
+cat('done d\n')
+tally2(
+	hexsim.wksp <- 'D:/Data/wilsey/',
+	hexsim.wksp2 <- 'D:\\Data\\wilsey',
+	spp.folder <- 'lynx_v1',
 	scenario.name <- 'lynx.042.hadcm3',
 	tally.type <- 'b',
-	start.year <- 81,
-	stop.year <- 108
+	start.year <- 87,
+	stop.year <- 105
 	)
 cat('done b\n')
 tally2(
@@ -34,8 +54,8 @@ tally2(
 	spp.folder <- 'lynx_v1',
 	scenario.name <- 'lynx.042.hadcm3',
 	tally.type <- 'd',
-	start.year <- 81,
-	stop.year <- 108
+	start.year <- 88,
+	stop.year <- 106
 	)
 cat('done d\n')
 
