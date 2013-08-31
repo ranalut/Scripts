@@ -16,6 +16,7 @@ folder <- 'wolverine_v1'
 base.scenario <- 'gulo.017.baseline'
 scenarios <- c('gulo.017.a2.ccsm3','gulo.017.a2.cgcm3','gulo.017.a2.giss-er','gulo.017.a2.miroc','gulo.017.a2.hadcm3')
 cutoffs <- c(-100,-75,-50,-25,-10,0,10,25,50,75,100)
+cutoffs <- c(-150,-100,-75,-50,-25,-10,10,25,50,75,100,150)
 climate <- 'a2'
 
 # Spatial Layers
@@ -32,15 +33,26 @@ model.names <- c('CCSM3','CGCM3','GISS-ER','MIROC','HADCM3')
 
 bd.data <- read.csv(paste(workspace,folder,'/Results/',base.scenario,'/',base.scenario,'-[1]/eco.BirthsDeaths.table.csv',sep=''),header=TRUE, stringsAsFactors=FALSE)
 colnames(bd.data) <- c('ECO_ID_U','BD')
-bd.data$BD[bd.data$BD < cutoffs[1]] <- cutoffs[1] + 1
-bd.data$BD[bd.data$BD > cutoffs[length(cutoffs)]] <- cutoffs[length(cutoffs)] - 1
+
+# census3 <- read.csv(paste(workspace,folder,'/Results/',base.scenario,'/',base.scenario,'-[1]/',base.scenario,'.eco.csv',sep=''),header=TRUE,row.names=1)
+# start.pop <- census3[11,7:dim(census3)[2]]
+# # print(as.numeric(substring(colnames(start.pop),first=2)))
+# start.pop <- data.frame(ECO_ID_U=as.numeric(substring(colnames(start.pop),first=2)),population=as.numeric(start.pop[1,]))
+# # print(start.pop)
+# # stop('cbw')
+
+# bd.data$BD[bd.data$BD < cutoffs[1]] <- cutoffs[1] + 1
+# bd.data$BD[bd.data$BD > cutoffs[length(cutoffs)]] <- cutoffs[length(cutoffs)] - 1
 print(range(bd.data$BD))
-# print(head(bd.data))
+# # print(head(bd.data))
 
 eco@data <- merge(eco@data,bd.data)
+# eco@data <- merge(eco@data,start.pop)
+# eco@data$bdpop <- eco@data$BD / eco@data$population
+# print(range(eco@data$bdpop))
 # print(eco@data)
-p1 <- spplot(eco, zcol='BD', at=cutoffs, col.regions=brewer.pal(10,name='PRGn'), xlim=c(-137,-102), ylim=c(38,58)) + layer(sp.polygons(political,alpha=0.5)) + layer(sp.polygons(ocean,fill=rgb(166,189,219,max=255))) + layer(sp.text(loc=c(-130,40),txt='HISTORICAL',cex=1.5))
-# print(p1); stop('cbw')
+p1 <- spplot(eco, zcol='BD', at=cutoffs, col.regions=brewer.pal(11,name='PRGn'), xlim=c(-137,-102), ylim=c(38,58)) + layer(sp.polygons(political,alpha=0.5)) + layer(sp.polygons(ocean,fill=rgb(166,189,219,max=255))) + layer(sp.text(loc=c(-130,40),txt='HISTORICAL',cex=1.5))
+print(p1); stop('cbw')
 png(paste(workspace,folder,'/Analysis/',base.scenario,'BD_baseline.png',sep=''),width=350,height=350)
 	print(p1)
 dev.off()
