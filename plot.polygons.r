@@ -15,7 +15,7 @@ workspace <- 'F:/PNWCCVA_Data2/HexSim/Workspaces/'
 folder <- 'wolverine_v1'
 base.scenario <- 'gulo.017.baseline'
 scenarios <- c('gulo.017.a2.ccsm3','gulo.017.a2.cgcm3','gulo.017.a2.giss-er','gulo.017.a2.miroc','gulo.017.a2.hadcm3')
-cutoffs <- c(-100,-75,-50,-25,-10,0,10,25,50,75,100)
+cutoffs <- c(-500,-250,-100,-75,-50,-10,10,50,75,100,250,500)
 climate <- 'a2'
 
 # Spatial Layers
@@ -39,7 +39,7 @@ print(range(bd.data$BD))
 
 eco@data <- merge(eco@data,bd.data)
 # print(eco@data)
-p1 <- spplot(eco, zcol='BD', at=cutoffs, col.regions=brewer.pal(10,name='PRGn'), xlim=c(-137,-102), ylim=c(38,58)) + layer(sp.polygons(political,alpha=0.5)) + layer(sp.polygons(ocean,fill=rgb(166,189,219,max=255))) + layer(sp.text(loc=c(-130,40),txt='HISTORICAL',cex=1.5))
+p1 <- spplot(eco, zcol='BD', at=cutoffs, col.regions=brewer.pal(11,name='PRGn'), xlim=c(-137,-102), ylim=c(38,58)) + layer(sp.polygons(political,alpha=0.5)) + layer(sp.polygons(ocean,fill=rgb(166,189,219,max=255))) + layer(sp.text(loc=c(-130,40),txt='HISTORICAL',cex=1.5))
 # print(p1); stop('cbw')
 png(paste(workspace,folder,'/Analysis/',base.scenario,'BD_baseline.png',sep=''),width=350,height=350)
 	print(p1)
@@ -59,7 +59,7 @@ for (i in 1:length(scenarios))
 		eco@data <- merge(eco@data,bd.data)
 
 		# the.plots[[i]] <- spplot(eco, zcol='BD', at=cutoffs, col.regions=paste(brewer.pal(10,name='PRGn'),75,sep='')) + layer(sp.polygons(political,alpha=0.5))
-		the.plots[[model.names[i]]] <- spplot(eco, zcol='BD', at=cutoffs, col.regions=brewer.pal(10,name='PRGn'), xlim=c(-137,-102), ylim=c(38,58)) + layer(sp.polygons(political,alpha=0.5)) + layer(sp.polygons(ocean,fill=rgb(166,189,219,max=255))) # + layer(sp.text(loc=c(-130,40),txt=model.names[i],cex=1.5))
+		the.plots[[model.names[i]]] <- spplot(eco, zcol='BD', at=cutoffs, col.regions=brewer.pal(11,name='PRGn'), xlim=c(-137,-102), ylim=c(38,58)) + layer(sp.polygons(political,alpha=0.5)) + layer(sp.polygons(ocean,fill=rgb(166,189,219,max=255))) # + layer(sp.text(loc=c(-130,40),txt=model.names[i],cex=1.5))
 		# print(the.plots[[i]])
 	}
 the.plot <- c(p1,the.plots[[1]],the.plots[[2]],the.plots[[3]],the.plots[[4]],the.plots[[5]], layout=c(3,2))

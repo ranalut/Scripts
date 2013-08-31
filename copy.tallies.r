@@ -29,10 +29,10 @@ for (k in scenarios)
 # for (k in 'lynx.041b')
 {
 	copy.tally(
-		in.dir=paste('//cfr.washington.edu/main/Space/Lawler/Shared/Wilsey/PostDoc/HexSim/Workspaces/',wksp,'/Results/',k,'/',k,'-[1]/',sep=''),
-		# in.dir=paste('D:/Data/wilsey/',wksp,'/Results/',k,'/',k,'-[1]/',sep=''),
-		out.dir=paste('F:/PNWCCVA_Data2/HexSim/Workspaces/',wksp,'/Results/',k,'/',k,'-[1]/',sep=''),
-		# out.dir=paste('S:/Space/Lawler/Shared/Wilsey/PostDoc/HexSim/Workspaces/',wksp,'/Results/',k,'/',k,'-[1]/',sep=''),		
+		# in.dir=paste('//cfr.washington.edu/main/Space/Lawler/Shared/Wilsey/PostDoc/HexSim/Workspaces/',wksp,'/Results/',k,'/',k,'-[1]/',sep=''),
+		in.dir=paste('D:/Data/wilsey/',wksp,'/Results/',k,'/',k,'-[1]/',sep=''),
+		# out.dir=paste('F:/PNWCCVA_Data2/HexSim/Workspaces/',wksp,'/Results/',k,'/',k,'-[1]/',sep=''),
+		out.dir=paste('S:/Space/Lawler/Shared/Wilsey/PostDoc/HexSim/Workspaces/',wksp,'/Results/',k,'/',k,'-[1]/',sep=''),		
 		target='eco.BirthsDeaths'
 		)
 }
