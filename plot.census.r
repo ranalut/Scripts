@@ -40,36 +40,38 @@ table.census.traits <- function(workspace, scenario, merge.table)
 plot.census.traits <- function(workspace, max.t, scenarios, eco.region, y.max, main.text)
 {	
 	png(paste(workspace,'Analysis/',scenarios[1],'.',eco.region,'.png',sep=''))
-	plot(1~1,type='n',ylim=c(0,y.max),xlim=c(11,max.t),ylab='population',xlab='time step',main=main.text)
+	years <- seq(11,max.t,1) - 10 + 2000
+	plot(1~1,type='n',ylim=c(0,y.max),xlim=range(years),ylab='# of females',xlab='year',main=main.text)
 	
 	for (i in 1:length(scenarios))
 	{
 		census3 <- read.csv(paste(workspace,'Results/',scenarios[i],'/',scenarios[i],'-[1]/',scenarios[i],'.eco.csv',sep=''),header=TRUE,row.names=1)
-		
-		lines(census3[11:max.t,(eco.region+6)] ~ census3$Time.Step[11:max.t], lwd=2, col=brewer.pal(6,name='RdYlBu')[i])
+		lines(census3[11:max.t,(eco.region+6)] ~ years, lwd=2, col=rev(brewer.pal(7,name='Set1')[-6])[i])
+		if (i==1) { lines(census3[11:max.t,(eco.region+6)] ~ years, lwd=5, col=rev(brewer.pal(7,name='Set1')[-6])[i]) }
 	}
-	legend(x=11,y=y.max,lwd=2,bty='n',legend=scenarios,col=brewer.pal(6,name='RdYlBu'))
+	legend(x=years[1],y=y.max,lwd=2,bty='n',legend=scenarios,col=rev(brewer.pal(7,name='Set1')[-6]))
 	dev.off()
 }
 
 ecoregion.table <- read.csv('H:/SpatialData/SpatialData/tnc-terr-ecoregions121409/ecoregions.merge.table.csv',header=TRUE,row.names=1)
 
-folder <- 'lynx_v1'
-scenarios <- c('lynx.041b','lynx.041b.ccsm3','lynx.041b.cgcm3','lynx.041b2.giss-er','lynx.041b.miroc','lynx.041b2.hadcm3')
-y.max <- c(50000,5000,500)
-low.mean <- c(2500,500,10)
-high.mean <- c(50000,2500,500)
-fig.titles <- c('boreal cycling, CRU','boreal cycling, CCSM3','boreal cycling, CGCM3','boreal cycling, GISS-ER','boreal cycling, MIROC','boreal cycling, HADCM3')
-max.t <- 108
-
-# folder <- 'wolverine_v1'
-# scenarios <- c('gulo.017.baseline','gulo.017.a2.ccsm3','gulo.017.a2.cgcm3','gulo.017.a2.giss-er','gulo.017.a2.miroc','gulo.017.a2.hadcm3')
-# # c(0,0,0,1633,87,0,0,338,1928,454,351,35,764,0,0,0,272,40,0,780,262,0,38,0,0,0,0,0,0,0,0,0,11,0,12)
-# y.max <- c(10,10,10,2750,150,10,10,400,3000,800,500,50,1200,10,10,10,500,75,5,1400,600,0,200,0,5,0,0,10,8,0,0,0,20,5,35)
+# folder <- 'lynx_v1'
+# scenarios <- c('lynx.041b','lynx.041b.ccsm3','lynx.041b.cgcm3','lynx.041b2.giss-er','lynx.041b.miroc','lynx.041b2.hadcm3')
+# c(0,0,0,12241,173,0,0,2211,17163,1631,3016,0,5548,0,0,0,1610,16,0,3954,26993,7614,927,1,616,0,0,75,1,0,0,0,129,0,92)
+# y.max <- c(0,0,0,20000,750,0,0,5000,27000,4700,4500,10,9500,5,1000,350,3500,350,10,6000,50000,11000,1700,20,4000,0,0,750,250,0,0,10,350,5,500)
 # # low.mean <- c(2500,500,10)
 # # high.mean <- c(50000,2500,500)
-# fig.titles <- c('CRU','CCSM3','CGCM3','GISS-ER','MIROC','HADCM3')
-# max.t <- 110
+# fig.titles <- c('boreal cycling, CRU','boreal cycling, CCSM3','boreal cycling, CGCM3','boreal cycling, GISS-ER','boreal cycling, MIROC','boreal cycling, HADCM3')
+# max.t <- 108
+
+folder <- 'wolverine_v1'
+scenarios <- c('gulo.017.baseline','gulo.017.a2.ccsm3','gulo.017.a2.cgcm3','gulo.017.a2.giss-er','gulo.017.a2.miroc','gulo.017.a2.hadcm3')
+# c(0,0,0,1633,87,0,0,338,1928,454,351,35,764,0,0,0,272,40,0,780,262,0,38,0,0,0,0,0,0,0,0,0,11,0,12)
+y.max <- c(10,10,10,2750,150,10,10,400,3000,800,500,50,1200,10,10,10,500,75,5,1400,600,0,200,0,5,0,0,10,8,0,0,0,20,5,35)
+# low.mean <- c(2500,500,10)
+# high.mean <- c(50000,2500,500)
+fig.titles <- c('CRU','CCSM3','CGCM3','GISS-ER','MIROC','HADCM3')
+max.t <- 110
 
 for (i in scenarios)
 {
@@ -89,35 +91,8 @@ for (i in 1:dim(ecoregion.table)[1])
 		scenarios=scenarios, 
 		eco.region=i,
 		y.max=y.max[i], 
-		main.text=paste(ecoregion.table$ECO_NAME[i],'\nboreal cycling',sep='')
+		# main.text=paste(ecoregion.table$ECO_NAME[i],'\nboreal cycling',sep='')
+		main.text=ecoregion.table$ECO_NAME[i]
 		)
 }
-stop('cbw')
-
-# pdf(paste('f:/pnwccva_data2/hexsim/workspaces/',folder,'/Analysis/lynx.041b.census.2.pdf',sep=''),height=16,width=6,pointsize=8)
-pdf(paste('f:/pnwccva_data2/hexsim/workspaces/',folder,'/Analysis/gulo.017.census.pdf',sep=''),height=16,width=6,pointsize=8)
-	par(mfrow=c(6,3))
-	
-	# Baseline
-	plot.census.traits(workspace=paste('F:/PNWCCVA_Data2/HexSim/Workspaces/',folder,'/Results/',sep=''), scenario=scenarios[1], max.t=36, y.max=y.max[1], low.mean=low.mean[1], high.mean=high.mean[1], merge.table=ecoregion.table,main.text=fig.titles[1])
-	plot.census.traits(workspace=paste('F:/PNWCCVA_Data2/HexSim/Workspaces/',folder,'/Results/',sep=''), scenario=scenarios[1], max.t=36, y.max=y.max[2], low.mean=low.mean[2], high.mean=high.mean[2], merge.table=ecoregion.table,main.text=fig.titles[1])
-	plot.census.traits(workspace=paste('F:/PNWCCVA_Data2/HexSim/Workspaces/',folder,'/Results/',sep=''), scenario=scenarios[1], max.t=36, y.max=y.max[3], low.mean=low.mean[3], high.mean=high.mean[3], merge.table=ecoregion.table,main.text=fig.titles[1])
-
-	for (i in 2:6)
-		{
-			for (j in 1:3)
-			{
-				plot.census.traits(
-					workspace=paste('F:/PNWCCVA_Data2/HexSim/Workspaces/',folder,'/Results/',sep=''), 
-					scenario=scenarios[i], 
-					max.t=max.t, 
-					y.max=y.max[j], 
-					low.mean=low.mean[j], 
-					high.mean=high.mean[j], 
-					merge.table=ecoregion.table,
-					main.text=fig.titles[i]
-					)
-			}
-		}
-dev.off()
 
