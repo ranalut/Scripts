@@ -5,20 +5,20 @@ library(RColorBrewer)
 library(latticeExtra)
 
 workspace <- 'F:/PNWCCVA_Data2/HexSim/Workspaces/'
-# folder <- 'lynx_v1'
-# base.scenario <- 'lynx.041b'
-# scenarios <- c('lynx.041b.ccsm3','lynx.041b.cgcm3','lynx.041b2.giss-er','lynx.041b.miroc','lynx.041b2.hadcm3')
-# # base.scenario <- 'lynx.042'
-# # scenarios <- c('lynx.042.ccsm3','lynx.042.cgcm3.1','lynx.042.giss-er','lynx.042.miroc','lynx.042.hadcm3')
-# cutoffs <- c(-2000,-1000,-500,-250,-100,-25,25,100,250,500,1000,2000)
-# version.number <- 2
+folder <- 'lynx_v1'
+base.scenario <- 'lynx.041b'
+scenarios <- c('lynx.041b.ccsm3','lynx.041b.cgcm3','lynx.041b2.giss-er','lynx.041b.miroc','lynx.041b2.hadcm3')
+# base.scenario <- 'lynx.042'
+# scenarios <- c('lynx.042.ccsm3','lynx.042.cgcm3.1','lynx.042.giss-er','lynx.042.miroc','lynx.042.hadcm3')
+cutoffs <- c(-2000,-1000,-500,-250,-100,-25,25,100,250,500,1000,2000)
+version.number <- 2
 
-folder <- 'wolverine_v1'
-base.scenario <- 'gulo.017.baseline'
-scenarios <- c('gulo.017.a2.ccsm3','gulo.017.a2.cgcm3','gulo.017.a2.giss-er','gulo.017.a2.miroc','gulo.017.a2.hadcm3')
-cutoffs <- c(-500,-250,-100,-75,-50,-10,10,50,75,100,250,500)
-climate <- 'a2'
-version.number <- ''
+# folder <- 'wolverine_v1'
+# base.scenario <- 'gulo.017.baseline'
+# scenarios <- c('gulo.017.a2.ccsm3','gulo.017.a2.cgcm3','gulo.017.a2.giss-er','gulo.017.a2.miroc','gulo.017.a2.hadcm3')
+# cutoffs <- c(-500,-250,-100,-75,-50,-10,10,50,75,100,250,500)
+# climate <- 'a2'
+# version.number <- ''
 
 # Spatial Layers
 # eco <- readShapePoly(fn='H:/SpatialData/SpatialData/tnc-terr-ecoregions121409/mostly_in_study_grid_ecoregions',IDvar='ECO_ID_U',proj4string=CRS('+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0'),verbose=TRUE)
@@ -63,6 +63,10 @@ for (i in 1:length(scenarios))
 
 		# the.plots[[i]] <- spplot(eco, zcol='BD', at=cutoffs, col.regions=paste(brewer.pal(10,name='PRGn'),75,sep='')) + layer(sp.polygons(political,alpha=0.5))
 		the.plots[[model.names[i]]] <- spplot(eco, zcol='BD', at=cutoffs, col.regions=brewer.pal(11,name='PRGn'), xlim=c(-137,-102), ylim=c(38,58)) + layer(sp.polygons(political,alpha=0.5)) + layer(sp.polygons(ocean,fill=rgb(166,189,219,max=255))) # + layer(sp.text(loc=c(-130,40),txt=model.names[i],cex=1.5))
+		png(paste(workspace,folder,'/Analysis/',scenarios[i],'.BD.png',sep=''),width=500,height=500)
+			print(the.plots[[model.names[i]]])
+		dev.off()
+
 		# print(the.plots[[i]])
 	}
 the.plot <- c(p1,the.plots[[1]],the.plots[[2]],the.plots[[3]],the.plots[[4]],the.plots[[5]], layout=c(3,2))

@@ -27,7 +27,7 @@ output.wksp <- 'F:/PNWCCVA_Data2/HexSim/' #'E:/HexSim/'
 output.wksp2 <- 'F:\\PNWCCVA_Data2\\HexSim' # 'E:\\HexSim'
 spp.folder <- 'lynx_v1'
 
-run.hex.grid <- 		'y'
+run.hex.grid <- 		'n'
 run.historical.swe <- 	'n'
 run.historical.fire <- 	'n'	# Not going to include this
 run.biomes <- 			'n'
@@ -36,8 +36,11 @@ run.initial <- 			'n'
 run.exclusion <- 		'n'
 run.coastal <- 			'n'
 run.future.swe <- 		'n'	# Copied these hexmaps from Spotted Frog workspace.
-run.water.excl <-		'y'
+run.water.excl <-		'n'
 run.eco.reg <- 			'n'
+run.hfp <- 				'n'
+run.us.huc <- 			'y'
+run.ca.huc <-			'y'
 
 startTime <- Sys.time()
 
@@ -191,11 +194,56 @@ if (run.water.excl=='y')
 {
 	nc.2.hxn(
 		variable='lake', 
-		nc.file="F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1/Spatial Data/pnw_lakes_wgs84.nc",
+		nc.file="F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1/Spatial Data/pnw_lakes4_wgs84.nc",
 		hex.grid=hex.grid[[2]], 
 		theCentroids=hex.grid[[1]],
 		max.value=Inf, 
-		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='lakes2'
+		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='lakes4'
+		)
+}
+
+# ==========================================================================================================
+# Human Footprint
+
+if (run.hfp=='y')
+{
+	nc.2.hxn(
+		variable='hfp', 
+		nc.file="F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1/Spatial Data/hfp_2005.nc",
+		hex.grid=hex.grid[[2]], 
+		theCentroids=hex.grid[[1]],
+		max.value=Inf, 
+		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='hfp'
+		)
+}
+
+# ==========================================================================================================
+# Canada HUCS
+
+if (run.ca.huc=='y')
+{
+	nc.2.hxn(
+		variable='CBW_CODE', 
+		nc.file="F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1/Spatial Data/ca_hucs.nc",
+		hex.grid=hex.grid[[2]], 
+		theCentroids=hex.grid[[1]],
+		max.value=Inf, 
+		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='ca.huc'
+		)
+}
+
+# ==========================================================================================================
+# U.S. HUCS
+
+if (run.us.huc=='y')
+{
+	nc.2.hxn(
+		variable='CBW_CODE', 
+		nc.file="F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1/Spatial Data/us_hucs.nc",
+		hex.grid=hex.grid[[2]], 
+		theCentroids=hex.grid[[1]],
+		max.value=Inf, 
+		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='us.huc'
 		)
 }
 
