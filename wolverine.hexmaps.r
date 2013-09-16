@@ -28,10 +28,10 @@ output.wksp2 <- 'F:\\PNWCCVA_Data2\\HexSim' # 'E:\\HexSim'
 spp.folder <- 'wolverine_v1'
 
 run.hex.grid <- 		'n'
-run.historical.swe <- 	'n'
+run.historical.swe <- 	'y'
 run.historical.mtwa <-  'n'
 run.biomes <- 			'n'
-run.biomes.hist <- 		'y'
+run.biomes.hist <- 		'n'
 run.initial <- 			'n'
 run.exclusion <- 		'n'
 run.future.swe <- 		'n'
@@ -162,19 +162,20 @@ if (run.historical.swe=='y')
 	file.name <- '/wna30sec_CRU_TS_2.10_'
 	variable.folders <- 'snowfall_swe_balance'
 
-	for (j in 5:100)
-	{
-		extract.swe(
-			file.path.in=paste(file.path,variable.folders,file.name,variable.folders,'_first_day_of_month_',(1900+j),'.nc',sep=''),
-			file.path.out=paste(file.path,variable.folders,'/swe_may_',(1900+j),'.nc',sep=''),
-			month=5,
-			max.value=5000
-			)
-		# stop('cbw')
-	}
+	# This has already run for all 100 yrs.
+	# for (j in 5:100) # Only the last 30 years, same a vegetation.
+	# {
+		# extract.swe(
+			# file.path.in=paste(file.path,variable.folders,file.name,variable.folders,'_first_day_of_month_',(1900+j),'.nc',sep=''),
+			# file.path.out=paste(file.path,variable.folders,'/swe_may_',(1900+j),'.nc',sep=''),
+			# month=5,
+			# max.value=5000
+			# )
+		# # stop('cbw')
+	# }
 	
 	all.file.paths <- list()
-	for (j in 1:96) { all.file.paths[[j]] <- paste(file.path,variable.folders,'/swe_may_',(1904+j),'.nc',sep='') }
+	for (j in 1:30) { all.file.paths[[j]] <- paste(file.path,variable.folders,'/swe_may_',(1970+j),'.nc',sep='') } # Only the last 30 years, same as vegetation
 	
 	# calc.swe(file.path=file.path,file.name=file.name,variable.folders=variable.folders,month=13)
 	calc.swe(
@@ -193,7 +194,7 @@ if (run.historical.swe=='y')
 		hex.grid=hex.grid[[2]], 
 		theCentroids=hex.grid[[1]],
 		max.value=2000, 
-		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='mean.swe.may'
+		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='mean.swe.may.71.00'
 		)
 
 	nc.2.hxn(
@@ -202,7 +203,7 @@ if (run.historical.swe=='y')
 		hex.grid=hex.grid[[2]], 
 		theCentroids=hex.grid[[1]],
 		max.value=2000, 
-		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='sd.swe.may'
+		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='sd.swe.may.71.00'
 		)
 }
 # stop('cbw')

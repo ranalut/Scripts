@@ -39,8 +39,8 @@ run.future.swe <- 		'n'	# Copied these hexmaps from Spotted Frog workspace.
 run.water.excl <-		'n'
 run.eco.reg <- 			'n'
 run.hfp <- 				'n'
-run.us.huc <- 			'y'
-run.ca.huc <-			'y'
+run.all.huc <- 			'n'
+run.pa <- 				'y'
 
 startTime <- Sys.time()
 
@@ -70,7 +70,7 @@ if (run.historical.swe=='y')
 	variable.folders <- 'snowfall_swe_ann'
 	
 	all.file.paths <- list()
-	for (j in 1:100) { all.file.paths[[j]] <- paste(file.path,variable.folders,file.name,variable.folders,'_',(1900+j),'.nc',sep='') }
+	for (j in 1:30) { all.file.paths[[j]] <- paste(file.path,variable.folders,file.name,variable.folders,'_',(1970+j),'.nc',sep='') } # Only for the final 30 years of the century, similar to biomes data.
 	
 	# calc.swe(file.path=file.path,file.name=file.name,variable.folders=variable.folders,month=13)
 	calc.swe(
@@ -89,7 +89,7 @@ if (run.historical.swe=='y')
 		hex.grid=hex.grid[[2]], 
 		theCentroids=hex.grid[[1]],
 		max.value=Inf, 
-		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='mean.swe.ann'
+		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='mean.swe.ann.71.00'
 		)
 
 	nc.2.hxn(
@@ -98,7 +98,7 @@ if (run.historical.swe=='y')
 		hex.grid=hex.grid[[2]], 
 		theCentroids=hex.grid[[1]],
 		max.value=Inf, 
-		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='sd.swe.ann'
+		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='sd.swe.ann.71.00'
 		)
 }
 # stop('cbw')
@@ -120,7 +120,7 @@ if (run.biomes=='y')
 		for (j in 1:99)
 		# for (j in 1)
 		{
-			test <- file.exists(paste(output.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/',theGCMs[i],'.biomes.a2/',theGCMs[i],'.biomes.a2.',(10+j),'.hxn',sep=''))
+			test <- file.exists(paste(output.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/',theGCMs[i],'.biomes.a2.v2/',theGCMs[i],'.biomes.a2.v2.',(10+j),'.hxn',sep=''))
 			if(test==TRUE) { cat(theGCMs[i],j,'\n'); next(j) }
 			
 			nc.2.hxn(
@@ -129,14 +129,14 @@ if (run.biomes=='y')
 				hex.grid=hex.grid[[2]], 
 				theCentroids=hex.grid[[1]],
 				max.value=Inf,
-				changeTable=data.frame(matrix(c(seq(1,12,1),c(0,1,1,0,1,1,0,0,0,0,0,0)),ncol=2)),
+				changeTable=data.frame(matrix(c(seq(1,12,1),c(0,1,1,0,1,0.75,0,0,0,0,0,0)),ncol=2)),
 				hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, 
-				hexmap.name=paste(theGCMs[i],'.biomes.a2',sep='')
+				hexmap.name=paste(theGCMs[i],'.biomes.a2.v2',sep='')
 				)
 
 			file.copy(
-				from=paste(output.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/',theGCMs[i],'.biomes.a2/',theGCMs[i],'.biomes.a2.1.hxn',sep=''), 
-				to=paste(output.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/',theGCMs[i],'.biomes.a2/',theGCMs[i],'.biomes.a2.',(10+j),'.hxn',sep=''),
+				from=paste(output.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/',theGCMs[i],'.biomes.a2.v2/',theGCMs[i],'.biomes.a2.v2.1.hxn',sep=''), 
+				to=paste(output.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/',theGCMs[i],'.biomes.a2.v2/',theGCMs[i],'.biomes.a2.v2.',(10+j),'.hxn',sep=''),
 				overwrite=TRUE
 				)
 			cat('Year',j,Sys.time()-startTime, 'minutes or seconds to create Hexmap', '\n') # 1.09 minutes...
@@ -150,8 +150,8 @@ if (run.biomes=='y')
 			hex.grid=hex.grid[[2]], 
 			theCentroids=hex.grid[[1]],
 			max.value=Inf,
-			changeTable=data.frame(matrix(c(seq(1,12,1),c(0,1,1,0,1,1,0,0,0,0,0,0)),ncol=2)),
-			hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name=paste(theGCMs[i],'.biomes.a2',sep='')
+			changeTable=data.frame(matrix(c(seq(1,12,1),c(0,1,1,0,1,0.75,0,0,0,0,0,0)),ncol=2)),
+			hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name=paste(theGCMs[i],'.biomes.a2.v2',sep='')
 			)
 	}
 }
@@ -168,6 +168,22 @@ if (run.initial=='y')
 		theCentroids=hex.grid[[1]],
 		max.value=Inf, 
 		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='initial.dist'
+		)
+}	
+# stop('cbw')
+
+# ==========================================================================================================
+# Protected Areas
+
+if (run.pa=='y')
+{
+	nc.2.hxn(
+		variable='objectid', 
+		nc.file="F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1/Spatial Data/pa.nc", 
+		hex.grid=hex.grid[[2]], 
+		theCentroids=hex.grid[[1]],
+		max.value=Inf, 
+		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='protected.areas'
 		)
 }	
 # stop('cbw')
@@ -192,13 +208,22 @@ if (run.coastal=='y')
 
 if (run.water.excl=='y')
 {
+	# nc.2.hxn(
+		# variable='lake', 
+		# nc.file="F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1/Spatial Data/pnw_lakes4_wgs84.nc",
+		# hex.grid=hex.grid[[2]], 
+		# theCentroids=hex.grid[[1]],
+		# max.value=Inf, 
+		# hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='lakes4'
+		# )
+		
 	nc.2.hxn(
-		variable='lake', 
-		nc.file="F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1/Spatial Data/pnw_lakes4_wgs84.nc",
+		variable='water', 
+		nc.file="F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1/Spatial Data/mask_water.nc",
 		hex.grid=hex.grid[[2]], 
 		theCentroids=hex.grid[[1]],
 		max.value=Inf, 
-		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='lakes4'
+		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='mask.water'
 		)
 }
 
@@ -218,32 +243,17 @@ if (run.hfp=='y')
 }
 
 # ==========================================================================================================
-# Canada HUCS
+# HUCS
 
-if (run.ca.huc=='y')
+if (run.all.huc=='y')
 {
 	nc.2.hxn(
 		variable='CBW_CODE', 
-		nc.file="F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1/Spatial Data/ca_hucs.nc",
+		nc.file="F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1/Spatial Data/all_hucs2.nc",
 		hex.grid=hex.grid[[2]], 
 		theCentroids=hex.grid[[1]],
 		max.value=Inf, 
-		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='ca.huc'
-		)
-}
-
-# ==========================================================================================================
-# U.S. HUCS
-
-if (run.us.huc=='y')
-{
-	nc.2.hxn(
-		variable='CBW_CODE', 
-		nc.file="F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1/Spatial Data/us_hucs.nc",
-		hex.grid=hex.grid[[2]], 
-		theCentroids=hex.grid[[1]],
-		max.value=Inf, 
-		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='us.huc'
+		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='all.huc.2'
 		)
 }
 
