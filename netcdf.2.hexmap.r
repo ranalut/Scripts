@@ -19,6 +19,7 @@ nc.2.hxn <- function(variable, nc.file, hex.grid, theCentroids, max.value, hexsi
 
 	dataDump <- data.frame(hex_id=theCentroids$Hex_ID, extractedData)
 	dir.create(path=paste(hexsim.wksp,'scratch_workspace/',sep=''), recursive=TRUE)
+	dataDump[1,2] <- 0.001
 	write.csv(dataDump, paste(hexsim.wksp,'scratch_workspace/',hexmap.name,'.csv',sep=''),row.names=FALSE)
 
 	startTime <- Sys.time()

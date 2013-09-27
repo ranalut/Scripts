@@ -25,26 +25,49 @@ copy.hexmaps <- function(in.dir, out.dir, in.name, out.name, in.n, out.n)
 
 theGCMs <- c('ccsm3','cgcm3.1','giss-er','miroc','hadcm3')
 
-for (j in theGCMs)
-{
-  copy.hexmaps(
-  	in.dir=paste('S:/space/lawler/shared/wilsey/postdoc/hexsim/workspaces/lynx_v1/Results/lynx.038.',j,'.maps/lynx.038.',j,'.maps-[1]/',sep=''), 
-  	out.dir="D:/Data/wilsey/lynx_v1/Spatial Data/Hexagons/", 
-  	in.name='hab.qual', 
-  	out.name=paste('hab.qual.',j,sep=''), 
-  	in.n=c(1,seq(10,108,1)), 
-  	out.n=c(1,seq(10,108,1))
-  	)
-}
+# for (j in theGCMs)
+# {
+  # copy.hexmaps(
+  	# in.dir=paste('S:/space/lawler/shared/wilsey/postdoc/hexsim/workspaces/lynx_v1/Results/lynx.038.',j,'.maps/lynx.038.',j,'.maps-[1]/',sep=''), 
+  	# out.dir="D:/Data/wilsey/lynx_v1/Spatial Data/Hexagons/", 
+  	# in.name='hab.qual', 
+  	# out.name=paste('hab.qual.',j,sep=''), 
+  	# in.n=c(1,seq(10,108,1)), 
+  	# out.n=c(1,seq(10,108,1))
+  	# )
+# }
+
+# for (j in theGCMs)
+# {
+  # copy.hexmaps(
+  	# in.dir=paste("D:/Data/wilsey/lynx_v1/Spatial Data/Hexagons/",sep=''), 
+  	# out.dir="D:/Data/wilsey/lynx_v1/Spatial Data/Hexagons/", 
+  	# in.name='hab.qual.2000.baseline', 
+  	# out.name=paste('hab.qual.',j,sep=''), 
+  	# in.n=seq(1,9,1), 
+  	# out.n=seq(1,9,1)
+  	# )
+# }
+
+theGCMs <- c('ccsm3','cgcm3','giss-er','miroc','hadcm3')
 
 for (j in theGCMs)
 {
   copy.hexmaps(
-  	in.dir=paste("D:/Data/wilsey/lynx_v1/Spatial Data/Hexagons/",sep=''), 
-  	out.dir="D:/Data/wilsey/lynx_v1/Spatial Data/Hexagons/", 
-  	in.name='hab.qual.2000.baseline', 
-  	out.name=paste('hab.qual.',j,sep=''), 
-  	in.n=seq(1,9,1), 
-  	out.n=seq(1,9,1)
+  	in.dir=paste('D:/Data/wilsey/wolverine_v1/Results/gulo.023.a2.',j,'.maps.biomes/gulo.023.a2.',j,'.maps.biomes-[1]/',sep=''), 
+  	out.dir="D:/Data/wilsey/wolverine_v1/Spatial Data/Hexagons/", 
+  	in.name='habitat.qual', 
+  	out.name=paste('hab.qual.',j,'.biomes',sep=''), 
+  	in.n=c(1,seq(11,109,1)), 
+  	out.n=c(1,seq(11,109,1))
+  	)
+	
+	copy.hexmaps(
+  	in.dir=paste('D:/Data/wilsey/wolverine_v1/Results/gulo.023/gulo.023-[1]/',sep=''), 
+  	out.dir="D:/Data/wilsey/wolverine_v1/Spatial Data/Hexagons/", 
+  	in.name='habitat.qual', 
+  	out.name=paste('hab.qual.',j,'.biomes',sep=''), 
+  	in.n=1, 
+  	out.n=1
   	)
 }
