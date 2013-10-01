@@ -31,12 +31,12 @@ run.hex.grid <- 		'n'
 run.historical.swe <- 	'n'
 run.streams <- 			'n'
 run.initial <- 			'n'
-run.future.swe <- 		'n'
+run.future.swe <- 		'y'
 run.hist.aet.mam <- 	'n'
 run.hist.aet.jja <- 	'n'
 run.hist.veg <- 		'n'
 run.biomes <- 			'n'
-run.future.aet <-		c('y','mam')
+run.future.aet <-		'n' # c('y','jja')
 
 startTime <- Sys.time()
 
@@ -309,47 +309,84 @@ if (run.future.swe=='y')
 	file.name <- c('/wna30sec_a2_','_snowfall_swe_balance_first_day_of_month_')
 	variable.folders <- 'snowfall_swe_balance_first_day_of_month_a2'
 
-	for (i in 1:5)
-	{
-		startTime <- Sys.time()
+	# for (i in 1:5)
+	# {
+		# startTime <- Sys.time()
 
-		for (j in 1:99)
-		# for (j in 1)
-		{
-			extract.swe(
-				file.path.in=paste(file.path,variable.folders,file.name[1],theGCMs[i],file.name[2],(2000+j),'.nc',sep=''),
-				file.path.out=paste(file.path,variable.folders,'/',theGCMs[i],'_swe_max_',(2000+j),'.nc',sep=''),
-				month=13,
-				max.value=5000
-				)
-			# stop('cbw')
+		# for (j in 1:99)
+		# # for (j in 1)
+		# {
+			# extract.swe(
+				# file.path.in=paste(file.path,variable.folders,file.name[1],theGCMs[i],file.name[2],(2000+j),'.nc',sep=''),
+				# file.path.out=paste(file.path,variable.folders,'/',theGCMs[i],'_swe_max_',(2000+j),'.nc',sep=''),
+				# month=13,
+				# max.value=5000
+				# )
+			# # stop('cbw')
 			
-			nc.2.hxn(
-				variable='swe_max', 
-				nc.file=paste(file.path,variable.folders,'/',theGCMs[i],'_swe_max_',(2000+j),'.nc',sep=''), 
-				hex.grid=hex.grid[[2]], 
-				theCentroids=hex.grid[[1]],
-				max.value=2000, 
-				hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, 
-				hexmap.name=paste(theGCMs[i],'.max.swe',sep='')
-				)
+			# nc.2.hxn(
+				# variable='swe_max', 
+				# nc.file=paste(file.path,variable.folders,'/',theGCMs[i],'_swe_max_',(2000+j),'.nc',sep=''), 
+				# hex.grid=hex.grid[[2]], 
+				# theCentroids=hex.grid[[1]],
+				# max.value=2000, 
+				# hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, 
+				# hexmap.name=paste(theGCMs[i],'.max.swe',sep='')
+				# )
 
-			file.copy(
-				from=paste(output.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/',theGCMs[i],'.max.swe/',theGCMs[i],'.max.swe.1.hxn',sep=''), 
-				to=paste(output.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/',theGCMs[i],'.max.swe/',theGCMs[i],'.max.swe.',(10+j),'.hxn',sep=''),
-				overwrite=TRUE
-				)
-			cat('Year',j,Sys.time()-startTime, 'minutes or seconds to create Hexmap', '\n') # 1.09 minutes...
-			# stop('cbw')
-		}
+			# file.copy(
+				# from=paste(output.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/',theGCMs[i],'.max.swe/',theGCMs[i],'.max.swe.1.hxn',sep=''), 
+				# to=paste(output.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/',theGCMs[i],'.max.swe/',theGCMs[i],'.max.swe.',(10+j),'.hxn',sep=''),
+				# overwrite=TRUE
+				# )
+			# cat('Year',j,Sys.time()-startTime, 'minutes or seconds to create Hexmap', '\n') # 1.09 minutes...
+			# # stop('cbw')
+		# }
 		
-		# Replace timestep 1 with historical mean.
+		# # Replace timestep 1 with historical mean.
+		# file.copy(
+			# from=paste(output.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/mean.swe.max/mean.swe.max.1.hxn',sep=''), 
+			# to=paste(output.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/',theGCMs[i],'.max.swe/',theGCMs[i],'.max.swe.1.hxn',sep=''),
+			# overwrite=TRUE
+			# )
+	# }
+	
+	# Replace timesteps 1-10 with historical 1991-2000, writing directly to F: drive (as opposed to H:).
+	for (j in 1:10)
+	# for (j in 1)
+	{
+		nc.2.hxn(
+			variable='swe_max', 
+			nc.file=paste('H:/bioclimate/annual/CRU_TS2.1_1901-2000/snowfall_swe_balance/swe_max_',(1990+j),'.nc',sep=''), 
+			hex.grid=hex.grid[[2]], 
+			theCentroids=hex.grid[[1]],
+			max.value=2000, 
+			hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=hexsim.wksp, output.wksp2=hexsim.wksp2, spp.folder=spp.folder, 
+			hexmap.name=paste('CRU.swe.temp',sep='')
+			)
+
 		file.copy(
-			from=paste(output.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/mean.swe.max/mean.swe.max.1.hxn',sep=''), 
-			to=paste(output.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/',theGCMs[i],'.max.swe/',theGCMs[i],'.max.swe.1.hxn',sep=''),
+			from=paste(hexsim.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/','CRU.swe.temp/','CRU.swe.temp.1.hxn',sep=''), 
+			to=paste(hexsim.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/','CRU.swe.max/CRU.swe.max.',j,'.hxn',sep=''),
 			overwrite=TRUE
 			)
+
+		cat('Year',j,Sys.time()-startTime, 'minutes or seconds to create Hexmap', '\n') # 1.09 minutes...
+		# stop('cbw')
 	}
+	for (i in theGCMs)
+	{
+		for (j in seq(1,10,1))
+		{
+			file.copy(
+			from=paste(hexsim.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/CRU.swe.max/CRU.swe.max.',j,'.hxn',sep=''), 
+			to=paste(hexsim.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/',i,'.max.swe/',i,'.max.swe.',j,'.hxn',sep=''),
+			overwrite=TRUE
+			)
+			# stop('cbw')
+		}
+	}
+
 }
 
 # ==========================================================================================================
@@ -391,27 +428,40 @@ if (run.future.aet[1]=='y')
 		# }
 	# }	
 	# Replace timesteps 1-10 with historical 1991-2000.
-	for (j in 1:10)
-	# for (j in 1)
-	{
+	# for (j in 1:10)
+	# # for (j in 1)
+	# {
 					
-		nc.2.hxn(
-			variable=paste('aet_',the.months,sep=''), 
-			nc.file=paste('H:/bioclimate/annual/CRU_TS2.1_1901-2000/aet_',the.months,'_v1/wna30sec_CRU_TS_2.10_aet_',the.months,'_v1_',(1990+j),'.nc',sep=''), 
-			hex.grid=hex.grid[[2]], 
-			theCentroids=hex.grid[[1]],
-			max.value=2000, 
-			hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, 
-			hexmap.name=paste('CRU.aet.',the.months,'.temp',sep='')
-			)
+		# nc.2.hxn(
+			# variable=paste('aet_',the.months,sep=''), 
+			# nc.file=paste('H:/bioclimate/annual/CRU_TS2.1_1901-2000/aet_',the.months,'_v1/wna30sec_CRU_TS_2.10_aet_',the.months,'_v1_',(1990+j),'.nc',sep=''), 
+			# hex.grid=hex.grid[[2]], 
+			# theCentroids=hex.grid[[1]],
+			# max.value=2000, 
+			# hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, 
+			# hexmap.name=paste('CRU.aet.',the.months,'.temp',sep='')
+			# )
 
-		file.copy(
-			from=paste(output.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/','CRU.aet.',the.months,'.temp/','CRU.aet.',the.months,'.temp.1.hxn',sep=''), 
-			to=paste(output.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/','CRU.aet.',the.months,'/','CRU.aet.',the.months,'.',j,'.hxn',sep=''),
+		# file.copy(
+			# from=paste(output.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/','CRU.aet.',the.months,'.temp/','CRU.aet.',the.months,'.temp.1.hxn',sep=''), 
+			# to=paste(output.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/','CRU.aet.',the.months,'/','CRU.aet.',the.months,'.',j,'.hxn',sep=''),
+			# overwrite=TRUE
+			# )
+		# cat('Year',j,Sys.time()-startTime, 'minutes or seconds to create Hexmap', '\n') # 1.09 minutes...
+		# # stop('cbw')
+	# }
+	
+	for (i in theGCMs)
+	{
+		for (j in seq(1,10,1))
+		{
+			file.copy(
+			from=paste(hexsim.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/CRU.aet.',the.months,'/','CRU.aet.',the.months,'.',j,'.hxn',sep=''), 
+			to=paste(hexsim.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/',i,'.aet.',the.months,'/',i,'.aet.',the.months,'.',j,'.hxn',sep=''),
 			overwrite=TRUE
 			)
-		cat('Year',j,Sys.time()-startTime, 'minutes or seconds to create Hexmap', '\n') # 1.09 minutes...
-		# stop('cbw')
+			# stop('cbw')
+		}
 	}
 		# file.copy(
 			# from=paste(output.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/mean.aet.',the.months,'/mean.aet.',the.months,'.1.hxn',sep=''), 

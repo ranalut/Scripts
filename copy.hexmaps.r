@@ -11,43 +11,37 @@ copy.hexmaps <- function(in.dir, out.dir, in.name, out.name, in.n, out.n)
 			recursive=FALSE, 
 			overwrite=TRUE
 			)
+		# stop('cbw')
 	}
 }
 
-# copy.hexmaps(
-	# in.dir="F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1/Spatial Data/Hexagons/", 
-	# out.dir="F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1/Spatial Data/Hexagons/", 
-	# in.name='hab.qual.CRU.mean', 
-	# out.name='hab.qual.2000.baseline', 
-	# in.n=c(rep(seq(1,9,1),4)), # in.n=c(rep(1,9),rep(seq(1,9,1),3)), 
-	# out.n=seq(1,36,1)
-	# )
+theGCMs <- c('ccsm3','cgcm3','giss-er','miroc','hadcm3')
 
-theGCMs <- c('ccsm3','cgcm3.1','giss-er','miroc','hadcm3')
+for (j in theGCMs)
+{
+  copy.hexmaps(
+  	in.dir=paste('D:/data/wilsey/hexsim/workspaces/lynx_v1/Results/lynx.050.',j,'.maps/lynx.050.',j,'.maps-[1]/',sep=''), 
+  	out.dir="D:/Data/wilsey/hexsim/workspaces/lynx_v1/Spatial Data/Hexagons/", 
+  	in.name='hab.qual', 
+  	out.name=paste('hab.qual.v3.',j,sep=''), 
+  	in.n=c(1,seq(10,108,1)), 
+  	out.n=c(1,seq(10,108,1))
+  	)
+}
 
-# for (j in theGCMs)
-# {
-  # copy.hexmaps(
-  	# in.dir=paste('S:/space/lawler/shared/wilsey/postdoc/hexsim/workspaces/lynx_v1/Results/lynx.038.',j,'.maps/lynx.038.',j,'.maps-[1]/',sep=''), 
-  	# out.dir="D:/Data/wilsey/lynx_v1/Spatial Data/Hexagons/", 
-  	# in.name='hab.qual', 
-  	# out.name=paste('hab.qual.',j,sep=''), 
-  	# in.n=c(1,seq(10,108,1)), 
-  	# out.n=c(1,seq(10,108,1))
-  	# )
-# }
+for (j in theGCMs)
+{
+  copy.hexmaps(
+  	in.dir=paste('D:/data/wilsey/hexsim/workspaces/lynx_v1/Results/lynx.050.baseline.2000.maps/lynx.050.baseline.2000.maps-[1]/',sep=''), 
+  	out.dir="D:/Data/wilsey/hexsim/workspaces/lynx_v1/Spatial Data/Hexagons/", 
+  	in.name='hab.qual.baseline.2000', 
+  	out.name=paste('hab.qual.v3.',j,sep=''), 
+  	in.n=seq(1,9,1), 
+  	out.n=seq(1,9,1)
+  	)
+}
 
-# for (j in theGCMs)
-# {
-  # copy.hexmaps(
-  	# in.dir=paste("D:/Data/wilsey/lynx_v1/Spatial Data/Hexagons/",sep=''), 
-  	# out.dir="D:/Data/wilsey/lynx_v1/Spatial Data/Hexagons/", 
-  	# in.name='hab.qual.2000.baseline', 
-  	# out.name=paste('hab.qual.',j,sep=''), 
-  	# in.n=seq(1,9,1), 
-  	# out.n=seq(1,9,1)
-  	# )
-# }
+stop('cbw') 
 
 theGCMs <- c('ccsm3','cgcm3','giss-er','miroc','hadcm3')
 
