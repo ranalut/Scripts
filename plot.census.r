@@ -1,5 +1,6 @@
 
 library(RColorBrewer)
+source('scenario.vector.r')
 
 plot.census.reps <- function(workspace, max.t=120, scenario, max.reps=10,y.max=200000,output)
 {
@@ -17,25 +18,6 @@ plot.census.reps <- function(workspace, max.t=120, scenario, max.reps=10,y.max=2
 
 # plot.census.reps(workspace='F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1/Results/', scenario='lynx.040.hadcm3')
 # plot.census.reps(workspace='F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1/Results/', scenario='lynx.040.miroc',output='Population.Size')
-
-
-table.census.traits <- function(workspace, scenario, merge.table)
-{
-	test <- file.exists(paste(workspace,scenario,'/',scenario,'-[1]/',scenario,'.1.csv',sep=''))
-	# cat(test,'\n')
-	if (test==FALSE) { return('Cannot find file.') }
-	census <- read.csv(paste(workspace,scenario,'/',scenario,'-[1]/',scenario,'.1.csv',sep=''),header=TRUE)
-	# print(head(census))
-	census2 <- census[,7:dim(census)[2]]
-
-	census2 <- census2[,(merge.table$Trait.Index + 1)]
-	colnames(census2) <- merge.table$ECO_ID_U
-	
-	census3 <- data.frame(census[,1:6],census2)
-	# print(head(census3))
-	write.csv(census3,paste(workspace,scenario,'/',scenario,'-[1]/',scenario,'.eco.csv',sep=''))
-	# return(census3)
-}	
 	
 plot.census.traits <- function(workspace, max.t, scenarios, eco.region, y.max, main.text)
 {	
@@ -54,30 +36,104 @@ plot.census.traits <- function(workspace, max.t, scenarios, eco.region, y.max, m
 	dev.off()
 }
 
-ecoregion.table <- read.csv('H:/SpatialData/SpatialData/tnc-terr-ecoregions121409/ecoregions.merge.table.csv',header=TRUE,row.names=1)
-
-folder <- 'lynx_v1'
-scenarios <- c('lynx.041b','lynx.041b.ccsm3','lynx.041b.cgcm3','lynx.041b2.giss-er','lynx.041b.miroc','lynx.041b2.hadcm3')
-# c(0,0,0,12241,173,0,0,2211,17163,1631,3016,0,5548,0,0,0,1610,16,0,3954,26993,7614,927,1,616,0,0,75,1,0,0,0,129,0,92)
-y.max <- c(0,0,0,20000,750,0,0,5000,27000,4700,4500,10,9500,5,1000,350,3500,350,10,6000,50000,11000,1700,20,4000,0,0,750,250,0,0,10,350,5,500)
-fig.titles <- c('boreal cycling, CRU','boreal cycling, CCSM3','boreal cycling, CGCM3','boreal cycling, GISS-ER','boreal cycling, MIROC','boreal cycling, HADCM3')
-max.t <- 108
-
-# folder <- 'wolverine_v1'
-# scenarios <- c('gulo.017.baseline','gulo.017.a2.ccsm3','gulo.017.a2.cgcm3','gulo.017.a2.giss-er','gulo.017.a2.miroc','gulo.017.a2.hadcm3')
-# # c(0,0,0,1633,87,0,0,338,1928,454,351,35,764,0,0,0,272,40,0,780,262,0,38,0,0,0,0,0,0,0,0,0,11,0,12)
-# y.max <- c(10,10,10,2750,150,10,10,400,3000,800,500,50,1200,10,10,10,500,75,5,1400,600,0,200,0,5,0,0,10,8,0,0,0,20,5,35)
-# fig.titles <- c('CRU','CCSM3','CGCM3','GISS-ER','MIROC','HADCM3')
-# max.t <- 110
-
-for (i in scenarios)
+table.census.traits <- function(workspace, scenario, merge.table, reps, census.no, trait.name, years)
 {
-	table.census.traits(
-		workspace=paste('F:/PNWCCVA_Data2/HexSim/Workspaces/',folder,'/Results/',sep=''), 
-		scenario=i, 
-		merge.table=ecoregion.table
-		)
+	test <- file.exists(paste(workspace,scenario,'/',scenario,'-[',reps,']/',scenario,'.',census.no,'.csv',sep=''))
+	# cat(test,'\n')
+	if (test==FALSE) { print('Cannot find file.'); return(NA) }
+	census <- read.csv(paste(workspace,scenario,'/',scenario,'-[',reps,']/',scenario,'.',census.no,'.csv',sep=''),header=TRUE)
+	# print(census[(years[1]+1),]); stop('cbw')
+	census2 <- census[,7:dim(census)[2]]
+
+	census2 <- census2[,(merge.table$trait.index + 1)]
+	colnames(census2) <- paste(trait.name,merge.table$shape.index,sep='')
+	
+	census3 <- data.frame(census[,3:5],census2)
+	census3 <- census3[(years[1]+1):(years[2]+1),]
+	# print(census3); stop('cbw')
+	
+	the.means <- as.data.frame(round(apply(census3,MARGIN=2,FUN=mean)))
+	colnames(the.means) <- 'the.mean'
+	# print(the.means); stop('cbw')
+	
+	# census3 <- data.frame(census[,1:6],census2)
+	# print(head(census3))
+	write.csv(the.means, paste(workspace,scenario,'/',scenario,'-[',reps,']/',scenario,'.',trait.name,'.',years[1],'.',years[2],'.csv',sep=''))
+	# return(census3)
 }
+
+percent.change <- function(workspace, baseline, fut.scenarios, reps, trait.name, base.years, years)
+{
+	# Baseline Mean
+	scenario <- baseline
+	output <- read.csv(paste(workspace ,scenario,'/',scenario,'-[1]/',scenario,'.',trait.name,'.',base.years[1],'.',base.years[2],'.csv',sep=''),header=TRUE, row.names=1)
+	# print(head(output)); stop('cbw')
+	for (i in 2:reps)
+	{
+		temp <- read.csv(paste(workspace ,scenario,'/',scenario,'-[',i,']/',scenario,'.',trait.name,'.',base.years[1],'.',base.years[2],'.csv',sep=''),header=TRUE, row.names=1)
+		output <- cbind(output,temp)
+	}
+	# print(head(output)); stop('cbw')
+	temp.sum <- as.numeric(apply(output,MARGIN=1,mean))
+	output$base.mean <- temp.sum
+	write.csv(output,paste(workspace ,scenario,'/mean.',scenario,'.',trait.name,'.',base.years[1],'.',base.years[2],'.csv',sep=''))
+	base.mean <- output$base.mean
+	
+	# Future Scenarios
+	for (j in fut.scenarios)
+	{
+		scenario <- j
+		output <- read.csv(paste(workspace ,scenario,'/',scenario,'-[1]/',scenario,'.',trait.name,'.',years[1],'.',years[2],'.csv',sep=''),header=TRUE, row.names=1)
+		for (i in 2:reps)
+		{
+			temp <- read.csv(paste(workspace ,scenario,'/',scenario,'-[',i,']/',scenario,'.',trait.name,'.',years[1],'.',years[2],'.csv',sep=''),header=TRUE, row.names=1)
+			output <- cbind(output,temp)
+		}
+		# print(head(output)); stop('cbw')
+		temp.sum <- as.numeric(apply(output,MARGIN=1,mean))
+		output$rep.mean <- temp.sum
+		output$p.change <- round(100 * ((output$rep.mean - base.mean) / base.mean))
+		print(head(output))
+		write.csv(output,paste(workspace,scenario,'/p.change.',scenario, '.',trait.name,'.',years[1],'.',years[2],'.csv',sep=''))
+	}
+	# return(output)
+}	
+
+huc.table <- data.frame(shape.index=seq(1,1549,1),trait.index=seq(1,1549,1))
+pro.area.table <- data.frame(shape.index=seq(1,1252,1),trait.index=seq(1,1252,1))
+ecoregion.table <- read.csv('H:/SpatialData/SpatialData/tnc-terr-ecoregions121409/ecoregions.merge.table.csv',header=TRUE,row.names=1)
+colnames(ecoregion.table) <- c('shape.index','ECO_NAME','trait.index')
+
+folder <- 'wolverine_v1'
+scenarios <- scenarios.vector(
+				# base.sim='gulo.023.',
+				base.sim='gulo.023.a2.',
+				# gcms='baseline',
+				gcms=c('ccsm3','cgcm3','giss-er','hadcm3','miroc'),
+				# other=''
+				other=c('','.biomes','.swe')
+				)
+# for (i in scenarios)
+# {
+	# for (j in 1:5)
+	# {
+		# table.census.traits(
+			# workspace=paste('H:/HexSim/Workspaces/',folder,'/Results/',sep=''), 
+			# scenario=i, 
+			# merge.table=huc.table,
+			# reps=j,
+			# census.no=2,
+			# trait.name='huc',
+			# years=c(100,109)
+			# )
+		# cat(i,j,'\n')
+		# # stop('cbw')
+	# }
+# }
+
+percent.change(workspace=paste('H:/HexSim/Workspaces/',folder,'/Results/',sep=''), baseline='gulo.023.baseline', fut.scenarios=scenarios, reps=5, trait.name='huc', base.years=c(41,50), years=c(100,109))
+
+stop('cbw')
 
 for (i in 1:dim(ecoregion.table)[1])
 # for (i in 1)

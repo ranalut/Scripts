@@ -31,7 +31,10 @@ run.hex.grid <- 		'n'
 run.historical.swe <- 	'n'
 run.streams <- 			'n'
 run.initial <- 			'n'
-run.future.swe <- 		'y'
+run.future.swe <- 		'n'
+run.annual.hist.swe <- 	'n'
+run.ann.hist.aet.mam <- 'n'
+run.ann.hist.aet.jja <- 'y'
 run.hist.aet.mam <- 	'n'
 run.hist.aet.jja <- 	'n'
 run.hist.veg <- 		'n'
@@ -352,28 +355,28 @@ if (run.future.swe=='y')
 	# }
 	
 	# Replace timesteps 1-10 with historical 1991-2000, writing directly to F: drive (as opposed to H:).
-	for (j in 1:10)
-	# for (j in 1)
-	{
-		nc.2.hxn(
-			variable='swe_max', 
-			nc.file=paste('H:/bioclimate/annual/CRU_TS2.1_1901-2000/snowfall_swe_balance/swe_max_',(1990+j),'.nc',sep=''), 
-			hex.grid=hex.grid[[2]], 
-			theCentroids=hex.grid[[1]],
-			max.value=2000, 
-			hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=hexsim.wksp, output.wksp2=hexsim.wksp2, spp.folder=spp.folder, 
-			hexmap.name=paste('CRU.swe.temp',sep='')
-			)
+	# for (j in 1:10)
+	# # for (j in 1)
+	# {
+		# nc.2.hxn(
+			# variable='swe_max', 
+			# nc.file=paste('H:/bioclimate/annual/CRU_TS2.1_1901-2000/snowfall_swe_balance/swe_max_',(1990+j),'.nc',sep=''), 
+			# hex.grid=hex.grid[[2]], 
+			# theCentroids=hex.grid[[1]],
+			# max.value=2000, 
+			# hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=hexsim.wksp, output.wksp2=hexsim.wksp2, spp.folder=spp.folder, 
+			# hexmap.name=paste('CRU.swe.temp',sep='')
+			# )
 
-		file.copy(
-			from=paste(hexsim.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/','CRU.swe.temp/','CRU.swe.temp.1.hxn',sep=''), 
-			to=paste(hexsim.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/','CRU.swe.max/CRU.swe.max.',j,'.hxn',sep=''),
-			overwrite=TRUE
-			)
+		# file.copy(
+			# from=paste(hexsim.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/','CRU.swe.temp/','CRU.swe.temp.1.hxn',sep=''), 
+			# to=paste(hexsim.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/','CRU.swe.max/CRU.swe.max.',j,'.hxn',sep=''),
+			# overwrite=TRUE
+			# )
 
-		cat('Year',j,Sys.time()-startTime, 'minutes or seconds to create Hexmap', '\n') # 1.09 minutes...
-		# stop('cbw')
-	}
+		# cat('Year',j,Sys.time()-startTime, 'minutes or seconds to create Hexmap', '\n') # 1.09 minutes...
+		# # stop('cbw')
+	# }
 	for (i in theGCMs)
 	{
 		for (j in seq(1,10,1))
@@ -387,6 +390,99 @@ if (run.future.swe=='y')
 		}
 	}
 
+}
+
+# ==========================================================================================================
+# Making annual hexmaps from historical SWE
+
+if (run.annual.hist.swe=='y')
+{
+	file.path <- 'H:/bioclimate/annual/CRU_TS2.1_1901-2000/snowfall_swe_balance'
+	startTime <- Sys.time()
+
+	for (j in seq(90,51,-1))
+	# for (j in 1)
+	{
+		nc.2.hxn(
+			variable='swe_max', 
+			nc.file=paste(file.path,'/','swe_max_',(1900+j),'.nc',sep=''), 
+			hex.grid=hex.grid[[2]], 
+			theCentroids=hex.grid[[1]],
+			max.value=2000, 
+			hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, 
+			hexmap.name=paste('CRU.max.swe.51.90',sep='')
+			)
+
+		file.copy(
+			from=paste(output.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/CRU.max.swe.51.90/CRU.max.swe.51.90.1.hxn',sep=''), 
+			to=paste(output.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/CRU.max.swe.51.90/CRU.max.swe.51.90.',(j-50),'.hxn',sep=''),
+			overwrite=TRUE
+			)
+		cat('Year',j,Sys.time()-startTime, 'minutes or seconds to create Hexmap', '\n') # 1.09 minutes...
+		# stop('cbw')
+	}
+}
+
+# ==========================================================================================================
+# Making annual hexmaps from historical AET MAM
+
+if (run.ann.hist.aet.mam=='y')
+{
+	file.path <- 'H:/bioclimate/annual/CRU_TS2.1_1901-2000/aet_mam_v1'
+	startTime <- Sys.time()
+
+	for (j in seq(90,51,-1))
+	# for (j in 1)
+	{
+		nc.2.hxn(
+			variable='aet_mam', 
+			nc.file=paste(file.path,'/wna30sec_CRU_TS_2.10_aet_mam_v1_',(1900+j),'.nc',sep=''), 
+			hex.grid=hex.grid[[2]], 
+			theCentroids=hex.grid[[1]],
+			max.value=2000, 
+			hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, 
+			hexmap.name=paste('CRU.aet.mam.51.90',sep='')
+			)
+
+		file.copy(
+			from=paste(output.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/CRU.aet.mam.51.90/CRU.aet.mam.51.90.1.hxn',sep=''), 
+			to=paste(output.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/CRU.aet.mam.51.90/CRU.aet.mam.51.90.',(j-50),'.hxn',sep=''),
+			overwrite=TRUE
+			)
+		cat('Year',j,Sys.time()-startTime, 'minutes or seconds to create Hexmap', '\n') # 1.09 minutes...
+		# stop('cbw')
+	}
+}
+
+# ==========================================================================================================
+# Making annual hexmaps from historical AET JJA
+
+if (run.ann.hist.aet.jja=='y')
+{
+	file.path <- 'H:/bioclimate/annual/CRU_TS2.1_1901-2000/aet_jja_v1'
+	startTime <- Sys.time()
+
+	for (j in seq(90,51,-1))
+	# for (j in 1)
+	{
+		nc.2.hxn(
+			variable='aet_jja', 
+			nc.file=paste(file.path,'/wna30sec_CRU_TS_2.10_aet_jja_v1_',(1900+j),'.nc',sep=''), 
+			hex.grid=hex.grid[[2]], 
+			theCentroids=hex.grid[[1]],
+			max.value=2000, 
+			hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, 
+			hexmap.name=paste('CRU.aet.jja.51.90',sep='')
+			)
+
+		file.copy(
+			from=paste(output.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/CRU.aet.jja.51.90/CRU.aet.jja.51.90.1.hxn',sep=''), 
+			to=paste(output.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/CRU.aet.jja.51.90/CRU.aet.jja.51.90.',(j-50),'.hxn',sep=''),
+			overwrite=TRUE
+			)
+		cat('Year',j,Sys.time()-startTime, 'minutes or seconds to create Hexmap', '\n') # 1.09 minutes...
+		# stop('cbw')
+	}
 }
 
 # ==========================================================================================================
