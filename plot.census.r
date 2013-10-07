@@ -62,7 +62,7 @@ table.census.traits <- function(workspace, scenario, merge.table, reps, census.n
 	# return(census3)
 }
 
-percent.change <- function(workspace, baseline, fut.scenarios, reps, trait.name, base.years, years)
+the.change <- function(workspace, baseline, fut.scenarios, reps, trait.name, base.years, years, type)
 {
 	# Baseline Mean
 	scenario <- baseline
@@ -92,9 +92,11 @@ percent.change <- function(workspace, baseline, fut.scenarios, reps, trait.name,
 		# print(head(output)); stop('cbw')
 		temp.sum <- as.numeric(apply(output,MARGIN=1,mean))
 		output$rep.mean <- temp.sum
-		output$p.change <- round(100 * ((output$rep.mean - base.mean) / base.mean))
+		
+		if (type=='p') { output$p.change <- round(100 * ((output$rep.mean - base.mean) / base.mean)) }
+		if (type=='abs') { output$abs.change <- round(output$rep.mean - base.mean) }
 		print(head(output))
-		write.csv(output,paste(workspace,scenario,'/p.change.',scenario, '.',trait.name,'.',years[1],'.',years[2],'.csv',sep=''))
+		write.csv(output,paste(workspace,scenario,'/',type,'.change.',scenario, '.',trait.name,'.',years[1],'.',years[2],'.csv',sep=''))
 	}
 	# return(output)
 }	
@@ -131,7 +133,7 @@ scenarios <- scenarios.vector(
 	# }
 # }
 
-percent.change(workspace=paste('H:/HexSim/Workspaces/',folder,'/Results/',sep=''), baseline='gulo.023.baseline', fut.scenarios=scenarios, reps=5, trait.name='huc', base.years=c(41,50), years=c(100,109))
+the.change(workspace=paste('H:/HexSim/Workspaces/',folder,'/Results/',sep=''), baseline='gulo.023.baseline', fut.scenarios=scenarios, reps=5, trait.name='huc', base.years=c(41,50), years=c(41,50), type='abs')
 
 stop('cbw')
 
