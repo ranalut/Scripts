@@ -21,11 +21,13 @@ change.panel.plots <- function(baseline.data, fut.data, cutoffs, spatial.data, p
 	# p1 <- spplot(baseline.map, zcol='variable', at=cutoffs, col.regions=brewer.pal(9,name='RdYlBu'), xlim=c(-137,-105), ylim=c(38,58)) + layer(sp.polygons(political,alpha=0.5)) + layer(sp.polygons(ocean,fill=rgb(166,189,219,max=255))) + layer(sp.text(loc=c(-130,40),txt='HISTORICAL',cex=1.5)) # 'PRGn'
 	baseline.map@data$color <- as.character(cut(baseline.map@data$variable, breaks=cutoffs, labels=brewer.pal(9,name='RdYlBu')))
 	# print(head(baseline.map@data$color)); stop('cbw')
-	plot(political, col=rgb(161,217,155,max=255), xlim=c(-137,-103), ylim=c(38,58))
-	plot(baseline.map, add=TRUE, col=baseline.map@data$color)
+	par(mar=c(3,3,2,5))
+	plot(political, col=rgb(161,217,155,max=255), xlim=c(-136,-106), ylim=c(38,58), axes=TRUE)
+	plot(baseline.map, add=TRUE, col=baseline.map@data$color, border='gray')
 	plot(ocean, add=TRUE, col=rgb(166,189,219,max=255))
 	plot(political, add=TRUE)
-	image.plot(legend.only=TRUE, zlim=c(min(cutoffs),max(cutoffs)), nlevel=9,col=brewer.pal(9,name='RdYlBu'))
+	image.plot(legend.only=TRUE, zlim=c(min(cutoffs),max(cutoffs)), breaks=cutoffs,col=brewer.pal(9,name='RdYlBu'), lab.breaks=cutoffs) #[-c(1,length(cutoffs))]) # nlevel=9
+	text(x=-130,y=40,'HISTORICAL',cex=1.5)
 	# print(p1); stop('cbw')
 	
 	# png(output.png,width=500,height=500)
