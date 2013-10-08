@@ -5,64 +5,6 @@ library(RColorBrewer)
 library(latticeExtra)
 library(fields)
 
-
-change.panel.plots <- function(baseline.data, fut.data, cutoffs, spatial.data, political, ocean, model.names, output.png)
-{
-
-	baseline.data$variable[baseline.data$variable < cutoffs[1]] <- cutoffs[1] + 1
-	baseline.data$variable[baseline.data$variable > cutoffs[length(cutoffs)]] <- cutoffs[length(cutoffs)] - 1
-	print(range(baseline.data$variable))
-	# print(as.vector(baseline.data$variable))
-	# print(head(baseline.data))
-
-	baseline.map <- merge(spatial.data,baseline.data,all.x=FALSE)
-	# print(head(baseline.map@data))
-	
-	# p1 <- spplot(baseline.map, zcol='variable', at=cutoffs, col.regions=brewer.pal(9,name='RdYlBu'), xlim=c(-137,-105), ylim=c(38,58)) + layer(sp.polygons(political,alpha=0.5)) + layer(sp.polygons(ocean,fill=rgb(166,189,219,max=255))) + layer(sp.text(loc=c(-130,40),txt='HISTORICAL',cex=1.5)) # 'PRGn'
-	baseline.map@data$color <- as.character(cut(baseline.map@data$variable, breaks=cutoffs, labels=brewer.pal(9,name='RdYlBu')))
-	# print(head(baseline.map@data$color)); stop('cbw')
-	par(mar=c(3,3,2,5))
-	plot(political, col=rgb(161,217,155,max=255), xlim=c(-136,-106), ylim=c(38,58), axes=TRUE)
-	plot(baseline.map, add=TRUE, col=baseline.map@data$color, border='gray')
-	plot(ocean, add=TRUE, col=rgb(166,189,219,max=255))
-	plot(political, add=TRUE)
-	image.plot(legend.only=TRUE, zlim=c(min(cutoffs),max(cutoffs)), breaks=cutoffs,col=brewer.pal(9,name='RdYlBu'), lab.breaks=cutoffs) #[-c(1,length(cutoffs))]) # nlevel=9
-	text(x=-130,y=40,'HISTORICAL',cex=1.5)
-	# print(p1); stop('cbw')
-	
-	# png(output.png,width=500,height=500)
-		# print(p1)
-	# dev.off()
-	stop('cbw')
-
-	the.plots <- list()
-	for (i in 1:length(fut.data))
-		{
-			print(i)
-			fut.data[[i]]$variable[fut.data[[i]]$variable < cutoffs[1]] <- cutoffs[1] + 1
-			fut.data[[i]]$variable[fut.data[[i]]$variable > cutoffs[length(cutoffs)]] <- cutoffs[length(cutoffs)] - 1
-			print(range(fut.data[[i]]$variable))
-			# print(as.vector(fut.data[[i]]$variable))
-			# print(head(fut.data[[i]]))
-
-			temp.map <- merge(spatial.data,fut.data[[i]],all.x=FALSE)
-
-			# the.plots[[i]] <- spplot(eco, zcol='variable', at=cutoffs, col.regions=paste(brewer.pal(10,name='PRGn'),75,sep='')) + layer(sp.polygons(political,alpha=0.5))
-			the.plots[[model.names[i]]] <- spplot(temp.map, zcol='variable', at=cutoffs, col.regions=brewer.pal(11,name='RdYlBu'), xlim=c(-137,-105), ylim=c(38,58)) + layer(sp.polygons(political,alpha=0.5)) + layer(sp.polygons(ocean,fill=rgb(166,189,219,max=255))) # + layer(sp.text(loc=c(-130,40),txt=model.names[i],cex=1.5)) 'PRGn'
-			
-			# png(paste(workspace,folder,'/Analysis/',scenarios[i],'.variable.png',sep=''),width=500,height=500)
-				# print(the.plots[[model.names[i]]])
-			# dev.off()
-
-			# print(the.plots[[i]])
-		}
-	the.plot <- c(p1,the.plots[[1]],the.plots[[2]],the.plots[[3]],the.plots[[4]],the.plots[[5]], layout=c(3,2))
-
-	png(output.png,width=1050,height=700)
-		print(the.plot)
-	dev.off()
-}
-
 extract.number <- function(x,var.name) { temp <- as.numeric(strsplit(x,split=var.name)[[1]][2]); return(temp) }
 
 data.prep <- function(data.file, type, var.name)
@@ -89,6 +31,34 @@ data.prep <- function(data.file, type, var.name)
 	}
 }
 
+# Function to produce a plot, must be wrapped in png() and layout() functions
+map.plot <- function(baseline.data, cutoffs, spatial.data, political, ocean, model.name, legend.only, include.axes,color.ramp)
+{
+	baseline.data$variable[baseline.data$variable < cutoffs[1]] <- cutoffs[1] + 1
+	baseline.data$variable[baseline.data$variable > cutoffs[length(cutoffs)]] <- cutoffs[length(cutoffs)] - 1
+	print(range(baseline.data$variable))
+
+	baseline.map <- merge(spatial.data,baseline.data,all.x=FALSE)
+	
+	baseline.map@data$color <- as.character(cut(baseline.map@data$variable, breaks=cutoffs, labels=color.ramp))
+	# print(head(baseline.map@data$color)); stop('cbw')
+	
+	if (legend.only==FALSE)
+	{
+		par(mar=c(3,3,0,0))
+		plot(political, col=rgb(189,189,189,max=255), xlim=c(-135,-107), ylim=c(38,58), axes=include.axes, cex.axis=1.5)
+		plot(baseline.map, add=TRUE, col=baseline.map@data$color, border='gray')
+		plot(ocean, add=TRUE, col=rgb(166,189,219,max=255))
+		plot(political, add=TRUE)
+		text(x=-130,y=40,model.name,cex=2)
+	}
+	if (legend.only==TRUE) 
+	{ 
+		plot(political,border='white')
+		image.plot(legend.only=TRUE, add=TRUE, zlim=c(min(cutoffs),max(cutoffs)), breaks=cutoffs,col=color.ramp, lab.breaks=cutoffs, graphics.reset=TRUE) #[-c(1,length(cutoffs))]) # nlevel=9
+	}
+}	
+
 # workspace <- 'F:/PNWCCVA_Data2/HexSim/Workspaces/'
 workspace <- 'H:/HexSim/Workspaces/'
 baseline.data <- data.prep(data.file=paste(workspace,'wolverine_v1/Results/gulo.023.baseline/mean.gulo.023.baseline.huc.41.50.csv',sep=''),type='abundance',var.name='huc')
@@ -104,6 +74,67 @@ for (i in 1:5)
 	# print(head(fut.data[[i]]))
 }
 
+png('h:/hexsim/workspaces/wolverine_v1/analysis/gulo.023.a2.abs.change.41.50.png', width=1400, height=600)
+	layout(matrix(c(7,1,2,3,8,7,4,5,6,8),byrow=TRUE,ncol=5), widths=c(0.3,1,1,1,0.3))
+
+	cutoffs <- c(0,5,10,15,20,25,50,75)
+	map.plot(
+		baseline.data=baseline.data, 
+		cutoffs=cutoffs,
+		model.name='HISTORICAL', 
+		legend.only=FALSE,
+		include.axes=TRUE,	
+		spatial.data=huc,
+		color.ramp=brewer.pal((length(cutoffs)-1),name='YlGn'),
+		political=political,
+		ocean=ocean
+		)
+	
+	cutoffs <- c(-60,-30,-20,-10,-1,1,10,20,30,60)
+	for (i in 1:5)
+	{
+		map.plot(
+			baseline.data=fut.data[[i]], 
+			cutoffs=cutoffs,
+			model.name=c('CCSM3','CGCM3.1','GISS-ER','MIROC','HadCM3')[i], 
+			legend.only=FALSE,
+			include.axes=TRUE,	
+			spatial.data=huc,
+			color.ramp=brewer.pal((length(cutoffs)-1),name='RdYlBu'),
+			political=political,
+			ocean=ocean
+			)
+	}
+	
+	cutoffs <- c(0,5,10,15,20,25,50,75)		
+	map.plot(
+		baseline.data=baseline.data, 
+		cutoffs=cutoffs,
+		model.name='HISTORICAL', 
+		legend.only=TRUE,
+		include.axes=FALSE,	
+		spatial.data=huc,
+		color.ramp=brewer.pal((length(cutoffs)-1),name='YlGn'),
+		political=political,
+		ocean=ocean
+		)
+		
+	cutoffs <- c(-60,-30,-20,-10,-1,1,10,20,30,60)
+	map.plot(
+		baseline.data=baseline.data, 
+		cutoffs=cutoffs,
+		model.name='HISTORICAL', 
+		legend.only=TRUE,
+		include.axes=FALSE,	
+		spatial.data=huc,
+		color.ramp=brewer.pal((length(cutoffs)-1),name='RdYlBu'),
+		political=political,
+		ocean=ocean
+		)
+
+dev.off()
+stop('cbw')
+
 change.panel.plots(
 	baseline.data=baseline.data, 
 	fut.data=fut.data, 
@@ -116,7 +147,37 @@ change.panel.plots(
 	)
 
 stop('cbw')
+
+# ==============================================
 	
+	the.plots <- list()
+	for (i in 1:length(fut.data))
+		{
+			print(i)
+			fut.data[[i]]$variable[fut.data[[i]]$variable < cutoffs[1]] <- cutoffs[1] + 1
+			fut.data[[i]]$variable[fut.data[[i]]$variable > cutoffs[length(cutoffs)]] <- cutoffs[length(cutoffs)] - 1
+			print(range(fut.data[[i]]$variable))
+			# print(as.vector(fut.data[[i]]$variable))
+			# print(head(fut.data[[i]]))
+
+			temp.map <- merge(spatial.data,fut.data[[i]],all.x=FALSE)
+
+			# the.plots[[i]] <- spplot(eco, zcol='variable', at=cutoffs, col.regions=paste(brewer.pal(10,name='PRGn'),75,sep='')) + layer(sp.polygons(political,alpha=0.5))
+			the.plots[[model.names[i]]] <- spplot(temp.map, zcol='variable', at=cutoffs, col.regions=brewer.pal(11,name='RdYlBu'), xlim=c(-137,-105), ylim=c(38,58)) + layer(sp.polygons(political,alpha=0.5)) + layer(sp.polygons(ocean,fill=rgb(166,189,219,max=255))) # + layer(sp.text(loc=c(-130,40),txt=model.names[i],cex=1.5)) 'PRGn'
+			
+			# png(paste(workspace,folder,'/Analysis/',scenarios[i],'.variable.png',sep=''),width=500,height=500)
+				# print(the.plots[[model.names[i]]])
+			# dev.off()
+
+			# print(the.plots[[i]])
+		}
+	the.plot <- c(p1,the.plots[[1]],the.plots[[2]],the.plots[[3]],the.plots[[4]],the.plots[[5]], layout=c(3,2))
+
+	png(output.png,width=1050,height=700)
+		print(the.plot)
+	dev.off()
+
+
 	
 # baseline.data <- read.csv(paste(workspace,folder,'/Results/',base.scenario,'/',base.scenario,'-[1]/eco.BirthsDeaths',version.number,'.table.csv',sep=''),header=TRUE, stringsAsFactors=FALSE)
 # colnames(baseline.data) <- c('ECO_ID_U','variable')
