@@ -79,12 +79,12 @@ create.figure <- function(workspace, species.folder, baseline.scenario, future.s
 	gcms <- c('ccsm3','cgcm3','giss-er','hadcm3','miroc')
 	for (i in 1:5)
 	{
-		fut.data[[i]] <- data.prep(data.file=paste(workspace,species.folder,'/Results/',future.scenario,gcms[i],'/abs.change.',future.scenario,gcms[i],'.',spatial.variable,'.',time.window[1],'.csv',sep=''),type='abundance',var.name=spatial.variable)
+		fut.data[[i]] <- data.prep(data.file=paste(workspace,species.folder,'/Results/',future.scenario[1],gcms[i],future.scenario[2],'/abs.change.',future.scenario[1],gcms[i],future.scenario[2],'.',spatial.variable,'.',time.window[1],'.csv',sep=''),type='abundance',var.name=spatial.variable)
 		# print(head(fut.data[[i]]))
 	}
 
 	if (is.null(dev.list())) { dev.new() } # This may start giving an error for an invalid screen number.  Quit R and start over if this happens. 
-	png(paste(workspace,species.folder,'/analysis/',future.scenario,'abs.change.',time.window[1],'.png',sep=''), width=1200, height=800)
+	png(paste(workspace,species.folder,'/analysis/',future.scenario[1],'abs.change.',time.window[1],future.scenario[2],'.png',sep=''), width=1200, height=800)
 		
 		split.screen(
 			figs=matrix( # L, R, B, T; Ordered upper left corner to upper right, then bottom row.
@@ -163,10 +163,10 @@ create.figure(
 	workspace='H:/HexSim/Workspaces/',
 	species.folder='wolverine_v1',
 	baseline.scenario='gulo.023.baseline',
-	future.scenario='gulo.023.a2.',
+	future.scenario=c('gulo.023.a2.','.swe'), # '.swe' '.biomes'
 	spatial.variable='huc',
 	baseline.time='41.50',
-	time.window=c('100.109','LATE-2100s'), #'100.109', #'41.50'
+	time.window=c('41.50','MID-2100s'), # c('100.109','LATE-2100s'), #'100.109', #'41.50'
 	historical.cutoffs=c(0,5,10,25,50,75,100,150),
 	future.cutoffs=c(-125,-75,-30,-15,-5,0,5,15,30,75,125)
 	)
