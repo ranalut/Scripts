@@ -46,6 +46,7 @@ map.plot <- function(baseline.data, distribution.data, cutoffs, spatial.data, po
 	# print(head(baseline.map@data))
 	
 	baseline.map@data$color <- as.character(cut(baseline.map@data$variable, breaks=cutoffs, labels=color.ramp))
+	# baseline.map@data$color <- as.character(colorRampPalette(color.ramp)(baseline.map@data$variable))
 	# print(head(baseline.map@data$color)); stop('cbw')
 	
 	par(mar=margins)
@@ -60,6 +61,8 @@ map.plot <- function(baseline.data, distribution.data, cutoffs, spatial.data, po
 	{ 
 		# color.legend(xl,yb,xr,yt)
 		image.plot(legend.only=TRUE, add=TRUE, zlim=c(min(cutoffs),max(cutoffs)), breaks=cutoffs, col=color.ramp, lab.breaks=cutoffs, legend.width=3, graphics.reset=TRUE, legend.args=list(text=label.text,cex=1.5,side=1,line=2.25))
+		# image.plot(legend.only=TRUE, add=TRUE, zlim=c(min(cutoffs),max(cutoffs)), col=as.character(colorRampPalette(color.ramp)(baseline.map@data$variable)), legend.width=3, graphics.reset=TRUE, legend.args=list(text=label.text,cex=1.5,side=1,line=2.25))
+		# image.plot(legend.only=TRUE, add=TRUE, zlim=c(min(cutoffs),max(cutoffs)), col=color.ramp, lab.breaks=cutoffs, legend.width=3, legend.args=list(text=label.text,cex=1.5,side=1,line=2.25)) # nlevel=length(color.ramp), graphics.reset=TRUE)
 	}
 }	
 
@@ -76,12 +79,12 @@ create.figure <- function(workspace, species.folder, baseline.scenario, future.s
 	gcms <- c('ccsm3','cgcm3','giss-er','hadcm3','miroc')
 	for (i in 1:5)
 	{
-		fut.data[[i]] <- data.prep(data.file=paste(workspace,species.folder,'/Results/',future.scenario,gcms[i],'/abs.change.',future.scenario,gcms[i],'.',spatial.variable,'.',time.window,'.csv',sep=''),type='abundance',var.name=spatial.variable)
+		fut.data[[i]] <- data.prep(data.file=paste(workspace,species.folder,'/Results/',future.scenario,gcms[i],'/abs.change.',future.scenario,gcms[i],'.',spatial.variable,'.',time.window[1],'.csv',sep=''),type='abundance',var.name=spatial.variable)
 		# print(head(fut.data[[i]]))
 	}
 
 	if (is.null(dev.list())) { dev.new() } # This may start giving an error for an invalid screen number.  Quit R and start over if this happens. 
-	png(paste(workspace,species.folder,'/analysis/',future.scenario,'abs.change.',time.window,'.png',sep=''), width=1200, height=800)
+	png(paste(workspace,species.folder,'/analysis/',future.scenario,'abs.change.',time.window[1],'.png',sep=''), width=1200, height=800)
 		
 		split.screen(
 			figs=matrix( # L, R, B, T; Ordered upper left corner to upper right, then bottom row.
@@ -104,7 +107,7 @@ create.figure <- function(workspace, species.folder, baseline.scenario, future.s
 					baseline.data=fut.data[[i]],
 					distribution.data=historical.data,
 					cutoffs=cutoffs,
-					model.name=paste('MID-2100s',c('CCSM3','CGCM3.1','GISS-ER','MIROC3.2','UKMO-\nHadCM3'),sep='\n')[i], 
+					model.name=paste(time.window[2],c('CCSM3','CGCM3.1','GISS-ER','MIROC3.2','UKMO-\nHadCM3'),sep='\n')[i], 
 					add.legend=FALSE,
 					include.axes=TRUE,	
 					spatial.data=huc,
@@ -122,7 +125,7 @@ create.figure <- function(workspace, species.folder, baseline.scenario, future.s
 					baseline.data=fut.data[[i]], 
 					distribution.data=historical.data,
 					cutoffs=cutoffs,
-					model.name=paste('MID-2100s',c('CCSM3','CGCM3.1','GISS-ER','MIROC3.2','UKMO-\nHadCM3'),sep='\n')[i], 
+					model.name=paste(time.window[2],c('CCSM3','CGCM3.1','GISS-ER','MIROC3.2','UKMO-\nHadCM3'),sep='\n')[i], 
 					add.legend=TRUE,
 					include.axes=TRUE,	
 					spatial.data=huc,
@@ -163,7 +166,7 @@ create.figure(
 	future.scenario='gulo.023.a2.',
 	spatial.variable='huc',
 	baseline.time='41.50',
-	time.window='100.109', #'100.109', #'41.50'
+	time.window=c('100.109','LATE-2100s'), #'100.109', #'41.50'
 	historical.cutoffs=c(0,5,10,25,50,75,100,150),
-	future.cutoffs=c(-60,-30,-20,-10,-5,0,5,10,20,30,60)
+	future.cutoffs=c(-125,-75,-30,-15,-5,0,5,15,30,75,125)
 	)
