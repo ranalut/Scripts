@@ -32,7 +32,7 @@ merge.report.traits <- function(workspace, scenario, r, report, trait.name, year
 	colnames(the.sum) <- c('CBW_CODE','variable')
 	the.sum <- data.frame(the.sum$CBW_CODE,births=rep(NA,dim(the.sum)[1]),deaths=rep(NA,dim(the.sum)[1]),the.sum$variable)
 	#print(head(the.means)); stop('cbw')
-	write.csv(the.sum, paste(workspace,scenario,'/',scenario,'-[',r,']/',scenario,report,population,'_',years[[1]][1],'_',years[[length(years)]][2],'_[',trait.name,'].csv',sep=''))
+	write.csv(the.sum, paste(workspace,scenario,'/',scenario,'-[',r,']/',scenario,report,population,'_',years[[1]][1],'_',years[[length(years)]][2],'_[',trait.name,'].csv',sep=''), row.names=FALSE)
 	# return(census3)
 }
 
@@ -44,9 +44,9 @@ colnames(ecoregion.table) <- c('shape.index','ECO_NAME','trait.index')
 
 folder <- 'wolverine_v1'
 scenarios <- scenarios.vector(
-				base.sim='gulo.023.a2.', # base.sim='gulo.023.',
-				gcms=c('ccsm3','cgcm3','giss-er','hadcm3','miroc'), # gcms='baseline',
-				other=c('','.biomes','.swe') # other=''
+				base.sim='gulo.023.a2.', # base.sim='gulo.023.a2.', # base.sim='gulo.023.',
+				gcms=c('ccsm3','cgcm3','giss-er','hadcm3','miroc'), # gcms=c('ccsm3','cgcm3','giss-er','hadcm3','miroc'), # gcms='baseline',
+				other=c('','.biomes','.swe') # other=c('','.biomes','.swe') # other=''
 				)
 for (i in scenarios)
 {
@@ -58,7 +58,7 @@ for (i in scenarios)
 			r=j,
 			report='_REPORT_productivity_',
 			trait.name='HucID',
-			years=list(c(31,40),c(41,50),c(51,60)),
+			years=list(c(81,90),c(91,100),c(101,109)), # Be sure that mid-century is year 60 and end-of century is year 110.
 			population='wolverine'
 			)
 		cat(i,j,'\n')
