@@ -37,7 +37,7 @@ report4 <- function(hexsim.wksp1, hexsim.wksp2, spp.folder, scenario.name, repor
 
 # base.sim <- 'gulo.023.a2.' # base.sim <- 'gulo.023.'
 base.sim <- 'lynx.050.'
-gcms <- c('baseline') # c('ccsm3','cgcm3','giss-er','hadcm3','miroc') # c('baseline')
+gcms <- c('ccsm3','cgcm3','giss-er','hadcm3','miroc') # c('baseline')
 # gcms <- 'ccsm3'
 other <- c('','.35') # other <- '' # other <- c('','.biomes','.swe')
 
@@ -55,7 +55,7 @@ print(scenarios)
 # years <- list(c(11,20),c(21,30),c(31,40),c(41,50),c(51,60),c(61,70),c(71,80),c(81,90),c(91,100),c(101,109)) # years <- list(c(11,20),c(21,30),c(31,40),c(41,50)) # Wolverine
 # years <- list(c(16,24),c(25,33),c(34,42),c(43,51),c(52,60),c(61,69),c(70,78),c(79,87),c(88,96),c(97,105)) # Lynx
 # years <- list(c(25,33),c(34,42),c(43,51),c(79,87),c(88,96),c(97,105)) # Only mid-century and end-of-century. # Lynx
-years <- list(c(16,42)) # years <- list(c(25,51),c(79,105))
+years <- list(c(34,60)) # list(c(16,42)) # years <- list(c(25,51),c(79,105))
 # stop('cbw')
 
 for (i in scenarios)
