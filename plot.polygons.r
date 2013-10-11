@@ -1,4 +1,5 @@
 
+setwd('c:/users/cbwilsey/documents/github/scripts/')
 library(maptools)
 library(sp)
 library(RColorBrewer)
@@ -37,16 +38,16 @@ create.figure <- function(workspace, species.folder, baseline.scenario, future.s
 	# =====================================================================================================
 	# Plotting, making a figure
 	if (is.null(dev.list())) { dev.new() } # This may start giving an error for an invalid screen number.  Quit R and start over if this happens. 
-	png(paste(workspace,species.folder,'/analysis/',future.scenario[1],data.type,'.',time.window[1],future.scenario[2],'.png',sep=''), width=1200, height=800)
+	png(paste(workspace,species.folder,'/analysis/',future.scenario[1],data.type,'.',time.window[1],future.scenario[2],'.png',sep=''), width=1300, height=800)
 		
 		split.screen(
 			figs=matrix( # L, R, B, T; Ordered upper left corner to upper right, then bottom row.
-				c(0,0.32,0.5,1,
-				0.32,0.64,0.5,1,
-				0.64,1,0.5,1,
-				0,0.32,0,0.5,
-				0.32,0.64,0,0.5,
-				0.64,1,0,0.5),
+				c(0,0.31,0.5,1,
+				0.31,0.62,0.5,1,
+				0.62,1,0.5,1,
+				0,0.31,0,0.5,
+				0.31,0.62,0,0.5,
+				0.62,1,0,0.5),
 				ncol=4,byrow=TRUE)
 				) 
 		# stop('cbw')
@@ -85,8 +86,8 @@ create.figure <- function(workspace, species.folder, baseline.scenario, future.s
 					include.axes=TRUE,	
 					spatial.data=huc,
 					color.ramp=brewer.pal((length(cutoffs)-1),name='PRGn'),
-					margins=c(3,3,0.5,4.5),
-					label.text='  births-\n  deaths', # '  delta',
+					margins=c(3,3,0.5,6.5),
+					label.text=ifelse(data.type=='abundance','      delta','      births-\n      deaths'), 
 					political=political,
 					ocean=ocean,
 					study.area=study.area,
@@ -96,18 +97,20 @@ create.figure <- function(workspace, species.folder, baseline.scenario, future.s
 			}
 		}
 		cutoffs <- historical.cutoffs
+		if (data.type=='abundance') { color.ramp <- brewer.pal((length(cutoffs)-1),name='YlGn') }
+		else { color.ramp <- brewer.pal((length(cutoffs)-1),name='PRGn') }
 		screen(6,new=TRUE)
 		map.plot(
 			the.data=historical.data,
 			distribution.data=historical.data,
 			cutoffs=cutoffs,
-			model.name='BASELINE', # 'BASELINE\nABUNDANCE', 
-			add.legend=FALSE, # TRUE,
+			model.name=ifelse(data.type=='abundance','BASELINE\nABUNDANCE','BASELINE'), 
+			add.legend=ifelse(data.type=='abundance',TRUE,FALSE), 
 			include.axes=TRUE,	
 			spatial.data=huc,
-			color.ramp=brewer.pal((length(cutoffs)-1),name='PRGn'), # brewer.pal((length(cutoffs)-1),name='YlGn'),
-			margins=c(3,3,0.5,4.5),
-			label.text='  females',
+			color.ramp=color.ramp,
+			margins=c(3,3,0.5,6.5),
+			label.text='      females',
 			political=political,
 			ocean=ocean,
 			study.area=study.area,
@@ -125,10 +128,10 @@ create.figure(
 	species.folder='wolverine_v1',
 	baseline.scenario='gulo.023.baseline',
 	future.scenario=c('gulo.023.a2.',''), # '' '.swe' '.biomes'
-	data.type='productivity', # 'abundance'
+	data.type='abundance', # 'productivity', # 'abundance'
 	spatial.variable='huc',
-	baseline.time='21.50',
-	time.window=c('81.109','LATE-2100s'), # c('100.109','LATE-2100s'), #'100.109', #'41.50'
-	historical.cutoffs=c(-1,-0.5,-0.25,-0.10,-0.05,0.05,0.10,0.25,0.5,1), # c(-75,-50,-30,-15,-5,5,15,30,50,75), # c(0,5,10,25,50,75,100,150),
-	future.cutoffs=c(-1,-0.5,-0.25,-0.10,-0.05,0.05,0.10,0.25,0.5,1) # c(-75,-50,-30,-15,-5,5,15,30,50,75) # c(-125,-75,-30,-15,-5,0,5,15,30,75,125)
+	baseline.time='41.50', # '41.50', # '21.50',
+	time.window=c('100.109','LATE-2100s'), # c('31.60','MID-2100s'), # c('81.109','LATE-2100s'),
+	historical.cutoffs=c(0,2,5,10,25,50,175), # c(-100,-25,-10,-5,-2,0,2,5,10,25,100), # c(0,5,10,25,50,75,100,150),
+	future.cutoffs=c(-125,-25,-10,-5,-2,0,2,5,10,25,125) # c(-100,-25,-10,-5,-2,0,2,5,10,25,100)
 	)
