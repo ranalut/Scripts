@@ -106,48 +106,46 @@ pro.area.table <- data.frame(shape.index=seq(1,1252,1),trait.index=seq(1,1252,1)
 ecoregion.table <- read.csv('H:/SpatialData/SpatialData/tnc-terr-ecoregions121409/ecoregions.merge.table.csv',header=TRUE,row.names=1)
 colnames(ecoregion.table) <- c('shape.index','ECO_NAME','trait.index')
 
-folder <- 'wolverine_v1'
+folder <- 'lynx_v1' # 'wolverine_v1'
 scenarios <- scenarios.vector(
-				# base.sim='gulo.023.',
-				base.sim='gulo.023.a2.',
-				# gcms='baseline',
-				gcms=c('ccsm3','cgcm3','giss-er','hadcm3','miroc'),
-				# other=''
-				other=c('','.biomes','.swe')
+				base.sim='lynx.050.', # base.sim='gulo.023.a2.',# base.sim='gulo.023.',
+				gcms=c('baseline','ccsm3','cgcm3','giss-er','hadcm3','miroc'),# gcms=c('ccsm3','cgcm3','giss-er','hadcm3','miroc'), gcms='baseline',
+				other=c('','.35') # other=c('','.biomes','.swe')# other=''
 				)
-# for (i in scenarios)
-# {
-	# for (j in 1:5)
-	# {
-		# table.census.traits(
-			# workspace=paste('H:/HexSim/Workspaces/',folder,'/Results/',sep=''), 
-			# scenario=i, 
-			# merge.table=huc.table,
-			# reps=j,
-			# census.no=2,
-			# trait.name='huc',
-			# years=c(100,109)
-			# )
-		# cat(i,j,'\n')
-		# # stop('cbw')
-	# }
-# }
+for (i in scenarios)
+{
+	for (j in 1:5)
+	{
+		table.census.traits(
+			workspace=paste('I:/HexSim/Workspaces/',folder,'/Results/',sep=''), # workspace=paste('H:/HexSim/Workspaces/',folder,'/Results/',sep=''), 
+			scenario=i, 
+			merge.table=huc.table,
+			reps=j,
+			census.no=2,
+			trait.name='huc',
+			years=c(25,51)
+			)
+		cat(i,j,'\n')
+		# stop('cbw')
+	}
+}
 
-the.change(workspace=paste('H:/HexSim/Workspaces/',folder,'/Results/',sep=''), baseline='gulo.023.baseline', fut.scenarios=scenarios, reps=5, trait.name='huc', base.years=c(41,50), years=c(41,50), type='abs')
+# the.change(workspace=paste('H:/HexSim/Workspaces/',folder,'/Results/',sep=''), baseline='gulo.023.baseline', fut.scenarios=scenarios, reps=5, trait.name='huc', base.years=c(41,50), years=c(41,50), type='abs')
+the.change(workspace=paste('I:/HexSim/Workspaces/',folder,'/Results/',sep=''), baseline='lynx.050.baseline', fut.scenarios=scenarios, reps=5, trait.name='huc', base.years=c(25,51), years=c(41,50), type='abs')
 
 stop('cbw')
 
-for (i in 1:dim(ecoregion.table)[1])
-# for (i in 1)
-{
-	plot.census.traits(
-		workspace=paste('F:/PNWCCVA_Data2/HexSim/Workspaces/',folder,'/',sep=''), 
-		max.t=max.t, 
-		scenarios=scenarios, 
-		eco.region=i,
-		y.max=y.max[i], 
-		# main.text=paste(ecoregion.table$ECO_NAME[i],'\nboreal cycling',sep='')
-		main.text=ecoregion.table$ECO_NAME[i]
-		)
-}
+# for (i in 1:dim(ecoregion.table)[1])
+# # for (i in 1)
+# {
+	# plot.census.traits(
+		# workspace=paste('F:/PNWCCVA_Data2/HexSim/Workspaces/',folder,'/',sep=''), 
+		# max.t=max.t, 
+		# scenarios=scenarios, 
+		# eco.region=i,
+		# y.max=y.max[i], 
+		# # main.text=paste(ecoregion.table$ECO_NAME[i],'\nboreal cycling',sep='')
+		# main.text=ecoregion.table$ECO_NAME[i]
+		# )
+# }
 
