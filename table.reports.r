@@ -2,7 +2,7 @@
 library(RColorBrewer)
 source('scenario.vector.r')
 
-table.report.traits <- function(workspace, scenario, merge.table, reps, report, trait.name, years, population)
+table.report.traits <- function(workspace, scenario, merge.table, reps, report, report.output, trait.name, years, population)
 {	
 	# print(paste(workspace,scenario,'/',scenario,'-[1]/',scenario,report,population,'_',years[1],'_',years[2],'_[HucID].csv',sep=''))
 	test <- file.exists(paste(workspace,scenario,'/',scenario,'-[1]/',scenario,report,population,'_',years[1],'_',years[2],'_[HucID].csv',sep=''))
@@ -31,7 +31,7 @@ table.report.traits <- function(workspace, scenario, merge.table, reps, report, 
 	the.means <- the.data[,c(1,7)]
 	colnames(the.means) <- c('CBW_CODE','variable')
 	# print(head(the.means)); stop('cbw')
-	write.csv(the.means, paste(workspace,scenario,'/',scenario,report,trait.name,'.',years[1],'.',years[2],'.csv',sep=''))
+	write.csv(the.means, paste(workspace,scenario,'/',scenario,report.output,trait.name,'.',years[1],'.',years[2],'.csv',sep=''))
 	# return(census3)
 }
 
@@ -43,9 +43,9 @@ colnames(ecoregion.table) <- c('shape.index','ECO_NAME','trait.index')
 
 folder <- 'wolverine_v1' # 'lynx_v1' # 'wolverine_v1'
 scenarios <- scenarios.vector(
-				base.sim='gulo.023.a2.',# base.sim='lynx.050.', # base.sim='gulo.023.a2.',# base.sim='gulo.023.',
-				gcms=c('ccsm3','cgcm3','giss-er','hadcm3','miroc'), # gcms='baseline', # gcms=c('baseline','ccsm3','cgcm3','giss-er','hadcm3','miroc')
-				other=c('','.biomes','.swe') #other=c('','.35') # other=c('','.biomes','.swe')# other=''
+				base.sim='gulo.023.',# base.sim='lynx.050.', # base.sim='gulo.023.a2.',# base.sim='gulo.023.',
+				gcms='baseline', # gcms='baseline', # gcms=c('baseline','ccsm3','cgcm3','giss-er','hadcm3','miroc')
+				other='' #other=c('','.35') # other=c('','.biomes','.swe')# other=''
 				)
 for (i in scenarios)
 {
@@ -55,8 +55,9 @@ for (i in scenarios)
 		merge.table=huc.table,
 		reps=5,
 		report='_REPORT_productivity_',
+		report.output='.report.productivity.',
 		trait.name='huc',
-		years=c(81,109),
+		years=c(21,50),
 		population='wolverine'
 		)
 	cat(i,j,'\n')
