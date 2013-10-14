@@ -44,7 +44,7 @@ map.plot <- function(the.data, distribution.data, cutoffs, spatial.data, politic
 	if (add.legend==TRUE) 
 	{ 
 		# color.legend(xl,yb,xr,yt)
-		image.plot(legend.only=TRUE, add=TRUE, zlim=c(min(cutoffs.log),max(cutoffs.log)), breaks=cutoffs.log, col=color.ramp, lab.breaks=cutoffs, legend.width=3, graphics.reset=TRUE, legend.args=list(text=label.text,cex=1.5,side=1,line=2.5))
+		image.plot(legend.only=TRUE, add=TRUE, zlim=c(min(cutoffs.log),max(cutoffs.log)), breaks=cutoffs.log, col=color.ramp, lab.breaks=cutoffs, legend.width=3, graphics.reset=TRUE, legend.args=list(text=label.text,cex=1.5,side=1,line=ifelse(data.type=='abundance',2,2.5)))
 		# image.plot(legend.only=TRUE, add=TRUE, zlim=c(min(cutoffs),max(cutoffs)), col=as.character(colorRampPalette(color.ramp)(the.map@data$variable)), legend.width=3, graphics.reset=TRUE, legend.args=list(text=label.text,cex=1.5,side=1,line=2.25))
 		# image.plot(legend.only=TRUE, add=TRUE, zlim=c(min(cutoffs),max(cutoffs)), col=color.ramp, lab.breaks=cutoffs, legend.width=3, legend.args=list(text=label.text,cex=1.5,side=1,line=2.25)) # nlevel=length(color.ramp), graphics.reset=TRUE)
 	}
