@@ -38,7 +38,7 @@ create.figure <- function(workspace, species.folder, baseline.scenario, future.s
 	# =====================================================================================================
 	# Plotting, making a figure
 	if (is.null(dev.list())) { dev.new() } # This may start giving an error for an invalid screen number.  Quit R and start over if this happens. 
-	png(paste(workspace,species.folder,'/analysis/',future.scenario[1],data.type,'.',time.window[1],future.scenario[2],'.png',sep=''), width=1300, height=800)
+	png(paste(workspace,species.folder,'/analysis/',future.scenario[1],data.type,'.',time.window[1],future.scenario[2],'.png',sep=''), width=1250, height=800)
 		
 		split.screen(
 			figs=matrix( # L, R, B, T; Ordered upper left corner to upper right, then bottom row.
@@ -120,18 +120,33 @@ create.figure <- function(workspace, species.folder, baseline.scenario, future.s
 	dev.off()
 
 }
-
 # =======================================================================================
-# Function Call
+# Function Call Lynx
 create.figure(
-	workspace='H:/HexSim/Workspaces/',
-	species.folder='wolverine_v1',
-	baseline.scenario='gulo.023.baseline',
-	future.scenario=c('gulo.023.a2.',''), # '' '.swe' '.biomes'
+	workspace='I:/HexSim/Workspaces/',
+	species.folder='lynx_v1',
+	baseline.scenario='lynx.050.baseline',
+	future.scenario=c('gulo.050.','.swe'), # '' '.swe' '.biomes'
 	data.type='abundance', # 'productivity', # 'abundance'
 	spatial.variable='huc',
 	baseline.time='41.50', # '41.50', # '21.50',
-	time.window=c('100.109','LATE-2100s'), # c('31.60','MID-2100s'), # c('81.109','LATE-2100s'),
+	time.window=c('100.109','LATE-2100s'), # c('31.60','MID-2100s'), # c('81.109','LATE-2100s'), '100.109', '51.60'
 	historical.cutoffs=c(0,2,5,10,25,50,175), # c(-100,-25,-10,-5,-2,0,2,5,10,25,100), # c(0,5,10,25,50,75,100,150),
 	future.cutoffs=c(-125,-25,-10,-5,-2,0,2,5,10,25,125) # c(-100,-25,-10,-5,-2,0,2,5,10,25,100)
 	)
+
+
+# =======================================================================================
+# Function Call Wolverine
+# create.figure(
+	# workspace='H:/HexSim/Workspaces/',
+	# species.folder='wolverine_v1',
+	# baseline.scenario='gulo.023.baseline',
+	# future.scenario=c('gulo.023.a2.','.swe'), # '' '.swe' '.biomes'
+	# data.type='abundance', # 'productivity', # 'abundance'
+	# spatial.variable='huc',
+	# baseline.time='41.50', # '41.50', # '21.50',
+	# time.window=c('100.109','LATE-2100s'), # c('31.60','MID-2100s'), # c('81.109','LATE-2100s'), '100.109', '51.60'
+	# historical.cutoffs=c(0,2,5,10,25,50,175), # c(-100,-25,-10,-5,-2,0,2,5,10,25,100), # c(0,5,10,25,50,75,100,150),
+	# future.cutoffs=c(-125,-25,-10,-5,-2,0,2,5,10,25,125) # c(-100,-25,-10,-5,-2,0,2,5,10,25,100)
+	# )
