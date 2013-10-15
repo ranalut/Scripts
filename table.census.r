@@ -11,7 +11,14 @@ table.census.traits <- function(workspace, scenario, merge.table, reps, census.n
 	census <- read.csv(paste(workspace,scenario,'/',scenario,'-[',reps,']/',scenario,'.',census.no,'.csv',sep=''),header=TRUE)
 	# print(census[(years[1]+1),]); stop('cbw')
 	census2 <- census[,7:dim(census)[2]]
-
+	
+	if(length(grep('rana',scenario))==1)
+	{
+		temp.census <- list(census2[,1:1550],census2[,1551:3100],census2[,3101:4650],census2[,4651:6200],census2[,6201:7750],census2[,7751:9300])
+		census2 <- temp.census[[3]] + temp.census[[4]] + temp.census[[5]] # Considering populations > 50 individuals
+		# print(dim(census2)); print(census2[1,1:10]); stop('cbw')
+	}
+	
 	census2 <- census2[,(merge.table$trait.index + 1)]
 	colnames(census2) <- paste(trait.name,merge.table$shape.index,sep='')
 	
@@ -46,6 +53,7 @@ the.change <- function(workspace, baseline, fut.scenarios, reps, trait.name, bas
 	write.csv(output,paste(workspace ,scenario,'/mean.',scenario,'.',trait.name,'.',base.years[1],'.',base.years[2],'.csv',sep=''))
 	base.mean <- output$base.mean
 	
+	# print(fut.scenarios); stop('cbw')
 	# Future Scenarios
 	for (j in fut.scenarios)
 	{
@@ -97,11 +105,11 @@ summarize.census <- function(workspace, folder, base.sim, gcms, other, census.no
 		}
 	}
 	
-	fut.scenarios <- scenarios[-grep('base',scenarios)]
+	if (length(grep('base',scenarios)) >= 1) { fut.scenarios <- scenarios[-grep('base',scenarios)] }
+	else { fut.scenarios <- scenarios }
+	# print(fut.scenarios); stop('cbw')
 	
 	the.change(workspace=paste(workspace,folder,'/Results/',sep=''), baseline=baseline, fut.scenarios=fut.scenarios, reps=reps, trait.name=trait.name, base.years=base.years, years=fut.years, type=type)
-	# the.change(workspace=paste('I:/HexSim/Workspaces/',folder,'/Results/',sep=''), baseline='lynx.050.baseline', fut.scenarios=scenarios, reps=5, trait.name='huc', base.years=c(25,51), years=c(41,50), type='abs')
-
 }
 
 # # Wolverine
@@ -124,20 +132,35 @@ summarize.census <- function(workspace, folder, base.sim, gcms, other, census.no
 # All year segments = list(c(16,24),c(25,33),c(34,42),c(43,51),c(52,60),c(61,69),c(70,78),c(79,87),c(88,96),c(97,105))
 # 2, 30-year windows = list(c(34,60),c(79,105))
 # baseline window = list(c(25,51))
+# summarize.census(
+		# workspace='I:/HexSim/Workspaces/', 
+		# folder='lynx_v1', 
+		# base.sim='lynx.050.',
+		# gcms=c('baseline','ccsm3','cgcm3','giss-er','hadcm3','miroc'),
+		# other='', # '', '.35' # c('','.35'), # Run .35 separately with .35 baseline (below).
+		# census.no=2, 
+		# trait.name='huc', 
+		# reps=5, 
+		# fut.years=c(97,105), 
+		# baseline='lynx.050.baseline.35', # Will need to run with .35 as the baseline
+		# base.years=c(34,42), 
+		# type='abs'
+		# )
+
+# Spotted Frog
 summarize.census(
-		workspace='I:/HexSim/Workspaces/', 
-		folder='lynx_v1', 
-		base.sim='lynx.050.',
-		gcms=c('baseline','ccsm3','cgcm3','giss-er','hadcm3','miroc'),
-		other='.35', # '', '.35' # c('','.35'), # Run .35 separately with .35 baseline (below).
-		census.no=2, 
+		workspace='//cfr.washington.edu/main/Space/Lawler/Shared/Wilsey/PostDoc/HexSim/Workspaces/', 
+		folder='spotted_frog_v2', 
+		base.sim='rana.lut.104.100.', #'rana.lut.104.90.' # 'rana.lut.104.100.'
+		gcms=c('ccsm3','cgcm3','giss-er','hadcm3','miroc'), # gcms='baseline',
+		other=c('','.aet','.swe'), # c('','.aet','.swe'), # '',
+		census.no=1, 
 		trait.name='huc', 
 		reps=5, 
-		fut.years=c(52,60), 
-		baseline='lynx.050.baseline.35', # Will need to run with .35 as the baseline
-		base.years=c(34,42), 
+		fut.years=c(99,109), 
+		baseline='rana.lut.104.100.baseline', 
+		base.years=c(31,40), 
 		type='abs'
-		)
-		
-		
+		)		
+	
 		
