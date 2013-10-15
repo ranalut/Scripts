@@ -121,19 +121,34 @@ create.figure <- function(workspace, species.folder, baseline.scenario, future.s
 
 }
 # =======================================================================================
-# Function Call Lynx
+# Function Call Spotted Frog
 create.figure(
-	workspace='I:/HexSim/Workspaces/',
-	species.folder='lynx_v1',
-	baseline.scenario='lynx.050.baseline',
-	future.scenario=c('gulo.050.','.swe'), # '' '.swe' '.biomes'
-	data.type='abundance', # 'productivity', # 'abundance'
+	workspace='//cfr.washington.edu/main/Space/Lawler/Shared/Wilsey/PostDoc/HexSim/Workspaces/',
+	species.folder='spotted_frog_v2',
+	baseline.scenario='rana.lut.104.90.baseline', # 'rana.lut.104.100.baseline'
+	future.scenario=c('rana.lut.104.90.',''), # c('rana.lut.104.100.','.swe')
+	data.type='abundance',
 	spatial.variable='huc',
-	baseline.time='41.50', # '41.50', # '21.50',
-	time.window=c('100.109','LATE-2100s'), # c('31.60','MID-2100s'), # c('81.109','LATE-2100s'), '100.109', '51.60'
-	historical.cutoffs=c(0,2,5,10,25,50,175), # c(-100,-25,-10,-5,-2,0,2,5,10,25,100), # c(0,5,10,25,50,75,100,150),
-	future.cutoffs=c(-125,-25,-10,-5,-2,0,2,5,10,25,125) # c(-100,-25,-10,-5,-2,0,2,5,10,25,100)
+	baseline.time='31.40',
+	time.window=c('51.60','MID-2100s'), # c('51.60','MID-2100s'), c('99.109','LATE-2100s'),
+	historical.cutoffs=c(0,5,20,100,500,2000),
+	future.cutoffs=c(-2000,-500,-100,-20,-5,0,5,20,100,500,2000)
 	)
+
+# # =======================================================================================
+# # Function Call Lynx
+# create.figure(
+	# workspace='I:/HexSim/Workspaces/',
+	# species.folder='lynx_v1',
+	# baseline.scenario='lynx.050.baseline.35', # run .35 separately
+	# future.scenario=c('lynx.050.','.35'), # run .35 separately
+	# data.type='abundance', # 'productivity', # 'abundance'
+	# spatial.variable='huc',
+	# baseline.time='34.42',
+	# time.window=c('97.105','LATE-2100s'), # c('97.105','LATE-2100s') # c('52.60','MID-2100s')
+	# historical.cutoffs=c(0,5,25,200,1000),
+	# future.cutoffs=c(-350,-75,-20,-5,-2,0,2,5,20,75,350)
+	# )
 
 
 # =======================================================================================
