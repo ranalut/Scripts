@@ -1,6 +1,6 @@
 
 # =========================================================================================
-# Generate HexMaps from spatial data layers for the spotted frog workspace.
+# Generate HexMaps from spatial data layers for the Townsend's ground squirrel workspace.
 # =========================================================================================
 
 # ========================================================================================
@@ -27,11 +27,12 @@ output.wksp <- 'F:/PNWCCVA_Data2/HexSim/' #'H:/HexSim/' #'E:/HexSim/'
 output.wksp2 <- 'F:\\PNWCCVA_Data2\\HexSim' #'H:\\HexSim' # 'E:\\HexSim'
 spp.folder <- 'town_squirrel_v1'
 
-run.hex.grid <- 		'n'
+run.hex.grid <- 		'y'
 run.historical.swe <- 	'n'
-run.hist.deficit <- 	'y'
+run.hist.deficit <- 	'n'
+run.hist.biomes <-		'n'
 run.biomes <- 			'n'
-# run.initial <- 			'n' # Not updated for squirrel
+# run.initial <- 		'n' # Not updated for squirrel
 run.future.swe <- 		'n'
 run.defict <- 			'n' # Need to resample for new grid
 run.fire <- 			'n' # May need to add this
@@ -56,7 +57,7 @@ if (run.hex.grid=='y')
 # ==========================================================================================================
 # Biomes
 
-if (run.biomes=='y')
+if (run.hist.biomes=='y')
 {
 	nc.2.hxn(
 		variable='biome_modal_30yr', 
@@ -65,9 +66,64 @@ if (run.biomes=='y')
 		theCentroids=hex.grid[[1]],
 		max.value=Inf,
 		changeTable=data.frame(matrix(c(seq(1,12,1),c(0,0,0,0,0,0,0,1,1,0,0,0)),ncol=2)), # grasslands steppe (8) and shrub steppe (9)
-		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='biomes2'
+		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='biomes2',
+		dimensions=c(1750,1859)
 		)
 }	
+
+# Biomes
+if (run.biomes=='y')
+{
+	theGCMs <- c('CCSM3','CGCM3.1_t47','GISS-ER','MIROC3.2_medres','UKMO-HadCM3')
+	file.path <- 'H:/vegetation/26jul13_outputs/biome_modal_30yr_a2/'
+	file.name <- c('wna30sec_a2_','_biome_30-year_mean_')
+	# variable.folders <- 'snowfall_swe_balance_first_day_of_month_a2'
+
+	for (i in 1:5)
+	# for (i in 1)
+	{
+		startTime <- Sys.time()
+
+		for (j in 1:99)
+		# for (j in 1)
+		{
+			test <- file.exists(paste(output.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/',theGCMs[i],'.biomes.a2/',theGCMs[i],'.biomes.a2.',(10+j),'.hxn',sep=''))
+			if(test==TRUE) { cat(theGCMs[i],j,'\n'); next(j) }
+			
+			nc.2.hxn(
+				variable='biome', 
+				nc.file=paste(file.path,file.name[1],theGCMs[i],file.name[2],(2000+j),'.nc',sep=''), 
+				hex.grid=hex.grid[[2]], 
+				theCentroids=hex.grid[[1]],
+				max.value=Inf,
+				changeTable=data.frame(matrix(c(seq(1,12,1),c(0,0,0,0,0,0,0,1,1,0,0,0)),ncol=2)),
+				hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, 
+				hexmap.name=paste(theGCMs[i],'.biomes.a2',sep=''),
+				dimensions=c(1750,1859)
+				)
+
+			file.copy(
+				from=paste(output.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/',theGCMs[i],'.biomes.a2/',theGCMs[i],'.biomes.a2.1.hxn',sep=''), 
+				to=paste(output.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/',theGCMs[i],'.biomes.a2/',theGCMs[i],'.biomes.a2.',(10+j),'.hxn',sep=''),
+				overwrite=TRUE
+				)
+			cat('Year',j,Sys.time()-startTime, 'minutes or seconds to create Hexmap', '\n') # 1.09 minutes...
+			# stop('cbw')
+		}
+		
+		# Present-day
+		nc.2.hxn(
+			variable='biome', 
+			nc.file="H:/vegetation/26jul13_outputs/biome_modal_30yr_CRU_TS_2.10/wna30sec_CRU_TS_2.10_biome_30-year_mean_2000.nc", 
+			hex.grid=hex.grid[[2]], 
+			theCentroids=hex.grid[[1]],
+			max.value=Inf,
+			changeTable=data.frame(matrix(c(seq(1,12,1),c(0,0,0,0,0,0,0,1,1,0,0,0)),ncol=2)),
+			hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name=paste(theGCMs[i],'.biomes.a2',sep=''),
+			dimensions=c(1750,1859)
+			)
+	}
+}
 
 
 # ==========================================================================================================
