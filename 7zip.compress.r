@@ -11,9 +11,12 @@ scenarios <- scenarios.vector(
 
 for (i in scenarios)
 {				
+	start.time <- Sys.time()
 	command <- paste('I: && cd I:\\HexSim\\Workspaces\\lynx_v1\\Results\\ && 7z a logs.',i,'.7z -r ',i,'\\*.log -mx=5 -mmt=on -ms=off',sep='')
 	# print(command); stop('cbw')
 
 	shell(command)
 	# stop('cbw')
+	print(i)
+	print(start.time-Sys.time())
 }
