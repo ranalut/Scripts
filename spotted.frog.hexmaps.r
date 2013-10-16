@@ -299,8 +299,8 @@ if (run.hist.aet.jja=='y')
 # ========================================================================================================
 # Calculating Deficit from AET and PET and writing deficit to netCDF files...
 
-# See 'spotted.frog.hexmaps.v6.r' for this script.  I did not redo the code since I'd already run it the old way.
-
+# See 'spotted.frog.hexmaps.v6.r' for the original version of this script.  I did not redo the code since I'd already run it the old way.
+# See deficit.r for the newest version of this script.
 
 # ==========================================================================================================
 # Making hexmaps from SWE projections
