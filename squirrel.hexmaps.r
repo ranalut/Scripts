@@ -10,10 +10,6 @@ library(rgdal)
 library(raster)
 library(foreign)
 
-# setwd('F:/PNWCCVA_Data2/Scripts/')
-# setwd('C:/Users/cbwilsey/Documents/PostDoc/Scripts/')
-setwd('C:/Users/cbwilsey/Documents/GitHub/Scripts/')
-
 source('extract.swe.r')
 source('load.hex.grid.r')
 source('netcdf.2.hexmap.r')
@@ -21,20 +17,22 @@ source('plot.raster.stack.r')
 
 # Settings for this run.
 
-hexsim.wksp <- 'F:/PNWCCVA_Data2/HexSim/' # 'C:/Users/cbwilsey/Documents/PostDoc/HexSim/'
-hexsim.wksp2 <- 'F:\\PNWCCVA_Data2\\HexSim' # 'C:\\Users\\cbwilsey\\Documents\\Postdoc\\HexSim'
-output.wksp <- 'F:/PNWCCVA_Data2/HexSim/' #'H:/HexSim/' #'E:/HexSim/'
-output.wksp2 <- 'F:\\PNWCCVA_Data2\\HexSim' #'H:\\HexSim' # 'E:\\HexSim'
+hexsim.wksp <- 'D:/data/wilsey/HexSim/' # 'F:/PNWCCVA_Data2/HexSim/'
+hexsim.wksp2 <- 'D:\\data\\wilsey\\hexsim' # 'F:\\PNWCCVA_Data2\\HexSim'
+output.wksp <- 'D:/data/wilsey/HexSim/' # 'F:/PNWCCVA_Data2/HexSim/' #'H:/HexSim/' #'E:/HexSim/'
+output.wksp2 <- 'D:\\data\\wilsey\\hexsim' # 'F:\\PNWCCVA_Data2\\HexSim' #'H:\\HexSim' # 'E:\\HexSim'
 spp.folder <- 'town_squirrel_v1'
 
-run.hex.grid <- 		'y'
+run.hex.grid <- 		'n'
 run.historical.swe <- 	'n'
+run.annual.hist.swe <- 	'n'
+run.ann.hist.def <-		'n'
 run.hist.deficit <- 	'n'
+run.fut.deficit <- 		'y'
 run.hist.biomes <-		'n'
 run.biomes <- 			'n'
-# run.initial <- 		'n' # Not updated for squirrel
+run.initial <- 			'n' # Not updated for squirrel
 run.future.swe <- 		'n'
-run.defict <- 			'n' # Need to resample for new grid
 run.fire <- 			'n' # May need to add this
 
 startTime <- Sys.time()
@@ -49,7 +47,9 @@ startTime <- Sys.time()
 if (run.hex.grid=='y')
 {
 	hex.grid <- load.hex.grid(
-		centroid.file="F:/PNWCCVA_Data2/HexSim/Workspaces/sage_grouse_v2/Spatial Data/albers_centroids_1km_wgs84.dbf", #'F:/PNWCCVA_Data2/HexSim/Workspaces/centroids84.txt', #'C:/Users/cbwilsey/Documents/PostDoc/HexSim/Workspaces/centroids84.txt',  
+		centroid.file="S:/Space/Lawler/Shared/Wilsey/Postdoc/HexSim/Workspaces/sage_grouse_v2/Spatial Data/albers_centroids_1km_wgs84.dbf",
+		# "F:/PNWCCVA_Data2/HexSim/Workspaces/sage_grouse_v2/Spatial Data/albers_centroids_1km_wgs84.dbf", 
+		# 'F:/PNWCCVA_Data2/HexSim/Workspaces/centroids84.txt',  
 		file.format='dbf',
 		proj4='+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0'
 		)
@@ -148,7 +148,7 @@ if (run.initial=='y')
 
 if (run.historical.swe=='y')
 {
-	file.path <- 'H:/bioclimate/annual/CRU_TS2.1_1901-2000/' # 'D:/PNWCCVA_Data1/bioclimate/annual/CRU_TS2.1_1901-2000/'
+	file.path <- 'S:/Space/Lawler/Shared/PNWCCVA-ClimateData/annual/CRU_TS2.1_1901-2000/' # 'H:/bioclimate/annual/CRU_TS2.1_1901-2000/' 
 	file.name <- '/wna30sec_CRU_TS_2.10_'
 	variable.folders <- 'snowfall_swe_balance'
 
@@ -164,7 +164,7 @@ if (run.historical.swe=='y')
 	}
 	
 	all.file.paths <- list()
-	for (j in 1:96) { all.file.paths[[j]] <- paste(file.path,variable.folders,'/swe_mar_',(1904+j),'.nc',sep='') }
+	for (j in 1:30) { all.file.paths[[j]] <- paste(file.path,variable.folders,'/swe_mar_',(1960+j),'.nc',sep='') }
 	
 	# calc.swe(file.path=file.path,file.name=file.name,variable.folders=variable.folders,month=13)
 	calc.swe(
@@ -179,30 +179,258 @@ if (run.historical.swe=='y')
 		# Create the HexMap
 	nc.2.hxn(
 		variable='mean_swe_mar', 
-		nc.file="H:/bioclimate/annual/CRU_TS2.1_1901-2000/snowfall_swe_balance/mean_swe_mar.nc", # "D:/PNWCCVA_Data1/bioclimate/annual/CRU_TS2.1_1901-2000/snowfall_swe_balance/mean_swe_march.nc"
+		nc.file= "S:/Space/Lawler/Shared/PNWCCVA-ClimateData/annual/CRU_TS2.1_1901-2000/snowfall_swe_balance/mean_swe_mar.nc", # "H:/bioclimate/annual/CRU_TS2.1_1901-2000/snowfall_swe_balance/mean_swe_mar.nc",
 		hex.grid=hex.grid[[2]], 
 		theCentroids=hex.grid[[1]],
 		max.value=2000, 
-		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='mean.swe.mar',
+		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='mean.swe.mar.61.90',
 		dimensions=c(1750,1859)
 		)
 
 	nc.2.hxn(
 		variable='sd_swe_mar', 
-		nc.file="H:/bioclimate/annual/CRU_TS2.1_1901-2000/snowfall_swe_balance/sd_swe_mar.nc", # "D:/PNWCCVA_Data1/bioclimate/annual/CRU_TS2.1_1901-2000/snowfall_swe_balance/mean_swe_march.nc"
+		nc.file="S:/Space/Lawler/Shared/PNWCCVA-ClimateData/annual/CRU_TS2.1_1901-2000/snowfall_swe_balance/sd_swe_mar.nc", # "H:/bioclimate/annual/CRU_TS2.1_1901-2000/snowfall_swe_balance/sd_swe_mar.nc", # "D:/PNWCCVA_Data1/bioclimate/annual/CRU_TS2.1_1901-2000/snowfall_swe_balance/mean_swe_march.nc"
 		hex.grid=hex.grid[[2]], 
 		theCentroids=hex.grid[[1]],
 		max.value=2000, 
-		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='sd.swe.mar',
+		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='sd.swe.mar.61.90',
 		dimensions=c(1750,1859)
 		)
 }
 # stop('cbw')
 
+# ==========================================================================================================
+# Making hexmaps from SWE projections
+
+if (run.future.swe=='y')
+{
+	theGCMs <- c('CCSM3','CGCM3.1_t47','GISS-ER','MIROC3.2_medres','UKMO-HadCM3')
+	file.path <- 'S:/Space/Lawler/shared/PNWCCVA-ClimateData/annual/a2/' # 'H:/bioclimate/annual/a2/' # 'E:/bioclimate/annual/a2/'
+	file.name <- c('/wna30sec_a2_','_snowfall_swe_balance_first_day_of_month_')
+	variable.folders <- 'snowfall_swe_balance_first_day_of_month_a2'
+
+	# # for (i in 1:5)
+	# for (i in 2)
+	# {
+		# startTime <- Sys.time()
+
+		# for (j in 1:99)
+		# # for (j in 1)
+		# {
+			# extract.swe(
+				# file.path.in=paste(file.path,variable.folders,file.name[1],theGCMs[i],file.name[2],(2000+j),'.nc',sep=''),
+				# file.path.out=paste(file.path,variable.folders,'/',theGCMs[i],'_swe_mar_',(2000+j),'.nc',sep=''),
+				# month=3,
+				# max.value=5000
+				# )
+			# # stop('cbw')
+			
+			# nc.2.hxn(
+				# variable='swe_march', 
+				# nc.file=paste(file.path,variable.folders,'/',theGCMs[i],'_swe_mar_',(2000+j),'.nc',sep=''), 
+				# hex.grid=hex.grid[[2]], 
+				# theCentroids=hex.grid[[1]],
+				# max.value=2000, 
+				# hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, 
+				# hexmap.name=paste(theGCMs[i],'.mar.swe',sep=''),
+				# dimensions=c(1750,1859)
+				# )
+
+			# file.copy(
+				# from=paste(output.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/',theGCMs[i],'.mar.swe/',theGCMs[i],'.mar.swe.1.hxn',sep=''), 
+				# to=paste(output.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/',theGCMs[i],'.mar.swe/',theGCMs[i],'.mar.swe.',(10+j),'.hxn',sep=''),
+				# overwrite=TRUE
+				# )
+			# cat('Year',j,Sys.time()-startTime, 'minutes or seconds to create Hexmap', '\n') # 1.09 minutes...
+			# # stop('cbw')
+		# }
+
+	# }
+
+	for (i in theGCMs)
+	{
+		for (j in seq(41,50,1))
+		{
+			file.copy(
+			from=paste(hexsim.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/CRU.mar.swe.51.90/CRU.mar.swe.51.90.',j,'.hxn',sep=''), 
+			to=paste(hexsim.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/',i,'.mar.swe/',i,'.mar.swe.',(j-40),'.hxn',sep=''),
+			overwrite=TRUE
+			)
+			# stop('cbw')
+		}
+	}
+}
+
+# ==========================================================================================================
+# Making annual hexmaps from historical SWE
+
+if (run.annual.hist.swe=='y')
+{
+	file.path <- 'S:/Space/Lawler/Shared/PNWCCVA-ClimateData/annual/CRU_TS2.1_1901-2000/snowfall_swe_balance' # 'H:/bioclimate/annual/CRU_TS2.1_1901-2000/snowfall_swe_balance'
+	startTime <- Sys.time()
+
+	# for (j in seq(90,51,-1)) 
+	for (j in c(seq(100,91,-1),51)) # This will actually be 1951-2000.
+	# for (j in 1)
+	{
+		nc.2.hxn(
+			variable='swe_march', 
+			nc.file=paste(file.path,'/','swe_mar_',(1900+j),'.nc',sep=''), 
+			hex.grid=hex.grid[[2]], 
+			theCentroids=hex.grid[[1]],
+			max.value=2000, 
+			hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, 
+			hexmap.name=paste('CRU.mar.swe.51.90',sep=''),
+			dimensions=c(1750,1859)
+			)
+
+		file.copy(
+			from=paste(output.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/CRU.mar.swe.51.90/CRU.mar.swe.51.90.1.hxn',sep=''), 
+			to=paste(output.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/CRU.mar.swe.51.90/CRU.mar.swe.51.90.',(j-50),'.hxn',sep=''),
+			overwrite=TRUE
+			)
+		cat('Year',j,Sys.time()-startTime, 'minutes or seconds to create Hexmap', '\n') # 1.09 minutes...
+		# stop('cbw')
+	}
+}
+
+# ==========================================================================================================
+# Making annual hexmaps from historical Deficit
+
+if (run.ann.hist.def=='y')
+{
+	file.path <- 'S:/Space/Lawler/Shared/PNWCCVA-ClimateData/annual/CRU_TS2.1_1901-2000/deficit_mam_v1' # 'H:/bioclimate/annual/CRU_TS2.1_1901-2000/aet_mam_v1'
+	startTime <- Sys.time()
+
+	# for (j in seq(90,51,-1))
+	for (j in c(seq(100,91,-1),51)) # This will actually be 1951-2000.
+	# for (j in 1)
+	{
+		nc.2.hxn(
+			variable='deficit_mam', 
+			nc.file=paste(file.path,'/deficit_mam_',(1900+j),'.nc',sep=''), 
+			hex.grid=hex.grid[[2]], 
+			theCentroids=hex.grid[[1]],
+			max.value=2000, 
+			hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, 
+			hexmap.name=paste('CRU.deficit.mam.51.90',sep=''),
+			dimensions=c(1750,1859)
+			)
+
+		file.copy(
+			from=paste(output.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/CRU.deficit.mam.51.90/CRU.deficit.mam.51.90.1.hxn',sep=''), 
+			to=paste(output.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/CRU.deficit.mam.51.90/CRU.deficit.mam.51.90.',(j-50),'.hxn',sep=''),
+			overwrite=TRUE
+			)
+		cat('Year',j,Sys.time()-startTime, 'minutes or seconds to create Hexmap', '\n') # 1.09 minutes...
+		# stop('cbw')
+	}
+}
+
 # ==============================================================================================================
 # Historical Deficit
 
 if (run.hist.deficit=='y')
+{
+	file.path <- 'S:/Space/Lawler/Shared/PNWCCVA-ClimateData/annual/CRU_TS2.1_1901-2000/' # 'H:/bioclimate/annual/CRU_TS2.1_1901-2000/' 
+	variable.folders <- 'deficit_mam_v1'
+
+	# all.file.paths <- list()
+	# for (j in 1:30) { all.file.paths[[j]] <- paste(file.path,variable.folders,'/deficit_mam_',(1960+j),'.nc',sep='') }
+	
+	# # calc.swe(file.path=file.path,file.name=file.name,variable.folders=variable.folders,month=13)
+	# calc.swe(
+		# all.file.paths.in=all.file.paths,
+		# file.path.out=paste(file.path,variable.folders,sep=''),
+		# variable='deficit',
+		# month='mam'
+		# )
+	
+	# stop('cbw')
+
+		# Create the HexMap
+	nc.2.hxn(
+		variable='mean_deficit_mam_mam', # Due to a typo above
+		nc.file= "S:/Space/Lawler/Shared/PNWCCVA-ClimateData/annual/CRU_TS2.1_1901-2000/deficit_mam_v1/mean_deficit_mam.nc", # "H:/bioclimate/annual/CRU_TS2.1_1901-2000/snowfall_swe_balance/mean_swe_mar.nc",
+		hex.grid=hex.grid[[2]], 
+		theCentroids=hex.grid[[1]],
+		max.value=2000, 
+		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='mean.deficit.mam.61.90',
+		dimensions=c(1750,1859)
+		)
+
+	nc.2.hxn(
+		variable='sd_deficit_mam_mam', # Due to a typo above
+		nc.file="S:/Space/Lawler/Shared/PNWCCVA-ClimateData/annual/CRU_TS2.1_1901-2000/deficit_mam_v1/sd_deficit_mam.nc", # "H:/bioclimate/annual/CRU_TS2.1_1901-2000/snowfall_swe_balance/sd_swe_mar.nc", 
+		hex.grid=hex.grid[[2]], 
+		theCentroids=hex.grid[[1]],
+		max.value=2000, 
+		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='sd.deficit.mam.61.90',
+		dimensions=c(1750,1859)
+		)
+}
+# stop('cbw')
+
+# ==========================================================================================================
+# Making hexmaps from deficit projections
+
+if (run.fut.deficit=='y')
+{
+	the.months <- 'mam'
+	theGCMs <- c('CCSM3','CGCM3.1_t47','GISS-ER','MIROC3.2_medres','UKMO-HadCM3')
+	file.path <- 'S:/Space/Lawler/Shared/PNWCCVA-ClimateData/annual/a2/' # 'H:/bioclimate/annual/a2/' # 'E:/bioclimate/annual/a2/' # file.path <- 'D:/PNWCCVA_Data1/bioclimate/annual/CRU_TS2.1_1901-2000/'
+	file.name <- c('',paste('deficit_',the.months,sep=''))
+	variable.folders <- paste('deficit_',the.months,'_a2_v1',sep='')
+
+	# # for (i in 1:5)
+	# for (i in 4)
+	# {
+		# startTime <- Sys.time()
+
+		# for (j in 1:99)
+		# # for (j in 1)
+		# {
+						
+			# nc.2.hxn(
+				# variable=paste('deficit_',the.months,sep=''), 
+				# nc.file=paste(file.path,variable.folders,'/',file.name[1],theGCMs[i],'_',file.name[2],'_',(2000+j),'.nc',sep=''), 
+				# hex.grid=hex.grid[[2]], 
+				# theCentroids=hex.grid[[1]],
+				# max.value=Inf, 
+				# hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, 
+				# hexmap.name=paste(theGCMs[i],'.deficit.',the.months,sep=''),
+				# dimensions=c(1750,1859)
+				# )
+
+			# file.copy(
+				# from=paste(output.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/',theGCMs[i],'.deficit.',the.months,'/',theGCMs[i],'.deficit.',the.months,'.1.hxn',sep=''), 
+				# to=paste(output.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/',theGCMs[i],'.deficit.',the.months,'/',theGCMs[i],'.deficit.',the.months,'.',(10+j),'.hxn',sep=''),
+				# overwrite=TRUE
+				# )
+			# cat('Year',j,Sys.time()-startTime, 'minutes or seconds to create Hexmap', '\n') # 1.09 minutes...
+			# # stop('cbw')
+		# }
+	# }	
+	
+	for (i in theGCMs)
+	{
+		for (j in seq(41,50,1))
+		{
+			file.copy(
+			from=paste(hexsim.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/CRU.deficit.',the.months,'.51.90/CRU.deficit.',the.months,'.51.90.',j,'.hxn',sep=''), 
+			to=paste(hexsim.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/',i,'.deficit.',the.months,'/',i,'.deficit.',the.months,'.',(j-40),'.hxn',sep=''),
+			overwrite=TRUE
+			)
+			# stop('cbw')
+		}
+	}
+}
+
+
+# ==============================================================================================================
+# Historical Fire Fraction
+
+if (run.fire=='y')
 {
 	file.path <- 'H:/bioclimate/annual/CRU_TS2.1_1901-2000/' # 'D:/PNWCCVA_Data1/bioclimate/annual/CRU_TS2.1_1901-2000/'
 	file.name <- '/wna30sec_CRU_TS2.1_lpj_'
