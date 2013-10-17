@@ -151,14 +151,14 @@ summarize.census <- function(workspace, folder, base.sim, gcms, other, census.no
 summarize.census(
 		workspace='//cfr.washington.edu/main/Space/Lawler/Shared/Wilsey/PostDoc/HexSim/Workspaces/', 
 		folder='spotted_frog_v2', 
-		base.sim='rana.lut.104.100.', #'rana.lut.104.90.' # 'rana.lut.104.100.'
+		base.sim='rana.lut.104.90.', #'rana.lut.104.90.' # 'rana.lut.104.100.'
 		gcms=c('ccsm3','cgcm3','giss-er','hadcm3','miroc'), # gcms='baseline',
-		other=c('','.aet','.swe'), # c('','.aet','.swe'), # '',
+		other='', # c('','.aet','.swe'), # c('','.aet','.swe'), # '',
 		census.no=1, 
 		trait.name='huc', 
 		reps=5, 
 		fut.years=c(99,109), 
-		baseline='rana.lut.104.100.baseline', 
+		baseline='rana.lut.104.90.baseline', 
 		base.years=c(31,40), 
 		type='abs'
 		)		
