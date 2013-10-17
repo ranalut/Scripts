@@ -130,7 +130,7 @@ create.figure(
 	data.type='abundance',
 	spatial.variable='huc',
 	baseline.time='31.40',
-	time.window=c('51.60','MID-2100s'), # c('51.60','MID-2100s'), c('99.109','LATE-2100s'),
+	time.window=c('99.109','LATE-2100s'), # c('51.60','MID-2100s'), c('99.109','LATE-2100s'),
 	historical.cutoffs=c(0,5,20,100,500,2000),
 	future.cutoffs=c(-2000,-500,-100,-20,-5,0,5,20,100,500,2000)
 	)
