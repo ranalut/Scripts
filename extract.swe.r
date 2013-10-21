@@ -38,7 +38,8 @@ calc.swe <- function(
 	all.file.paths.in,
 	file.path.out,
 	variable,
-	month='max'
+	month='max',
+	FUN='mean'
 	)
 {
 	startTime <- Sys.time()
@@ -47,20 +48,66 @@ calc.swe <- function(
 	print('swe.all'); print(Sys.time()-startTime)
 	# return(swe.all)
 
-	the.mean <- mean(swe.all, na.rm=TRUE)
-	# plot(the.mean,main='Mean')
-	# return(the.mean)
-	print('mean'); print(Sys.time()-startTime)
+	if (FUN=='mean')
+	{
+		the.mean <- mean(swe.all, na.rm=TRUE)
+		# plot(the.mean,main='Mean')
+		# return(the.mean)
+		print('mean'); print(Sys.time()-startTime)
+		
+		writeRaster(the.mean, paste(file.path.out,'/mean_',variable,'_',month,'.nc',sep=''),overwrite=TRUE, varname=paste('mean_',variable,'_',month,sep=''))
+		rm(the.mean)
+
+		the.sd <- calc(swe.all, sd, na.rm=TRUE)
+		# plot(the.sd, main='SD')
+		print('sd'); print(Sys.time()-startTime)
+		# plot(the.sd, main='SD')
+		writeRaster(the.sd, paste(file.path.out,'/sd_',variable,'_',month,'.nc',sep=''),overwrite=TRUE, varname=paste('sd_',variable,'_',month,sep=''))
+		rm(the.sd)
+	}
+	if (FUN=='median')
+	{
+		the.mean <- calc(swe.all, quantile, na.rm=TRUE, probs=0.5)
+		# plot(the.mean,main='Mean')
+		# return(the.mean)
+		print('median'); print(Sys.time()-startTime)
+		
+		writeRaster(the.mean, paste(file.path.out,'/median_',variable,'_',month,'.nc',sep=''),overwrite=TRUE, varname=paste('median_',variable,'_',month,sep=''))
+		rm(the.mean)
+
+		the.sd <- calc(swe.all, quantile, na.rm=TRUE, probs=0.02)
+		# plot(the.sd, main='SD')
+		print('sd'); print(Sys.time()-startTime)
+		# plot(the.sd, main='SD')
+		writeRaster(the.sd, paste(file.path.out,'/quantiles_02_',variable,'_',month,'.nc',sep=''),overwrite=TRUE, varname=paste('quantiles_',variable,'_',month,sep=''))
+		rm(the.sd)
+		
+		the.sd <- calc(swe.all, quantile, na.rm=TRUE, probs=0.98)
+		# plot(the.sd, main='SD')
+		print('sd'); print(Sys.time()-startTime)
+		# plot(the.sd, main='SD')
+		writeRaster(the.sd, paste(file.path.out,'/quantiles_98_',variable,'_',month,'.nc',sep=''),overwrite=TRUE, varname=paste('quantiles_',variable,'_',month,sep=''))
+		rm(the.sd)
+	}
 	
-	writeRaster(the.mean, paste(file.path.out,'/mean_',variable,'_',month,'.nc',sep=''),overwrite=TRUE, varname=paste('mean_',variable,'_',month,sep=''))
-	rm(the.mean)
-
-	the.sd <- calc(swe.all, sd, na.rm=TRUE)
-	# plot(the.sd, main='SD')
-	print('sd'); print(Sys.time()-startTime)
-	# plot(the.sd, main='SD')
-	writeRaster(the.sd, paste(file.path.out,'/sd_',variable,'_',month,'.nc',sep=''),overwrite=TRUE, varname=paste('sd_',variable,'_',month,sep=''))
-	rm(the.sd)
-
 	print('files written'); print(Sys.time()-startTime)
 }
+
+
+
+# it1 <- raster(matrix(rep(1,9),ncol=3))
+# it2 <- raster(matrix(rep(2,9),ncol=3))
+# it3 <- raster(matrix(rep(3,9),ncol=3))
+
+# the.test <- stack(it1,it2,it3,it3,it3,it3,it2)
+# print(the.test)
+
+# the.q <- calc(the.test,fun=function(x) {quantile(x,probs = c(0.02,0.5,0.98),na.rm=TRUE)} )
+# print(the.q)
+
+
+
+
+
+
+
