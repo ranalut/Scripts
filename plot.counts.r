@@ -1,3 +1,4 @@
+# Plot number of occupied HUCs
 
 plot.counts <- function(workspace, var.name, output.file, species, ylim)
 {
