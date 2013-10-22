@@ -223,7 +223,8 @@ if (run.historical.swe=='y')
 		# file.path.out=paste(file.path,variable.folders,sep=''),
 		# variable='swe',
 		# month='mar',
-		# FUN='median'
+		# FUN='quantiles',
+		# probs=c(0.02,0.05,0.1,0.5,0.9,0.95,0.98)
 		# )
 	
 	# stop('cbw')
@@ -250,36 +251,36 @@ if (run.historical.swe=='y')
 		# )
 		
 	nc.2.hxn(
-		variable='median_swe_mar', 
-		nc.file= "S:/Space/Lawler/Shared/PNWCCVA-ClimateData/annual/CRU_TS2.1_1901-2000/snowfall_swe_balance/median_swe_mar.nc", # "H:/bioclimate/annual/CRU_TS2.1_1901-2000/snowfall_swe_balance/mean_swe_mar.nc",
+		variable='quantiles_swe_mar', 
+		nc.file= "S:/Space/Lawler/Shared/PNWCCVA-ClimateData/annual/CRU_TS2.1_1901-2000/snowfall_swe_balance/q_swe_mar.nc", # "H:/bioclimate/annual/CRU_TS2.1_1901-2000/snowfall_swe_balance/mean_swe_mar.nc",
 		hex.grid=hex.grid[[2]], 
 		theCentroids=hex.grid[[1]],
 		max.value=2000, 
-		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='median.swe.mar.61.90',
+		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='q50.swe.mar.61.90',
 		dimensions=c(1750,1859),
-		band=3
+		band=4
 		)
 
 	nc.2.hxn(
 		variable='quantiles_swe_mar', 
-		nc.file="S:/Space/Lawler/Shared/PNWCCVA-ClimateData/annual/CRU_TS2.1_1901-2000/snowfall_swe_balance/quantiles_02_swe_mar.nc", # "H:/bioclimate/annual/CRU_TS2.1_1901-2000/snowfall_swe_balance/sd_swe_mar.nc", # "D:/PNWCCVA_Data1/bioclimate/annual/CRU_TS2.1_1901-2000/snowfall_swe_balance/mean_swe_march.nc"
+		nc.file="S:/Space/Lawler/Shared/PNWCCVA-ClimateData/annual/CRU_TS2.1_1901-2000/snowfall_swe_balance/q_swe_mar.nc", # "H:/bioclimate/annual/CRU_TS2.1_1901-2000/snowfall_swe_balance/sd_swe_mar.nc", # "D:/PNWCCVA_Data1/bioclimate/annual/CRU_TS2.1_1901-2000/snowfall_swe_balance/mean_swe_march.nc"
 		hex.grid=hex.grid[[2]], 
 		theCentroids=hex.grid[[1]],
 		max.value=2000, 
-		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='q0.swe.mar.61.90',
+		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='q5.swe.mar.61.90',
 		dimensions=c(1750,1859),
-		band=1
+		band=2
 		)
 	
 	nc.2.hxn(
 		variable='quantiles_swe_mar', 
-		nc.file="S:/Space/Lawler/Shared/PNWCCVA-ClimateData/annual/CRU_TS2.1_1901-2000/snowfall_swe_balance/quantiles_98_swe_mar.nc", # "H:/bioclimate/annual/CRU_TS2.1_1901-2000/snowfall_swe_balance/sd_swe_mar.nc", # "D:/PNWCCVA_Data1/bioclimate/annual/CRU_TS2.1_1901-2000/snowfall_swe_balance/mean_swe_march.nc"
+		nc.file="S:/Space/Lawler/Shared/PNWCCVA-ClimateData/annual/CRU_TS2.1_1901-2000/snowfall_swe_balance/q_swe_mar.nc", # "H:/bioclimate/annual/CRU_TS2.1_1901-2000/snowfall_swe_balance/sd_swe_mar.nc", # "D:/PNWCCVA_Data1/bioclimate/annual/CRU_TS2.1_1901-2000/snowfall_swe_balance/mean_swe_march.nc"
 		hex.grid=hex.grid[[2]], 
 		theCentroids=hex.grid[[1]],
 		max.value=2000, 
-		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='q100.swe.mar.61.90',
+		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='q95.swe.mar.61.90',
 		dimensions=c(1750,1859),
-		band=5
+		band=6
 		)
 }
 # stop('cbw')
@@ -429,7 +430,8 @@ if (run.hist.deficit=='y')
 		# file.path.out=paste(file.path,variable.folders,sep=''),
 		# variable='deficit',
 		# month='mam',
-		# FUN='median'
+		# FUN='quantiles',
+		# probs=c(0.02,0.05,0.1,0.5,0.9,0.95,0.98)
 		# )
 	
 	# stop('cbw')
@@ -456,36 +458,36 @@ if (run.hist.deficit=='y')
 		# )
 		
 	nc.2.hxn(
-		variable='median_deficit_mam', 
-		nc.file= "S:/Space/Lawler/Shared/PNWCCVA-ClimateData/annual/CRU_TS2.1_1901-2000/deficit_mam_v1/median_deficit_mam.nc", # "H:/bioclimate/annual/CRU_TS2.1_1901-2000/snowfall_swe_balance/mean_swe_mar.nc",
+		variable='quantiles_deficit_mam', 
+		nc.file= "S:/Space/Lawler/Shared/PNWCCVA-ClimateData/annual/CRU_TS2.1_1901-2000/deficit_mam_v1/q_deficit_mam.nc", # "H:/bioclimate/annual/CRU_TS2.1_1901-2000/snowfall_swe_balance/mean_swe_mar.nc",
 		hex.grid=hex.grid[[2]], 
 		theCentroids=hex.grid[[1]],
 		max.value=2000, 
-		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='median.deficit.mam.61.90',
+		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='q50.deficit.mam.61.90',
 		dimensions=c(1750,1859),
-		band=3
+		band=4
 		)
 
 	nc.2.hxn(
 		variable='quantiles_deficit_mam', 
-		nc.file="S:/Space/Lawler/Shared/PNWCCVA-ClimateData/annual/CRU_TS2.1_1901-2000/deficit_mam_v1/quantiles_02_deficit_mam.nc", # "H:/bioclimate/annual/CRU_TS2.1_1901-2000/snowfall_swe_balance/sd_swe_mar.nc", # "D:/PNWCCVA_Data1/bioclimate/annual/CRU_TS2.1_1901-2000/snowfall_swe_balance/mean_swe_march.nc"
+		nc.file="S:/Space/Lawler/Shared/PNWCCVA-ClimateData/annual/CRU_TS2.1_1901-2000/deficit_mam_v1/q_deficit_mam.nc", # "H:/bioclimate/annual/CRU_TS2.1_1901-2000/snowfall_swe_balance/sd_swe_mar.nc", # "D:/PNWCCVA_Data1/bioclimate/annual/CRU_TS2.1_1901-2000/snowfall_swe_balance/mean_swe_march.nc"
 		hex.grid=hex.grid[[2]], 
 		theCentroids=hex.grid[[1]],
 		max.value=2000, 
-		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='q0.deficit.mam.61.90',
+		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='q5.deficit.mam.61.90',
 		dimensions=c(1750,1859),
-		band=1
+		band=2
 		)
 	
 	nc.2.hxn(
 		variable='quantiles_deficit_mam', 
-		nc.file="S:/Space/Lawler/Shared/PNWCCVA-ClimateData/annual/CRU_TS2.1_1901-2000/deficit_mam_v1/quantiles_98_deficit_mam.nc", # "H:/bioclimate/annual/CRU_TS2.1_1901-2000/snowfall_swe_balance/sd_swe_mar.nc", # "D:/PNWCCVA_Data1/bioclimate/annual/CRU_TS2.1_1901-2000/snowfall_swe_balance/mean_swe_march.nc"
+		nc.file="S:/Space/Lawler/Shared/PNWCCVA-ClimateData/annual/CRU_TS2.1_1901-2000/deficit_mam_v1/q_deficit_mam.nc", # "H:/bioclimate/annual/CRU_TS2.1_1901-2000/snowfall_swe_balance/sd_swe_mar.nc", # "D:/PNWCCVA_Data1/bioclimate/annual/CRU_TS2.1_1901-2000/snowfall_swe_balance/mean_swe_march.nc"
 		hex.grid=hex.grid[[2]], 
 		theCentroids=hex.grid[[1]],
 		max.value=2000, 
-		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='q100.deficit.mam.61.90',
+		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='q95.deficit.mam.61.90',
 		dimensions=c(1750,1859),
-		band=5
+		band=6
 		)
 }
 # stop('cbw')
