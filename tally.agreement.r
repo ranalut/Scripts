@@ -1,6 +1,7 @@
 
 plus.or.minus <- function(x, no.change)
 {
+	if (is.na(x)==TRUE) { return(NA) }
 	if (x>=no.change) { return(1) }
 	if (x<=(-1*no.change)) { return(-1) }
 	else { return(0) }
