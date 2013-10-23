@@ -11,7 +11,7 @@ source('tally.agreement.r')
 
 extract.number <- function(x,var.name) { temp <- as.numeric(strsplit(x,split=var.name)[[1]][2]); return(temp) }
 
-create.figure.agreement <- function(workspace, species.folder, baseline.scenario, future.scenario, spatial.variable, baseline.time, time.window, historical.cutoffs, future.cutoffs, data.type, no.change)
+create.figure.agreement <- function(workspace, species.folder, baseline.scenario, future.scenario, spatial.variable, baseline.time, time.window, cutoffs, data.type, no.change)
 {
 	# ================================================================================================
 	# Spatial Data
@@ -30,7 +30,7 @@ create.figure.agreement <- function(workspace, species.folder, baseline.scenario
 	{
 		if (data.type=='abundance') { fut.data[[i]] <- data.prep(data.file=paste(workspace,species.folder,'/Results/',future.scenario[1],gcms[i],future.scenario[2],'/abs.change.',future.scenario[1],gcms[i],future.scenario[2],'.',spatial.variable,'.',time.window[1],'.csv',sep=''),type='abundance',var.name=spatial.variable) }
 		if (data.type=='productivity') { fut.data[[i]] <- data.prep(data.file=paste(workspace,species.folder,'/Results/',future.scenario[1],gcms[i],future.scenario[2],'/',future.scenario[1],gcms[i],future.scenario[2],'.report.productivity.',spatial.variable,'.',time.window[1],'.csv',sep=''),type='productivity',var.name=spatial.variable) }
-		print(dim(fut.data[[i]]))
+		# print(dim(fut.data[[i]]))
 	}
 	
 	agreement <- fut.data[[1]]
@@ -43,19 +43,20 @@ create.figure.agreement <- function(workspace, species.folder, baseline.scenario
 			the.data <- c(the.data,fut.data[[j]]$variable[i])
 		}
 		the.data <- the.data[-1]
-		print(the.data)
+		# print(the.data)
 		if (sum(the.data==0)==length(gcms)) { agreement$variable[i] <- NA }
 		else
 		{
 			the.data <- sapply(the.data,plus.or.minus, no.change=no.change)
 			# print(the.data); stop('cbw')
 			the.value <- tally.agreement(the.data)
-			print(the.value)
+			# print(the.value)
 			agreement$variable[i] <- the.value
 		}
 	}
 
 	# print(agreement)
+	# return(agreement)
 	# stop('cbw')
 	
 	# =====================================================================================================
@@ -63,68 +64,67 @@ create.figure.agreement <- function(workspace, species.folder, baseline.scenario
 	if (is.null(dev.list())) { dev.new() } # This may start giving an error for an invalid screen number.  Quit R and start over if this happens. 
 	png(paste(workspace,species.folder,'/analysis/agree.',future.scenario[1],data.type,'.',time.window[1],future.scenario[2],'.png',sep=''), width=450, height=400)
 
-		cutoffs <- c(-5,-4,-3,-2,-1,1,2,3,4,5)
+		cutoffs <- cutoffs
 		map.plot.simple(
 			the.data=agreement,
-			distribution.data=historical.data,
 			cutoffs=cutoffs,
 			model.name=time.window[2], 
 			add.legend=TRUE,
 			include.axes=TRUE,	
 			spatial.data=huc,
 			color.ramp=brewer.pal((length(cutoffs)-1),name='PRGn'),
-			margins=c(3,3,1,5),
+			margins=c(3,3,1,6),
 			political=political,
 			ocean=ocean,
 			study.area=study.area,
-			data.type=data.type
+			data.type=data.type,
+			label.text='     # GCMs'
 			)
 
 	dev.off()
 }
 # =======================================================================================
-# # Function Call Spotted Frog
-# create.figure(
-	# workspace='//cfr.washington.edu/main/Space/Lawler/Shared/Wilsey/PostDoc/HexSim/Workspaces/',
-	# species.folder='spotted_frog_v2',
-	# baseline.scenario='rana.lut.104.90.baseline', # 'rana.lut.104.100.baseline'
-	# future.scenario=c('rana.lut.104.90.',''), # c('rana.lut.104.100.','.swe')
-	# data.type='abundance',
-	# spatial.variable='huc',
-	# baseline.time='31.40',
-	# time.window=c('99.109','LATE-2100s'), # c('51.60','MID-2100s'), c('99.109','LATE-2100s'),
-	# historical.cutoffs=c(0,5,20,100,500,2000),
-	# future.cutoffs=c(-2000,-500,-100,-20,-5,0,5,20,100,500,2000)
-	# )
+# Function Call Spotted Frog
+create.figure.agreement(
+	workspace='H:/HexSim/Workspaces/',
+	species.folder='spotted_frog_v2',
+	baseline.scenario='rana.lut.104.100.baseline', # 'rana.lut.104.100.baseline'
+	future.scenario=c('rana.lut.104.100.',''), # c('rana.lut.104.100.','.swe')
+	data.type='abundance',
+	spatial.variable='huc',
+	baseline.time='31.40',
+	time.window=c('99.109','LATE-2100s'), # c('51.60','MID-2100s'), c('99.109','LATE-2100s'),
+	cutoffs=c(-5,-4,-3,-2,-1,0,1,2,3,4,5),
+	no.change=20
+	)
 
-# # =======================================================================================
+# =======================================================================================
 # # Function Call Lynx
-# create.figure(
+# create.figure.agreement(
 	# workspace='I:/HexSim/Workspaces/',
 	# species.folder='lynx_v1',
-	# baseline.scenario='lynx.050.baseline.35', # run .35 separately
-	# future.scenario=c('lynx.050.','.35'), # run .35 separately
+	# baseline.scenario='lynx.050.baseline', # run .35 separately
+	# future.scenario=c('lynx.050.',''), # run .35 separately
 	# data.type='abundance', # 'productivity', # 'abundance'
 	# spatial.variable='huc',
 	# baseline.time='34.42',
 	# time.window=c('97.105','LATE-2100s'), # c('97.105','LATE-2100s') # c('52.60','MID-2100s')
-	# historical.cutoffs=c(0,5,25,200,1000),
-	# future.cutoffs=c(-350,-75,-20,-5,-2,0,2,5,20,75,350)
+	# cutoffs=c(-5,-4,-3,-2,-1,0,1,2,3,4,5),
+	# no.change=5
 	# )
 
 
 # =======================================================================================
 # Function Call Wolverine
-create.figure.agreement(
-	workspace='H:/HexSim/Workspaces/',
-	species.folder='wolverine_v1',
-	baseline.scenario='gulo.023.baseline',
-	future.scenario=c('gulo.023.a2.',''), # '' '.swe' '.biomes'
-	data.type='abundance', # 'productivity', # 'abundance'
-	spatial.variable='huc',
-	baseline.time='41.50', # '41.50', # '21.50',
-	time.window=c('100.109','LATE-2100s'), # c('31.60','MID-2100s'), # c('81.109','LATE-2100s'), '100.109', '51.60'
-	historical.cutoffs=c(0,2,5,10,25,50,175), # c(-100,-25,-10,-5,-2,0,2,5,10,25,100), # c(0,5,10,25,50,75,100,150),
-	future.cutoffs=c(-125,-25,-10,-5,-2,0,2,5,10,25,125), # c(-100,-25,-10,-5,-2,0,2,5,10,25,100)
-	no.change=1
-	)
+# it <- create.figure.agreement(
+	# workspace='H:/HexSim/Workspaces/',
+	# species.folder='wolverine_v1',
+	# baseline.scenario='gulo.023.baseline',
+	# future.scenario=c('gulo.023.a2.',''), # '' '.swe' '.biomes'
+	# data.type='abundance', # 'productivity', # 'abundance'
+	# spatial.variable='huc',
+	# baseline.time='41.50', # '41.50', # '21.50',
+	# time.window=c('100.109','LATE-2100s'), # c('31.60','MID-2100s'), # c('81.109','LATE-2100s'), '100.109', '51.60'
+	# cutoffs=c(-5,-4,-3,-2,-1,0,1,2,3,4,5),
+	# no.change=2
+	# )
