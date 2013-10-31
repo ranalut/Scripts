@@ -84,12 +84,12 @@ create.figure.agreement <- function(workspace, species.folder, baseline.scenario
 	dev.off()
 }
 # =======================================================================================
-# Function Call Spotted Frog
+# Function Call Townsend's Squirrel
 create.figure.agreement(
-	workspace='H:/HexSim/Workspaces/',
-	species.folder='spotted_frog_v2',
-	baseline.scenario='rana.lut.104.100.baseline', # 'rana.lut.104.100.baseline'
-	future.scenario=c('rana.lut.104.100.',''), # c('rana.lut.104.100.','.swe')
+	workspace='F:/pnwccva_data2/HexSim/Workspaces/',
+	species.folder='town_squirrel_v1',
+	baseline.scenario='squirrel.016.110.baseline', 
+	future.scenario=c('squirrel.016.110.',''),
 	data.type='abundance',
 	spatial.variable='huc',
 	baseline.time='31.40',
@@ -97,6 +97,21 @@ create.figure.agreement(
 	cutoffs=c(-5,-4,-3,-2,-1,0,1,2,3,4,5),
 	no.change=20
 	)
+
+# =======================================================================================
+# # Function Call Spotted Frog
+# create.figure.agreement(
+	# workspace='H:/HexSim/Workspaces/',
+	# species.folder='spotted_frog_v2',
+	# baseline.scenario='rana.lut.104.100.baseline', # 'rana.lut.104.100.baseline'
+	# future.scenario=c('rana.lut.104.100.',''), # c('rana.lut.104.100.','.swe')
+	# data.type='abundance',
+	# spatial.variable='huc',
+	# baseline.time='31.40',
+	# time.window=c('99.109','LATE-2100s'), # c('51.60','MID-2100s'), c('99.109','LATE-2100s'),
+	# cutoffs=c(-5,-4,-3,-2,-1,0,1,2,3,4,5),
+	# no.change=20
+	# )
 
 # =======================================================================================
 # # Function Call Lynx
