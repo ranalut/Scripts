@@ -1,4 +1,5 @@
 source('scenario.vector.r')
+source('extract.number.r')
 
 do.counts <- function(data.files, out.file, type, var.name=NA)
 {
@@ -76,15 +77,28 @@ do.counts <- function(data.files, out.file, type, var.name=NA)
 
 # do.counts(data.files=scenarios.files, out.file='I:/HexSim/Workspaces/lynx_v1/Analysis/count.hucs.csv', type='abundance', var.name='huc')
 
-# Spotted Frog
+# # Spotted Frog
+# scenarios <- scenarios.vector(
+				# base.sim='rana.lut.104.100.',
+				# gcms=c('ccsm3','cgcm3','giss-er','hadcm3','miroc'),
+				# other='' # c('','.35')
+				# )
+
+# scenarios.files <- paste('H:/HexSim/Workspaces/spotted_frog_v2/Results/',scenarios,'/abs.change.',scenarios,'.huc.99.109.csv',sep='')
+# scenarios.files <- c('H:/HexSim/Workspaces/spotted_frog_v2/Results/rana.lut.104.100.baseline/mean.rana.lut.104.100.baseline.huc.31.40.csv', scenarios.files)
+# print(scenarios.files)
+
+# do.counts(data.files=scenarios.files, out.file='H:/HexSim/Workspaces/spotted_frog_v2/Analysis/count.hucs.csv', type='abundance', var.name='huc')
+
+# Squirrel
 scenarios <- scenarios.vector(
-				base.sim='rana.lut.104.90.',
+				base.sim='squirrel.016.110.',
 				gcms=c('ccsm3','cgcm3','giss-er','hadcm3','miroc'),
 				other='' # c('','.35')
 				)
 
-scenarios.files <- paste('//cfr.washington.edu/main/space/lawler/shared/wilsey/postdoc/HexSim/Workspaces/spotted_frog_v2/Results/',scenarios,'/abs.change.',scenarios,'.huc.99.109.csv',sep='')
-scenarios.files <- c('//cfr.washington.edu/main/space/lawler/shared/wilsey/postdoc/HexSim/Workspaces/spotted_frog_v2/Results/rana.lut.104.90.baseline/mean.rana.lut.104.90.baseline.huc.31.40.csv', scenarios.files)
+scenarios.files <- paste('F:/pnwccva_data2/HexSim/Workspaces/town_squirrel_v1/Results/',scenarios,'/abs.change.',scenarios,'.huc.99.109.csv',sep='')
+scenarios.files <- c('F:/pnwccva_data2/HexSim/Workspaces/town_squirrel_v1/Results/squirrel.016.110.baseline/mean.squirrel.016.110.baseline.huc.31.40.csv', scenarios.files)
 print(scenarios.files)
 
-do.counts(data.files=scenarios.files, out.file='//cfr.washington.edu/main/space/lawler/shared/wilsey/postdoc/HexSim/Workspaces/spotted_frog_v2/Analysis/count.hucs.csv', type='abundance', var.name='huc')
+do.counts(data.files=scenarios.files, out.file='F:/pnwccva_data2/HexSim/Workspaces/town_squirrel_v1/Analysis/count.hucs.csv', type='abundance', var.name='huc')
