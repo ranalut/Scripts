@@ -7,10 +7,11 @@ library(fields)
 
 source('data.prep.r')
 source('map.plot.r')
+source('extract.number.r')
 
-extract.number <- function(x,var.name) { temp <- as.numeric(strsplit(x,split=var.name)[[1]][2]); return(temp) }
+# extract.number <- function(x,var.name) { temp <- as.numeric(strsplit(x,split=var.name)[[1]][2]); return(temp) }
 
-create.figure <- function(workspace, species.folder, baseline.scenario, future.scenario, spatial.variable, baseline.time, time.window, historical.cutoffs, future.cutoffs, data.type)
+create.figure <- function(workspace, species.folder, baseline.scenario, future.scenario, spatial.variable, baseline.time, time.window, historical.cutoffs, future.cutoffs, data.type, legend.label)
 {
 	# ================================================================================================
 	# Spatial Data
@@ -110,7 +111,7 @@ create.figure <- function(workspace, species.folder, baseline.scenario, future.s
 			spatial.data=huc,
 			color.ramp=color.ramp,
 			margins=c(3,3,0.5,6.5),
-			label.text='      females',
+			label.text=legend.label,
 			political=political,
 			ocean=ocean,
 			study.area=study.area,
@@ -121,19 +122,36 @@ create.figure <- function(workspace, species.folder, baseline.scenario, future.s
 
 }
 # =======================================================================================
-# Function Call Spotted Frog
+# Function Call Townsend Squirrel
 create.figure(
-	workspace='//cfr.washington.edu/main/Space/Lawler/Shared/Wilsey/PostDoc/HexSim/Workspaces/',
-	species.folder='spotted_frog_v2',
-	baseline.scenario='rana.lut.104.90.baseline', # 'rana.lut.104.100.baseline'
-	future.scenario=c('rana.lut.104.90.',''), # c('rana.lut.104.100.','.swe')
+	workspace='F:/pnwccva_data2/HexSim/Workspaces/',
+	species.folder='town_squirrel_v1',
+	baseline.scenario='squirrel.016.110.baseline', 
+	future.scenario=c('squirrel.016.110.',''),
 	data.type='abundance',
 	spatial.variable='huc',
 	baseline.time='31.40',
-	time.window=c('99.109','LATE-2100s'), # c('51.60','MID-2100s'), c('99.109','LATE-2100s'),
-	historical.cutoffs=c(0,5,20,100,500,2000),
-	future.cutoffs=c(-2000,-500,-100,-20,-5,0,5,20,100,500,2000)
+	time.window=c('99.109','LATE-2000s'), # c('51.60','MID-2100s'), c('99.109','LATE-2100s'),
+	historical.cutoffs=c(0,5,20,55,150,400,1000,3000,10000),
+	future.cutoffs=c(-2000,-500,-100,-20,-5,0,5,20,100,500,2000),
+	legend.label='    populations' # '      females'
 	)
+	
+# =======================================================================================
+# Function Call Spotted Frog
+# create.figure(
+	# workspace='H:/HexSim/Workspaces/',
+	# species.folder='spotted_frog_v2',
+	# baseline.scenario='rana.lut.104.100.baseline', # 'rana.lut.104.100.baseline'
+	# future.scenario=c('rana.lut.104.100.',''), # c('rana.lut.104.100.','.swe') # '.aet'
+	# data.type='abundance',
+	# spatial.variable='huc',
+	# baseline.time='31.40',
+	# time.window=c('51.60','LATE-2000s'), # c('51.60','MID-2100s'), c('99.109','LATE-2100s'),
+	# historical.cutoffs=c(0,5,20,55,150,400,1000,3500),
+	# future.cutoffs=c(-2000,-500,-100,-20,-5,0,5,20,100,500,2000),
+	# legend.label='    populations' # '      females'
+	# )
 
 # # =======================================================================================
 # # Function Call Lynx
