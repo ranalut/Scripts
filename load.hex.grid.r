@@ -5,6 +5,8 @@ library(foreign)
 
 load.hex.grid <- function(centroid.file, file.format, proj4)
 {
+	startTime <- Sys.time()
+	
 	if (file.format=='dbf') { theCentroids <- read.dbf(centroid.file, as.is=TRUE) }
 	if (file.format=='txt') { theCentroids <- read.csv(centroid.file, header=TRUE) }
 	
