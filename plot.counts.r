@@ -10,7 +10,7 @@ plot.counts <- function(workspace, var.name, output.file, species, ylim)
 	
 	barplot(the.data2, names.arg=c('BASELINE','CCSM3','CGCM3.1','GISS-ER','MIROC\n3.2','UKMO-\nHadCM3'),ylim=ylim, legend.text=c('decreasing','stable','increasing'))
 	
-	barplot(the.data[1,1], add=TRUE)
+	barplot(the.data[1,1], add=TRUE, density=15, angle=c(45), col='black')
 	
 	dev.off()
 }
@@ -19,4 +19,6 @@ plot.counts <- function(workspace, var.name, output.file, species, ylim)
 
 # plot.counts(workspace='I:/HexSim/Workspaces/lynx_v1/', var.name='hucs', species='lynx', ylim=c(0,425))
 
-plot.counts(workspace='//cfr.washington.edu/main/space/lawler/shared/wilsey/postdoc/HexSim/Workspaces/spotted_frog_v2/', var.name='hucs', species='rana.lut', ylim=c(0,325))
+# plot.counts(workspace='H:/HexSim/Workspaces/spotted_frog_v2/', var.name='hucs', species='rana.lut', ylim=c(0,425))
+
+plot.counts(workspace='F:/pnwccva_data2/HexSim/Workspaces/town_squirrel_v1/', var.name='hucs', species='squirrels', ylim=c(0,125))
