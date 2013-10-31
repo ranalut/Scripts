@@ -41,6 +41,7 @@ tally.agreement <- function(x)
 # tally.agreement(x=c(-1,-1,-1,0,1))
 # tally.agreement(x=c(-1,-1,1,0,1))
 # tally.agreement(x=c(-1,0,1,0,1))
+# tally.agreement(x=c(TRUE,TRUE,TRUE,FALSE,FALSE))
 
 
 
