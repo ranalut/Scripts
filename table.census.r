@@ -2,7 +2,7 @@
 library(RColorBrewer)
 source('scenario.vector.r')
 
-table.census.traits <- function(workspace, scenario, merge.table, reps, census.no, trait.name, years)
+table.census.traits <- function(workspace, scenario, merge.table, reps, census.no, trait.name, years, metapop)
 {
 	test <- file.exists(paste(workspace,scenario,'/',scenario,'-[',reps,']/',scenario,'.',census.no,'.csv',sep=''))
 	# print(paste(workspace,scenario,'/',scenario,'-[',reps,']/',scenario,'.',census.no,'.csv',sep=''))
@@ -12,11 +12,11 @@ table.census.traits <- function(workspace, scenario, merge.table, reps, census.n
 	# print(census[(years[1]+1),]); stop('cbw')
 	census2 <- census[,7:dim(census)[2]]
 	
-	if(length(grep('rana',scenario))==1)
+	if(metapop==TRUE)
 	{
 		temp.census <- list(census2[,1:1550],census2[,1551:3100],census2[,3101:4650],census2[,4651:6200],census2[,6201:7750],census2[,7751:9300])
-		census2 <- temp.census[[3]] + temp.census[[4]] + temp.census[[5]] # Considering populations > 50 individuals
-		# print(dim(census2)); print(census2[1,1:10]); stop('cbw')
+		census2 <- temp.census[[3]] + temp.census[[4]] + temp.census[[5]] + temp.census[[6]] # Considering populations > 50 individuals
+		# print(dim(census2)); print(dim(census2[,census2[110,]>0])); return(census2); stop('cbw')
 	}
 	
 	census2 <- census2[,(merge.table$trait.index + 1)]
@@ -42,7 +42,7 @@ the.change <- function(workspace, baseline, fut.scenarios, reps, trait.name, bas
 	scenario <- baseline
 	output <- read.csv(paste(workspace ,scenario,'/',scenario,'-[1]/',scenario,'.',trait.name,'.',base.years[1],'.',base.years[2],'.csv',sep=''),header=TRUE, row.names=1)
 	# print(head(output)); stop('cbw')
-	for (i in 2:reps)
+	for (i in 2:5)
 	{
 		temp <- read.csv(paste(workspace ,scenario,'/',scenario,'-[',i,']/',scenario,'.',trait.name,'.',base.years[1],'.',base.years[2],'.csv',sep=''),header=TRUE, row.names=1)
 		output <- cbind(output,temp)
@@ -59,10 +59,13 @@ the.change <- function(workspace, baseline, fut.scenarios, reps, trait.name, bas
 	{
 		scenario <- j
 		output <- read.csv(paste(workspace ,scenario,'/',scenario,'-[1]/',scenario,'.',trait.name,'.',years[1],'.',years[2],'.csv',sep=''),header=TRUE, row.names=1)
-		for (i in 2:reps)
+		if (reps>1)
 		{
-			temp <- read.csv(paste(workspace ,scenario,'/',scenario,'-[',i,']/',scenario,'.',trait.name,'.',years[1],'.',years[2],'.csv',sep=''),header=TRUE, row.names=1)
-			output <- cbind(output,temp)
+			for (i in 2:reps)
+			{
+				temp <- read.csv(paste(workspace ,scenario,'/',scenario,'-[',i,']/',scenario,'.',trait.name,'.',years[1],'.',years[2],'.csv',sep=''),header=TRUE, row.names=1)
+				output <- cbind(output,temp)
+			}
 		}
 		# print(head(output)); stop('cbw')
 		temp.sum <- as.numeric(apply(output,MARGIN=1,mean))
@@ -76,7 +79,7 @@ the.change <- function(workspace, baseline, fut.scenarios, reps, trait.name, bas
 	# return(output)
 }	
 
-summarize.census <- function(workspace, folder, base.sim, gcms, other, census.no, trait.name, reps, fut.years, baseline, base.years, type)
+summarize.census <- function(workspace, folder, base.sim, gcms, other, census.no, trait.name, reps, fut.years, baseline, base.years, type, metapop)
 {
 	if (trait.name=='huc') { merge.table <- data.frame(shape.index=seq(1,1549,1),trait.index=seq(1,1549,1)) }
 	# pro.area.table <- data.frame(shape.index=seq(1,1252,1),trait.index=seq(1,1252,1))
@@ -87,7 +90,7 @@ summarize.census <- function(workspace, folder, base.sim, gcms, other, census.no
 	
 	for (i in scenarios)
 	{
-		for (j in 1:5)
+		for (j in 1:reps)
 		{
 			if(length(grep('base',i))>0) { temp.years <- base.years }
 			else { temp.years <- fut.years }
@@ -98,9 +101,11 @@ summarize.census <- function(workspace, folder, base.sim, gcms, other, census.no
 				reps=j,
 				census.no=census.no,
 				trait.name=trait.name,
-				years=temp.years
+				years=temp.years,
+				metapop=metapop
 				)
 			cat(i,j,'\n')
+			# return(it)
 			# stop('cbw')
 		}
 	}
@@ -148,19 +153,36 @@ summarize.census <- function(workspace, folder, base.sim, gcms, other, census.no
 		# )
 
 # Spotted Frog
+# summarize.census(
+		# workspace='H:/HexSim/Workspaces/', # '//cfr.washington.edu/main/Space/Lawler/Shared/Wilsey/PostDoc/HexSim/Workspaces/', 
+		# folder='spotted_frog_v2', 
+		# base.sim='rana.lut.104.100.', #'rana.lut.104.90.' # 'rana.lut.104.100.'
+		# gcms=c('ccsm3','cgcm3','giss-er','hadcm3','miroc'), # gcms='baseline',
+		# other=c('','.aet','.swe'), # c('','.aet','.swe'), # '',
+		# census.no=1, 
+		# trait.name='huc', 
+		# reps=5, 
+		# fut.years=c(51,60), #99,109 #51,60
+		# baseline='rana.lut.104.100.baseline', 
+		# base.years=c(31,40), 
+		# type='abs',
+		# metapop=TRUE
+		# )
+# stop('cbw')		
+	
+# Squirrel
 summarize.census(
-		workspace='//cfr.washington.edu/main/Space/Lawler/Shared/Wilsey/PostDoc/HexSim/Workspaces/', 
-		folder='spotted_frog_v2', 
-		base.sim='rana.lut.104.90.', #'rana.lut.104.90.' # 'rana.lut.104.100.'
+		workspace='F:/PNWCCVA_Data2/HexSim/Workspaces/', 
+		folder='town_squirrel_v1', 
+		base.sim='squirrel.016.110.',
 		gcms=c('ccsm3','cgcm3','giss-er','hadcm3','miroc'), # gcms='baseline',
-		other='', # c('','.aet','.swe'), # c('','.aet','.swe'), # '',
+		other=c('.biomes','.swe','.def'), # c('','.aet','.swe'), # c('','.aet','.swe'), # '',
 		census.no=1, 
 		trait.name='huc', 
-		reps=5, 
-		fut.years=c(99,109), 
-		baseline='rana.lut.104.90.baseline', 
+		reps=1, # 5, 1,
+		fut.years=c(51,60), # c(99,109), 
+		baseline='squirrel.016.110.baseline', 
 		base.years=c(31,40), 
-		type='abs'
+		type='abs',
+		metapop=TRUE
 		)		
-	
-		
