@@ -21,6 +21,9 @@ calc.slope <- function(workspace, distribution, subset.map=NULL, subset.value, v
 		
 		spp.dist <- spp.dist[spp.dist$pa!=0,]
 		print(dim(spp.dist))
+		
+		# spp.dist <- spp.dist[sample(seq(1,dim(spp.dist)[1],1),size=10000),] # Did not make a difference.  Would need to be geographically balanced to make a difference.  Stratified sampling by elevation or something.
+		
 		hist(spp.dist$variable)
 		quantiles <- quantile(spp.dist$variable,probs=c(0.02,0.05,0.5,0.95,0.98))
 		print(quantiles)
@@ -52,23 +55,23 @@ calc.slope <- function(workspace, distribution, subset.map=NULL, subset.value, v
 }
 
 test1 <- calc.slope(
-	workspace='S:/Space/Lawler/Shared/Wilsey/PostDoc/HexSim/Workspaces/spotted_frog_v2/', 
+	workspace='D:/data/wilsey/hexsim/workspaces/spotted_frog_v2/', # 'S:/Space/Lawler/Shared/Wilsey/PostDoc/HexSim/Workspaces/spotted_frog_v2/', 
 	distribution='initial.v3.csv', 
 	subset.map='biomes.aet.v1.csv',
 	subset.value=1, # Range = 1, Basin = -1
 	variable='q50.aet.jja.61.90.csv', 
 	spread=FALSE,
-	output='q50.quant.aet.jja.txt'
+	output='q50.quant.aet.jja.2.txt'
 	)
 
 test2 <- calc.slope(
-	workspace='S:/Space/Lawler/Shared/Wilsey/PostDoc/HexSim/Workspaces/spotted_frog_v2/', 
+	workspace='D:/data/wilsey/hexsim/workspaces/spotted_frog_v2/', # 'S:/Space/Lawler/Shared/Wilsey/PostDoc/HexSim/Workspaces/spotted_frog_v2/', 
 	distribution='initial.v3.csv', 
 	subset.map='biomes.aet.v1.csv',
 	subset.value=-1, # Range = 1, Basin = -1
 	variable='q50.aet.mam.61.90.csv', 
 	spread=FALSE,
-	output='q50.quant.aet.mam.txt'
+	output='q50.quant.aet.mam.2.txt'
 	)
 	
 	
