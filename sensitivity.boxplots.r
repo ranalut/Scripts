@@ -54,49 +54,49 @@ sensitive.boxplots <- function(workspace, species.folder, baseline.scenario, bas
 
 # =======================================================================================
 # Function Call Townsend Squirrel
+# sensitive.boxplots(
+	# workspace='F:/pnwccva_data2/HexSim/Workspaces/',
+	# species.folder='town_squirrel_v1',
+	# baseline.scenario='squirrel.016.110.baseline', 
+	# future.scenario=c('squirrel.016.110.'),
+	# data.type='abundance',
+	# spatial.variable='huc',
+	# baseline.time='31.40',
+	# time.window=c('99.109','LATE-2000s'), # c('51.60','MID-2100s'), c('99.109','LATE-2100s'),
+	# legend.label='    populations', # '      females'
+	# suffix=c('','.swe','.def'),
+	# the.labels=c('FULL MODEL','SWE ONLY','DEFICIT ONLY'),
+	# leg.x=5.5, leg.y=3000, ylab='CHANGE IN # OF POPULATIONS\nRELATIVE TO BASELINE'	
+	# )
+	
+# =======================================================================================
+# Function Call Spotted Frog
 sensitive.boxplots(
-	workspace='F:/pnwccva_data2/HexSim/Workspaces/',
-	species.folder='town_squirrel_v1',
-	baseline.scenario='squirrel.016.110.baseline', 
-	future.scenario=c('squirrel.016.110.'),
+	workspace='H:/HexSim/Workspaces/',
+	species.folder='spotted_frog_v2',
+	baseline.scenario='rana.lut.105.125.baseline',
+	future.scenario=c('rana.lut.105.125.'),
 	data.type='abundance',
 	spatial.variable='huc',
 	baseline.time='31.40',
 	time.window=c('99.109','LATE-2000s'), # c('51.60','MID-2100s'), c('99.109','LATE-2100s'),
 	legend.label='    populations', # '      females'
-	suffix=c('','.swe','.def'),
-	the.labels=c('FULL MODEL','SWE ONLY','DEFICIT ONLY'),
-	leg.x=5.5, leg.y=3000, ylab='CHANGE IN # OF POPULATIONS\nRELATIVE TO BASELINE'	
+	suffix=c('','.swe','.aet'),
+	the.labels=c('FULL MODEL','SWE ONLY','AET ONLY'),
+	leg.x=6, leg.y=2500, ylab='CHANGE IN # OF POPULATIONS\nRELATIVE TO BASELINE'
 	)
-	
-# =======================================================================================
-# Function Call Spotted Frog
-# sensitive.boxplots(
-	# workspace='H:/HexSim/Workspaces/',
-	# species.folder='spotted_frog_v2',
-	# baseline.scenario='rana.lut.104.100.baseline',
-	# future.scenario=c('rana.lut.104.100.'),
-	# data.type='abundance',
-	# spatial.variable='huc',
-	# baseline.time='31.40',
-	# time.window=c('51.60','MID-2000s'), # c('51.60','MID-2100s'), c('99.109','LATE-2100s'),
-	# legend.label='    populations', # '      females'
-	# suffix=c('','.swe','.aet'),
-	# the.labels=c('FULL MODEL','SWE ONLY','AET ONLY'),
-	# leg.x=6, leg.y=-1000
-	# )
 
 # # =======================================================================================
-# # Function Call Lynx
+# Function Call Lynx
 # create.figure(
 	# workspace='I:/HexSim/Workspaces/',
 	# species.folder='lynx_v1',
-	# baseline.scenario='lynx.050.baseline.35', # run .35 separately
-	# future.scenario=c('lynx.050.','.35'), # run .35 separately
+	# baseline.scenario='lynx.050.baseline', # run .35 separately
+	# future.scenario=c('lynx.050.',''), # run .35 separately
 	# data.type='abundance', # 'productivity', # 'abundance'
 	# spatial.variable='huc',
 	# baseline.time='34.42',
-	# time.window=c('97.105','LATE-2100s'), # c('97.105','LATE-2100s') # c('52.60','MID-2100s')
+	# time.window=c('97.105','LATE-2000s'), # c('97.105','LATE-2100s') # c('52.60','MID-2100s')
 	# historical.cutoffs=c(0,5,25,200,1000),
 	# future.cutoffs=c(-350,-75,-20,-5,-2,0,2,5,20,75,350)
 	# )
@@ -104,15 +104,17 @@ sensitive.boxplots(
 
 # =======================================================================================
 # Function Call Wolverine
-# create.figure(
-	# workspace='H:/HexSim/Workspaces/',
-	# species.folder='wolverine_v1',
-	# baseline.scenario='gulo.023.baseline',
-	# future.scenario=c('gulo.023.a2.','.swe'), # '' '.swe' '.biomes'
-	# data.type='abundance', # 'productivity', # 'abundance'
-	# spatial.variable='huc',
-	# baseline.time='41.50', # '41.50', # '21.50',
-	# time.window=c('100.109','LATE-2100s'), # c('31.60','MID-2100s'), # c('81.109','LATE-2100s'), '100.109', '51.60'
-	# historical.cutoffs=c(0,2,5,10,25,50,175), # c(-100,-25,-10,-5,-2,0,2,5,10,25,100), # c(0,5,10,25,50,75,100,150),
-	# future.cutoffs=c(-125,-25,-10,-5,-2,0,2,5,10,25,125) # c(-100,-25,-10,-5,-2,0,2,5,10,25,100)
-	# )
+sensitive.boxplots(
+	workspace='H:/HexSim/Workspaces/',
+	species.folder='wolverine_v1',
+	baseline.scenario='gulo.023.baseline',
+	future.scenario=c('gulo.023.a2.'), # '' '.swe' '.biomes'
+	data.type='abundance', # 'productivity', # 'abundance'
+	spatial.variable='huc',
+	baseline.time='41.50', # '41.50', # '21.50',
+	time.window=c('100.109','LATE-2000s'), # c('31.60','MID-2100s'), # c('81.109','LATE-2100s'), '100.109', '51.60'
+	legend.label='      females', # '      females'
+	suffix=c('','.swe','.biomes'),
+	the.labels=c('FULL MODEL','SWE ONLY','BIOMES ONLY'),
+	leg.x=12, leg.y=-60, ylab='CHANGE IN # OF POPULATIONS\nRELATIVE TO BASELINE'
+	)
