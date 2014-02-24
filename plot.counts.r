@@ -19,6 +19,6 @@ plot.counts <- function(workspace, var.name, output.file, species, ylim)
 
 # plot.counts(workspace='I:/HexSim/Workspaces/lynx_v1/', var.name='hucs', species='lynx', ylim=c(0,425))
 
-# plot.counts(workspace='H:/HexSim/Workspaces/spotted_frog_v2/', var.name='hucs', species='rana.lut', ylim=c(0,425))
+plot.counts(workspace='H:/HexSim/Workspaces/spotted_frog_v2/', var.name='hucs.105', species='rana.lut', ylim=c(0,450))
 
-plot.counts(workspace='F:/pnwccva_data2/HexSim/Workspaces/town_squirrel_v1/', var.name='hucs', species='squirrels', ylim=c(0,125))
+# plot.counts(workspace='F:/pnwccva_data2/HexSim/Workspaces/town_squirrel_v1/', var.name='hucs', species='squirrels', ylim=c(0,125))
