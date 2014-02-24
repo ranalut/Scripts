@@ -51,7 +51,7 @@ do.counts <- function(data.files, out.file, type, var.name=NA)
 	}
 }
 
-# # Wolverine
+# Wolverine
 # scenarios <- scenarios.vector(
 				# base.sim='gulo.023.a2.',
 				# gcms=c('ccsm3','cgcm3','giss-er','hadcm3','miroc'),
@@ -62,7 +62,7 @@ do.counts <- function(data.files, out.file, type, var.name=NA)
 # scenarios.files <- c('H:/HexSim/Workspaces/wolverine_v1/Results/gulo.023.baseline/mean.gulo.023.baseline.huc.41.50.csv', scenarios.files)
 # print(scenarios.files)
 
-# do.counts(data.files=scenarios.files, out.file='H:/HexSim/Workspaces/wolverine_v1/Analysis/count.hucs.csv', type='abundance', var.name='huc')
+# do.counts(data.files=scenarios.files, out.file='H:/HexSim/Workspaces/wolverine_v1/Analysis/count.hucs.2.csv', type='abundance', var.name='huc')
 
 # # Lynx
 # scenarios <- scenarios.vector(
@@ -77,28 +77,28 @@ do.counts <- function(data.files, out.file, type, var.name=NA)
 
 # do.counts(data.files=scenarios.files, out.file='I:/HexSim/Workspaces/lynx_v1/Analysis/count.hucs.csv', type='abundance', var.name='huc')
 
-# # Spotted Frog
-# scenarios <- scenarios.vector(
-				# base.sim='rana.lut.104.100.',
-				# gcms=c('ccsm3','cgcm3','giss-er','hadcm3','miroc'),
-				# other='' # c('','.35')
-				# )
-
-# scenarios.files <- paste('H:/HexSim/Workspaces/spotted_frog_v2/Results/',scenarios,'/abs.change.',scenarios,'.huc.99.109.csv',sep='')
-# scenarios.files <- c('H:/HexSim/Workspaces/spotted_frog_v2/Results/rana.lut.104.100.baseline/mean.rana.lut.104.100.baseline.huc.31.40.csv', scenarios.files)
-# print(scenarios.files)
-
-# do.counts(data.files=scenarios.files, out.file='H:/HexSim/Workspaces/spotted_frog_v2/Analysis/count.hucs.csv', type='abundance', var.name='huc')
-
-# Squirrel
+# Spotted Frog
 scenarios <- scenarios.vector(
-				base.sim='squirrel.016.110.',
+				base.sim='rana.lut.105.125.',
 				gcms=c('ccsm3','cgcm3','giss-er','hadcm3','miroc'),
 				other='' # c('','.35')
 				)
 
-scenarios.files <- paste('F:/pnwccva_data2/HexSim/Workspaces/town_squirrel_v1/Results/',scenarios,'/abs.change.',scenarios,'.huc.99.109.csv',sep='')
-scenarios.files <- c('F:/pnwccva_data2/HexSim/Workspaces/town_squirrel_v1/Results/squirrel.016.110.baseline/mean.squirrel.016.110.baseline.huc.31.40.csv', scenarios.files)
+scenarios.files <- paste('H:/HexSim/Workspaces/spotted_frog_v2/Results/',scenarios,'/abs.change.',scenarios,'.huc.99.109.csv',sep='')
+scenarios.files <- c('H:/HexSim/Workspaces/spotted_frog_v2/Results/rana.lut.105.125.baseline/mean.rana.lut.105.125.baseline.huc.31.40.csv', scenarios.files)
 print(scenarios.files)
 
-do.counts(data.files=scenarios.files, out.file='F:/pnwccva_data2/HexSim/Workspaces/town_squirrel_v1/Analysis/count.hucs.csv', type='abundance', var.name='huc')
+do.counts(data.files=scenarios.files, out.file='H:/HexSim/Workspaces/spotted_frog_v2/Analysis/count.hucs.105.csv', type='abundance', var.name='huc')
+
+# # Squirrel
+# scenarios <- scenarios.vector(
+				# base.sim='squirrel.016.110.',
+				# gcms=c('ccsm3','cgcm3','giss-er','hadcm3','miroc'),
+				# other='' # c('','.35')
+				# )
+
+# scenarios.files <- paste('F:/pnwccva_data2/HexSim/Workspaces/town_squirrel_v1/Results/',scenarios,'/abs.change.',scenarios,'.huc.99.109.csv',sep='')
+# scenarios.files <- c('F:/pnwccva_data2/HexSim/Workspaces/town_squirrel_v1/Results/squirrel.016.110.baseline/mean.squirrel.016.110.baseline.huc.31.40.csv', scenarios.files)
+# print(scenarios.files)
+
+# do.counts(data.files=scenarios.files, out.file='F:/pnwccva_data2/HexSim/Workspaces/town_squirrel_v1/Analysis/count.hucs.csv', type='abundance', var.name='huc')
