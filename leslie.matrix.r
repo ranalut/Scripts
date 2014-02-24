@@ -1,4 +1,4 @@
-
+0
 library(popbio)
 
 build.matrix <- function(max.age,stage.thresh,vitals,yr1.multiplier) # yr1.multiplier used for things like females only model (0.5).
@@ -25,16 +25,25 @@ build.matrix <- function(max.age,stage.thresh,vitals,yr1.multiplier) # yr1.multi
 	return(output)
 }
 
-# Lynx
-best.mat <- build.matrix(max.age=15,stage.thresh=c(0,1,2,3,8,10),vitals=list(fertility=c(0,2.4,2.4,2.9,2.2,2.2),survival=c(0.24,0.54,0.7,0.7,0.7,0.31)),yr1.multiplier=1)
-print(best.mat)
-theLambda <- lambda(best.mat)
-cat("Lambda = ",theLambda,'\n')
-print('age distribution')
-print(round(stable.stage(best.mat),3))
+# # Lynx
+# best.mat <- build.matrix(max.age=15,stage.thresh=c(0,1,2,3,8,10),vitals=list(fertility=c(0,2.4,2.4,2.9,2.2,2.2),survival=c(0.24,0.54,0.7,0.7,0.7,0.31)),yr1.multiplier=1)
+# print(best.mat)
+# theLambda <- lambda(best.mat)
+# cat("Lambda = ",theLambda,'\n')
+# print('age distribution')
+# print(round(stable.stage(best.mat),3))
 
-# Wolverine
-best.mat <- build.matrix(max.age=10,stage.thresh=c(0,2),vitals=list(fertility=c(0,0.71),survival=c(0.72,0.76)),yr1.multiplier=1)
+# # Wolverine
+# best.mat <- build.matrix(max.age=10,stage.thresh=c(0,2),vitals=list(fertility=c(0,0.71),survival=c(0.72,0.76)),yr1.multiplier=1) # ??? Does this consider that half of all offspring are females and that this is a females-only model?
+# print(best.mat)
+# theLambda <- lambda(best.mat)
+# cat("Lambda = ",theLambda,'\n')
+# print('age distribution')
+# print(round(stable.stage(best.mat),3))
+
+# Fisher
+# best.mat <- build.matrix(max.age=10,stage.thresh=c(0,1,2,3),vitals=list(fertility=c(0,1.46,1.65,1.81),survival=c(0.25,0.75,0.75,0.75)),yr1.multiplier=1) # Literature values, only female offspring. Buskirk et al 2012.
+best.mat <- build.matrix(max.age=10,stage.thresh=c(0,1,2,3),vitals=list(fertility=c(0,1.46,1.65,1.81),survival=c(0.25,0.7,0.7,0.7)),yr1.multiplier=1)
 print(best.mat)
 theLambda <- lambda(best.mat)
 cat("Lambda = ",theLambda,'\n')
