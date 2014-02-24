@@ -50,6 +50,20 @@ the.change <- function(workspace, baseline, fut.scenarios, reps, trait.name, bas
 	# print(head(output)); stop('cbw')
 	temp.sum <- as.numeric(apply(output,MARGIN=1,mean))
 	output$base.mean <- temp.sum
+	
+	# Add in code here to calculate the change within the baseline scenario between the last decade and the previous decade.
+	# if (grep(
+	# temp.years <- base.years - 10
+	# temp.output <- read.csv(paste(workspace ,scenario,'/',scenario,'-[1]/',scenario,'.',trait.name,'.',base.years[1],'.',base.years[2],'.csv',sep=''),header=TRUE, row.names=1)
+	# # print(head(output)); stop('cbw')
+	# for (i in 2:5)
+	# {
+		# temp <- read.csv(paste(workspace ,scenario,'/',scenario,'-[',i,']/',scenario,'.',trait.name,'.',base.years[1],'.',base.years[2],'.csv',sep=''),header=TRUE, row.names=1)
+		# output <- cbind(output,temp)
+	# }
+	# # print(head(output)); stop('cbw')
+	# temp.sum <- as.numeric(apply(output,MARGIN=1,mean))
+	
 	write.csv(output,paste(workspace ,scenario,'/mean.',scenario,'.',trait.name,'.',base.years[1],'.',base.years[2],'.csv',sep=''))
 	base.mean <- output$base.mean
 	
@@ -87,6 +101,7 @@ summarize.census <- function(workspace, folder, base.sim, gcms, other, census.no
 	# colnames(ecoregion.table) <- c('shape.index','ECO_NAME','trait.index')
 
 	scenarios <- scenarios.vector(base.sim=base.sim, gcms=gcms, other=other)
+	# print(scenarios)
 	
 	for (i in scenarios)
 	{
@@ -104,10 +119,26 @@ summarize.census <- function(workspace, folder, base.sim, gcms, other, census.no
 				years=temp.years,
 				metapop=metapop
 				)
+			if(length(grep('base',i))>0) 
+			{ 
+				if (length(grep('lynx',i))>0) { temp.years <- base.years - 9 }
+				else { temp.years <- base.years - 10 }
+				table.census.traits(
+					workspace=paste(workspace,folder,'/Results/',sep=''), # workspace=paste('I:/HexSim/Workspaces/',folder,'/Results/',sep=''), #  
+					scenario=i, 
+					merge.table=merge.table,
+					reps=j,
+					census.no=census.no,
+					trait.name=trait.name,
+					years=temp.years,
+					metapop=metapop
+					)
+			}
 			cat(i,j,'\n')
 			# return(it)
 			# stop('cbw')
 		}
+		# stop('cbw')
 	}
 	
 	if (length(grep('base',scenarios)) >= 1) { fut.scenarios <- scenarios[-grep('base',scenarios)] }
@@ -121,16 +152,17 @@ summarize.census <- function(workspace, folder, base.sim, gcms, other, census.no
 # summarize.census(
 		# workspace='H:/HexSim/Workspaces/', 
 		# folder='wolverine_v1', 
-		# base.sim'gulo.023.a2.', # base.sim='lynx.050.', # base.sim='gulo.023.a2.',
-		# gcms=c('ccsm3','cgcm3','giss-er','hadcm3','miroc'), # gcms='baseline', # gcms=c('baseline','ccsm3','cgcm3','giss-er','hadcm3','miroc'),
-		# other=c('','.biomes','.swe'), # other='', # other=c('','.35') 
+		# base.sim='gulo.023.', # base.sim='gulo.023.a2.', # base.sim='gulo.023.',
+		# gcms='baseline', # c('ccsm3','cgcm3','giss-er','hadcm3','miroc'), # gcms='baseline', # gcms=c('baseline','ccsm3','cgcm3','giss-er','hadcm3','miroc'),
+		# other='', # c('','.biomes','.swe'), # other='', # other=c('','.35') 
 		# census.no=2, 
 		# trait.name='huc', 
 		# reps=5, 
 		# fut.years=c(51,60), # c(25,51), 
 		# baseline='gulo.023.baseline', 
 		# base.years=c(41,50), 
-		# type='abs'
+		# type='abs',
+		# metapop=FALSE
 		# )
 
 # Lynx
@@ -153,36 +185,36 @@ summarize.census <- function(workspace, folder, base.sim, gcms, other, census.no
 		# )
 
 # Spotted Frog
-# summarize.census(
-		# workspace='H:/HexSim/Workspaces/', # '//cfr.washington.edu/main/Space/Lawler/Shared/Wilsey/PostDoc/HexSim/Workspaces/', 
-		# folder='spotted_frog_v2', 
-		# base.sim='rana.lut.104.100.', #'rana.lut.104.90.' # 'rana.lut.104.100.'
-		# gcms=c('ccsm3','cgcm3','giss-er','hadcm3','miroc'), # gcms='baseline',
-		# other=c('','.aet','.swe'), # c('','.aet','.swe'), # '',
-		# census.no=1, 
-		# trait.name='huc', 
-		# reps=5, 
-		# fut.years=c(51,60), #99,109 #51,60
-		# baseline='rana.lut.104.100.baseline', 
-		# base.years=c(31,40), 
-		# type='abs',
-		# metapop=TRUE
-		# )
-# stop('cbw')		
-	
-# Squirrel
 summarize.census(
-		workspace='F:/PNWCCVA_Data2/HexSim/Workspaces/', 
-		folder='town_squirrel_v1', 
-		base.sim='squirrel.016.110.',
+		workspace='H:/HexSim/Workspaces/', # '//cfr.washington.edu/main/Space/Lawler/Shared/Wilsey/PostDoc/HexSim/Workspaces/', 
+		folder='spotted_frog_v2', 
+		base.sim='rana.lut.105.125.', #'rana.lut.104.90.' # 'rana.lut.104.100.'
 		gcms=c('ccsm3','cgcm3','giss-er','hadcm3','miroc'), # gcms='baseline',
-		other=c('.biomes','.swe','.def'), # c('','.aet','.swe'), # c('','.aet','.swe'), # '',
+		other='', # c('.aet','.swe'), # c('','.aet','.swe'), # '',
 		census.no=1, 
 		trait.name='huc', 
-		reps=1, # 5, 1,
-		fut.years=c(51,60), # c(99,109), 
-		baseline='squirrel.016.110.baseline', 
+		reps=5, # 5 # 1
+		fut.years=c(99,109), #99,109 #51,60
+		baseline='rana.lut.105.125.baseline', 
 		base.years=c(31,40), 
 		type='abs',
 		metapop=TRUE
-		)		
+		)
+# stop('cbw')		
+	
+# Squirrel
+# summarize.census(
+		# workspace='F:/PNWCCVA_Data2/HexSim/Workspaces/', 
+		# folder='town_squirrel_v1', 
+		# base.sim='squirrel.016.110.',
+		# gcms=c('ccsm3','cgcm3','giss-er','hadcm3','miroc'), # gcms='baseline',
+		# other=c('.biomes','.swe','.def'), # c('','.aet','.swe'), # c('','.aet','.swe'), # '',
+		# census.no=1, 
+		# trait.name='huc', 
+		# reps=1, # 5, 1,
+		# fut.years=c(51,60), # c(99,109), 
+		# baseline='squirrel.016.110.baseline', 
+		# base.years=c(31,40), 
+		# type='abs',
+		# metapop=TRUE
+		# )		
