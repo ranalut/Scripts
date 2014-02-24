@@ -124,35 +124,35 @@ create.figure <- function(workspace, species.folder, baseline.scenario, future.s
 
 # =======================================================================================
 # Function Call Townsend Squirrel
-create.figure(
-	workspace='F:/pnwccva_data2/HexSim/Workspaces/',
-	species.folder='town_squirrel_v1',
-	baseline.scenario='squirrel.016.110.baseline', # 'rana.lut.104.100.baseline'
-	future.scenario=c('squirrel.016.110.',''), # '.swe', '.def', '.biomes'
-	data.type='abundance',
-	spatial.variable='huc',
-	baseline.time='31.40',
-	time.window=c('51.60','LATE-2000s'), # c('51.60','MID-2100s'), c('99.109','LATE-2100s'),
-	historical.cutoffs=c(0,5,20,55,150,400,1000,3000,10000),
-	future.cutoffs=c(-2000,-500,-100,-20,-5,0,5,20,100,500,2000),
-	legend.label='    populations' # '      females'
-	)
-
-# =======================================================================================
-# Function Call Spotted Frog
 # create.figure(
-	# workspace='H:/HexSim/Workspaces/',
-	# species.folder='spotted_frog_v2',
-	# baseline.scenario='rana.lut.104.100.baseline', # 'rana.lut.104.100.baseline'
-	# future.scenario=c('rana.lut.104.100.',''), # c('rana.lut.104.100.','.swe')
+	# workspace='F:/pnwccva_data2/HexSim/Workspaces/',
+	# species.folder='town_squirrel_v1',
+	# baseline.scenario='squirrel.016.110.baseline', # 'rana.lut.104.100.baseline'
+	# future.scenario=c('squirrel.016.110.',''), # '.swe', '.def', '.biomes'
 	# data.type='abundance',
 	# spatial.variable='huc',
 	# baseline.time='31.40',
-	# time.window=c('51.60','MID-2000s'), # c('51.60','MID-2100s'), c('99.109','LATE-2100s'),
-	# historical.cutoffs=c(0,5,20,55,150,400,1000,3500),
+	# time.window=c('51.60','LATE-2000s'), # c('51.60','MID-2100s'), c('99.109','LATE-2100s'),
+	# historical.cutoffs=c(0,5,20,55,150,400,1000,3000,10000),
 	# future.cutoffs=c(-2000,-500,-100,-20,-5,0,5,20,100,500,2000),
 	# legend.label='    populations' # '      females'
 	# )
+
+# =======================================================================================
+# Function Call Spotted Frog
+create.figure(
+	workspace='H:/HexSim/Workspaces/',
+	species.folder='spotted_frog_v2',
+	baseline.scenario='rana.lut.105.125.baseline', # 'rana.lut.104.100.baseline'
+	future.scenario=c('rana.lut.105.125.',''), # c('rana.lut.104.100.','.swe')
+	data.type='abundance',
+	spatial.variable='huc',
+	baseline.time='31.40',
+	time.window=c('51.60','MID-2000s'), # c('51.60','MID-2100s'), c('99.109','LATE-2100s'),
+	historical.cutoffs=c(0,5,20,90,400,1800,5300),
+	future.cutoffs=c(-2000,-500,-100,-20,-5,0,5,20,100,500,2000),
+	legend.label='    populations' # '      females'
+	)
 
 # # =======================================================================================
 # Function Call Lynx
