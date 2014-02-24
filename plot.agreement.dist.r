@@ -101,21 +101,21 @@ create.figure.agreement(
 
 # =======================================================================================
 # Function Call Spotted Frog
-create.figure.agreement(
-	workspace='H:/HexSim/Workspaces/',
-	species.folder='spotted_frog_v2',
-	baseline.scenario='rana.lut.104.100.baseline', # 'rana.lut.104.100.baseline'
-	future.scenario=c('rana.lut.104.100.',''), # c('rana.lut.104.100.','.swe')
-	data.type='abundance',
-	spatial.variable='huc',
-	baseline.time='31.40',
-	time.window=c('99.109','LATE-2000s'), # c('51.60','MID-2100s'), c('99.109','LATE-2100s'),
-	cutoffs=c(0,1,2,3,4,5),
-	min.occ=20
-	)
+# create.figure.agreement(
+	# workspace='H:/HexSim/Workspaces/',
+	# species.folder='spotted_frog_v2',
+	# baseline.scenario='rana.lut.105.125.baseline', # 'rana.lut.104.100.baseline'
+	# future.scenario=c('rana.lut.105.125.',''), # c('rana.lut.104.100.','.swe')
+	# data.type='abundance',
+	# spatial.variable='huc',
+	# baseline.time='31.40',
+	# time.window=c('99.109','LATE-2000s'), # c('51.60','MID-2100s'), c('99.109','LATE-2100s'),
+	# cutoffs=c(0,1,2,3,4,5),
+	# min.occ=20
+	# )
 
 # =======================================================================================
-# # Function Call Lynx
+# Function Call Lynx
 # create.figure.agreement(
 	# workspace='I:/HexSim/Workspaces/',
 	# species.folder='lynx_v1',
@@ -124,23 +124,23 @@ create.figure.agreement(
 	# data.type='abundance', # 'productivity', # 'abundance'
 	# spatial.variable='huc',
 	# baseline.time='34.42',
-	# time.window=c('97.105','LATE-2100s'), # c('97.105','LATE-2100s') # c('52.60','MID-2100s')
-	# cutoffs=c(-5,-4,-3,-2,-1,0,1,2,3,4,5),
-	# no.change=5
+	# time.window=c('97.105','LATE-2000s'), # c('97.105','LATE-2100s') # c('52.60','MID-2100s')
+	# cutoffs=c(0,1,2,3,4,5),
+	# min.occ=5
 	# )
 
 
 # =======================================================================================
 # Function Call Wolverine
-# it <- create.figure.agreement(
-	# workspace='H:/HexSim/Workspaces/',
-	# species.folder='wolverine_v1',
-	# baseline.scenario='gulo.023.baseline',
-	# future.scenario=c('gulo.023.a2.',''), # '' '.swe' '.biomes'
-	# data.type='abundance', # 'productivity', # 'abundance'
-	# spatial.variable='huc',
-	# baseline.time='41.50', # '41.50', # '21.50',
-	# time.window=c('100.109','LATE-2100s'), # c('31.60','MID-2100s'), # c('81.109','LATE-2100s'), '100.109', '51.60'
-	# cutoffs=c(-5,-4,-3,-2,-1,0,1,2,3,4,5),
-	# no.change=2
-	# )
+create.figure.agreement(
+	workspace='H:/HexSim/Workspaces/',
+	species.folder='wolverine_v1',
+	baseline.scenario='gulo.023.baseline',
+	future.scenario=c('gulo.023.a2.',''), # '' '.swe' '.biomes'
+	data.type='abundance', # 'productivity', # 'abundance'
+	spatial.variable='huc',
+	baseline.time='41.50', # '41.50', # '21.50',
+	time.window=c('100.109','LATE-2000s'), # c('31.60','MID-2100s'), # c('81.109','LATE-2100s'), '100.109', '51.60'
+	cutoffs=c(0,1,2,3,4,5),
+	min.occ=2
+	)
