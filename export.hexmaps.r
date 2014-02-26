@@ -44,8 +44,14 @@ export.hexmaps.spatial <- function(hexsim.wksp2='F:\\PNWCCVA_Data2\\HexSim',spp.
 
 # export.hexmaps(spp.folder='spotted_frog_v2',scenario='rana.lut.73.baseline',hexmap.name='population',time.step=110)
 # export.hexmaps(spp.folder='lynx_v1',scenario='lynx.040.miroc',hexmap.name='lynx.presence',n=2,time.step=120)
-
-
-export.hexmaps(hexsim.wksp2='F:\\PNWCCVA_Data2\\HexSim', spp.folder='spotted_frog_v2',scenario='rana.lut.100a',n=1,hexmap.name='K')
+# export.hexmaps(hexsim.wksp2='F:\\PNWCCVA_Data2\\HexSim', spp.folder='spotted_frog_v2',scenario='rana.lut.100a',n=1,hexmap.name='K')
 
 # export.hexmaps.spatial(hexsim.wksp2='F:\\PNWCCVA_Data2\\HexSim', spp.folder='spotted_frog_v2',hexmap.name='CCSM3.aet.jja')
+# export.hexmaps.spatial(hexsim.wksp2='F:\\PNWCCVA_Data2\\HexSim', spp.folder='sage_grouse_v2',hexmap.name='biomes.2000')
+# export.hexmaps.spatial(hexsim.wksp2='F:\\PNWCCVA_Data2\\HexSim', spp.folder='sage_grouse_v2',hexmap.name='UKMO-HadCM3.biomes.2099')
+# export.hexmaps.spatial(hexsim.wksp2='F:\\PNWCCVA_Data2\\HexSim', spp.folder='sage_grouse_v2',hexmap.name='MIROC3.2_medres.biomes.2099')
+# export.hexmaps.spatial(hexsim.wksp2='F:\\PNWCCVA_Data2\\HexSim', spp.folder='sage_grouse_v2',hexmap.name='GISS-ER.biomes.2099')
+# export.hexmaps.spatial(hexsim.wksp2='F:\\PNWCCVA_Data2\\HexSim', spp.folder='sage_grouse_v2',hexmap.name='CGCM3.1_t47.biomes.2099')
+# export.hexmaps.spatial(hexsim.wksp2='F:\\PNWCCVA_Data2\\HexSim', spp.folder='sage_grouse_v2',hexmap.name='CCSM3.biomes.2099')
+export.hexmaps.spatial(hexsim.wksp2='F:\\PNWCCVA_Data2\\HexSim', spp.folder='sage_grouse_v2',hexmap.name='lulc.2000')
+export.hexmaps.spatial(hexsim.wksp2='F:\\PNWCCVA_Data2\\HexSim', spp.folder='sage_grouse_v2',hexmap.name='lulc.2099')
