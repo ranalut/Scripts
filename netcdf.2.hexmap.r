@@ -3,16 +3,17 @@ library(rgdal)
 library(raster)
 library(foreign)
 
-nc.2.hxn <- function(variable, nc.file, hex.grid, theCentroids, max.value, hexsim.wksp, hexsim.wksp2, output.wksp, output.wksp2, hexmap.name, spp.folder, changeTable=NA, dimensions, band=NA, buffer=NULL, fun=NULL) # dimensions=c(3131,2075)
+nc.2.hxn <- function(variable, nc.file, hex.grid, theCentroids, max.value, hexsim.wksp, hexsim.wksp2, output.wksp, output.wksp2, hexmap.name, spp.folder, changeTable=NA, dimensions, band=NA, buffer=NA, fun=NULL) # dimensions=c(3131,2075)
 {
 	
 	startTime <- Sys.time()
 	if (is.na(band)==TRUE) { theData <- raster(nc.file, varname=variable) }
 	else { theData <- raster(nc.file, band=band) }
 	if (is.na(changeTable)[1]==FALSE) { theData <- subs(theData, changeTable) }
-	
-	if (buffer==NULL) { extractedData <- extract(theData, hex.grid) }
+	# return(theData)
+	if (is.na(buffer)) { extractedData <- extract(theData, hex.grid) }
 	else { extractedData <- extract(theData, hex.grid, buffer=buffer, fun=fun, small=FALSE) }
+	
 	extractedData[is.na(extractedData)==TRUE] <- 0
 	extractedData[extractedData > max.value] <- max.value
 	
