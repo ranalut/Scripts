@@ -1,6 +1,6 @@
 
 # =========================================================================================
-# Generate HexMaps from spatial data layers for the Townsend's ground squirrel workspace.
+# Generate HexMaps from spatial data layers for the pygmy rabbit workspace.
 # =========================================================================================
 
 # ========================================================================================
@@ -17,19 +17,22 @@ source('plot.raster.stack.r')
 
 # Settings for this run.
 
-hexsim.wksp <- 'H:/HexSim/' # 'F:/PNWCCVA_Data2/HexSim/' # 'D:/data/wilsey/HexSim/'
-hexsim.wksp2 <- 'H:\\HexSim' # 'F:\\PNWCCVA_Data2\\HexSim' # 'D:\\data\\wilsey\\hexsim'
-output.wksp <- 'H:/HexSim/' # 'E:/HexSim/' # 'D:/data/wilsey/HexSim/' # 'F:/PNWCCVA_Data2/HexSim/' 
-output.wksp2 <- 'H:\\HexSim' # 'E:\\HexSim' # 'D:\\data\\wilsey\\hexsim' # 'F:\\PNWCCVA_Data2\\HexSim'
+hexsim.wksp <- 'D:/data/wilsey/HexSim/' # 'H:/HexSim/' # 'F:/PNWCCVA_Data2/HexSim/' # 'D:/data/wilsey/HexSim/'
+hexsim.wksp2 <- 'D:\\data\\wilsey\\hexsim' # 'H:\\HexSim' # 'F:\\PNWCCVA_Data2\\HexSim' # 'D:\\data\\wilsey\\hexsim'
+output.wksp <- 'L:/Space_Lawler/Shared/Wilsey/PostDoc/HexSim/' # 'H:/HexSim/' # 'E:/HexSim/' # 'D:/data/wilsey/HexSim/' # 'F:/PNWCCVA_Data2/HexSim/' 
+output.wksp2 <- 'L:\\Space_Lawler\\Shared\\Wilsey\\PostDoc\\HexSim' # 'H:\\HexSim' # 'E:\\HexSim' # 'D:\\data\\wilsey\\hexsim' # 'F:\\PNWCCVA_Data2\\HexSim'
 spp.folder <- 'rabbit_v1'
 
-run.hex.grid <- 		'y'
+run.hex.grid.distn <- 		'n'
+run.distn <- 			'n'
+run.hex.grid <-   'y'
+run.move.ave <- 'y'
 run.historical.swe <- 	'n'
 run.annual.hist.swe <- 	'n'
 run.ann.hist.def <-		'n'
-run.hist.deficit <- 	'y'
+run.hist.deficit <- 	'n'
 run.fut.deficit <- 		'n'
-run.hist.biomes <-		'y'
+run.hist.biomes <-		'n'
 run.biomes <- 			'n'
 run.initial <- 			'n' # Not updated for squirrel
 run.future.swe <- 		'n'
@@ -47,31 +50,114 @@ startTime <- Sys.time()
 # ==========================================================================================
 # Load WGS 84 hex.grid for extracting spatial data
 
+if (run.hex.grid.distn=='y')
+{
+	hex.grid <- load.hex.grid(
+		centroid.file="F:/PNWCCVA_Data2/HexSim/Workspaces/sage_grouse_v2/Spatial Data/albers_centroids_1km.dbf",# "S:/Space/Lawler/Shared/Wilsey/Postdoc/HexSim/Workspaces/sage_grouse_v2/Spatial Data/albers_centroids_1km_wgs84.dbf", # 'F:/PNWCCVA_Data2/HexSim/Workspaces/centroids84.txt',  
+		file.format='dbf',
+		proj4='+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=23 +lon_0=-96 +x_0=0 +y_0=0 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs'
+		# '+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0'
+		# '+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=23 +lon_0=-96 +x_0=0 +y_0=0 +ellps=GRS80 +datum=NAD83 +units=m +no_defs' 
+		)
+}
+# Testing
+# hex.grid[[1]] <- hex.grid[[1]][1673100:1674100,]; hex.grid[[2]] <- hex.grid[[2]][1673100:1674100,]; stop('cbw')
+
+# ==========================================================================================================
+# Modeled Distribution
+
+if (run.distn=='y')
+{
+	nc.2.hxn(
+		variable='bra_ida_pyrax', 
+		nc.file="H:/SpatialData/USGS GAP national/Bra_ida_PYRAx_Model/bra_ida_pyrax", 
+		hex.grid=hex.grid[[2]], 
+		theCentroids=hex.grid[[1]],
+		buffer=500, fun=sum,
+		max.value=Inf, 
+		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='pyra2',
+		dimensions=c(1750,1859)
+		)
+}
+
+# ==========================================================================================
+# Load WGS 84 hex.grid for extracting spatial data
+
 if (run.hex.grid=='y')
 {
 	hex.grid <- load.hex.grid(
-		centroid.file="F:/PNWCCVA_Data2/HexSim/Workspaces/sage_grouse_v2/Spatial Data/albers_centroids_1km_wgs84.dbf",# "S:/Space/Lawler/Shared/Wilsey/Postdoc/HexSim/Workspaces/sage_grouse_v2/Spatial Data/albers_centroids_1km_wgs84.dbf", # 'F:/PNWCCVA_Data2/HexSim/Workspaces/centroids84.txt',  
+		centroid.file="L:/Space_Lawler/Shared/Wilsey/Postdoc/HexSim/Workspaces/sage_grouse_v2/Spatial Data/albers_centroids_1km_wgs84.dbf", # "F:/PNWCCVA_Data2/HexSim/Workspaces/sage_grouse_v2/Spatial Data/albers_centroids_1km_wgs84.dbf",# "S:/Space/Lawler/Shared/Wilsey/Postdoc/HexSim/Workspaces/sage_grouse_v2/Spatial Data/albers_centroids_1km_wgs84.dbf", # 'F:/PNWCCVA_Data2/HexSim/Workspaces/centroids84.txt',  
 		file.format='dbf',
 		proj4='+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0'
 		)
 }
 
-# ==========================================================================================================
-# HUCS
-
-if (run.all.huc=='y')
+# ==========================================================================================
+if (run.move.ave=='y')
 {
-	nc.2.hxn(
-		variable='CBW_CODE', 
-		nc.file="F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1/Spatial Data/all_hucs2.nc",
-		hex.grid=hex.grid[[2]], 
-		theCentroids=hex.grid[[1]],
-		max.value=Inf, 
-		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='all.huc.2',
-		dimensions=c(1750,1859)
-		)
+  theGCMs <- c('CCSM3','CGCM3.1_t47','GISS-ER','MIROC3.2_medres','UKMO-HadCM3')
+  for (i in 1:length(theGCMs))
+  {
+    names1 <- paste('L:/space_lawler/shared/pnwccva-climatedata/annual/cru_ts2.1_1901-2000/deficit_mam_v1/deficit_mam_',seq(1961,2000,1),'.nc',sep='')
+    names2 <- paste('L:/space_lawler/shared/pnwccva-climatedata/annual/a2/deficit_mam_v1/',theGCMs[i],'deficit_mam_',seq(2000,2099,1),'.nc',sep='')
+    the.names <- c(names1,names2)
+  
+    the.stack <- stack(the.names[1:30])
+    cat('stacked...')
+    the.stack <- crop(the.stack, hex.grid[[2]]) 
+    cat('cropped...')
+    the.ave <- calc(the.stack, fun=mean, na.rm=TRUE)
+    cat('averaged...')
+    nc.2.hxn(
+  		variable=NA, 
+  		nc.file=the.ave, 
+  		hex.grid=hex.grid[[2]], 
+  		theCentroids=hex.grid[[1]],
+  		max.value=Inf, 
+  		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name=paste('ave.def.mam.',theGCMs[i],sep=''),
+  		dimensions=c(1750,1859)
+  		)
+    cat('hexmap\n')
+    # stop('cbw')
+    
+    for (j in 31:140) # 1991:2099
+    {
+      the.stack <- dropLayer(the.stack,1)
+      temp <- crop(raster(the.names[j]),hex.grid[[2]])
+      the.stack <- addLayer(the.stack,temp) 
+      cat('cropped...')
+      the.ave <- calc(the.stack, fun=mean, na.rm=TRUE)
+      cat('averaged...')
+      year1 <- the.ave
+      nc.2.hxn(
+    		variable=NA, 
+    		nc.file=the.ave, 
+    		hex.grid=hex.grid[[2]], 
+    		theCentroids=hex.grid[[1]],
+    		max.value=Inf, 
+    		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name=paste('ave.def.mam.',theGCMs[i],sep=''),
+    		dimensions=c(1750,1859)
+    		)
+      cat('hexmap\n')
+      file.copy(
+    				 from=paste(output.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/ave.def.mam.',theGCMs[i],'/ave.def.mam.',theGCMs[i],'.1.hxn',sep=''), 
+    				 to=paste(output.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/ave.def.mam.',theGCMs[i],'/ave.def.mam.',theGCMs[i],'.',(j-29),'.hxn',sep=''),
+    				 overwrite=TRUE
+    				 )
+    }
+    # Replace the first hexmap with the first map in series.
+    nc.2.hxn(
+    		variable=NA, 
+    		nc.file=year1, 
+    		hex.grid=hex.grid[[2]], 
+    		theCentroids=hex.grid[[1]],
+    		max.value=Inf, 
+    		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name=paste('ave.def.mam.',theGCMs[i],sep=''),
+    		dimensions=c(1750,1859)
+    		)
+  }
+  file.remove(dir("C:/Documents and Settings/cbwilsey/Local Settings/Temp/4/R_raster_tmp/cbwilsey",full.names=TRUE))
 }
-
 # ==========================================================================================================
 # HUCS
 
