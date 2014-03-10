@@ -10,7 +10,7 @@ load.hex.grid <- function(centroid.file, file.format, proj4)
 	if (file.format=='dbf') { theCentroids <- read.dbf(centroid.file, as.is=TRUE) }
 	if (file.format=='txt') { theCentroids <- read.csv(centroid.file, header=TRUE) }
 	
-	cat(Sys.time()-startTime, 'minutes to load file', '\n')
+	cat(Sys.time()-startTime, 'seconds or minutes to load file', '\n')
 
 	theCentroids <- theCentroids[,c('Hex_ID','POINT_X','POINT_Y')]
 	# print(head(theCentroids)); stop('cbw')
