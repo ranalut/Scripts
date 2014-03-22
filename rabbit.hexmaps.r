@@ -25,9 +25,10 @@ spp.folder <- 'rabbit_v1'
 
 run.hex.grid.distn <- 	'n'
 run.distn <- 			'n'
-run.hex.grid <-			'n'
-run.move.ave <-			'y'
-
+run.hex.grid <-			'y'
+run.move.ave <-			'n'
+run.biomes <- 			'n'
+run.hist.biomes <- 		'y'
 run.initial <- 			'n' # Not updated for squirrel
 run.fire <- 			'n' # May need to add this
 run.all.huc <- 			'n'
@@ -57,12 +58,15 @@ if (run.hex.grid.distn=='y')
 
 if (run.distn=='y')
 {
+	temp <- raster("H:/SpatialData/USGS GAP national/Bra_ida_PYRAx_Model (2)/bra_ida_pyrax")
+	temp2 <- aggregate(temp, fact=30, fun=sum, expand=FALSE, na.rm=TRUE, filename="H:/SpatialData/USGS GAP national/Bra_ida_PYRAx_Model (2)/bra_ida_900")
+	
 	nc.2.hxn(
-		variable='bra_ida_pyrax', 
-		nc.file="H:/SpatialData/USGS GAP national/Bra_ida_PYRAx_Model/bra_ida_pyrax", 
+		variable=NA, # 'bra_ida_pyrax', 
+		nc.file=temp2, # "H:/SpatialData/USGS GAP national/Bra_ida_PYRAx_Model (2)/bra_ida_900", 
 		hex.grid=hex.grid[[2]], 
 		theCentroids=hex.grid[[1]],
-		buffer=500, fun=sum,
+		# buffer=500, fun=sum,
 		max.value=Inf, 
 		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='pyra2',
 		dimensions=c(1750,1859)
@@ -81,6 +85,112 @@ if (run.hex.grid=='y')
 		)
 }
 
+# ==========================================================================================================
+# Biomes
+if (run.biomes=='y')
+{
+	source('veg.file.paths.r')
+	source('time.series.2.hexmaps.r')
+	theGCMs <- c('CCSM3','CGCM3.1_t47','GISS-ER','MIROC3.2_medres','UKMO-HadCM3')
+
+	for (i in 1:5)
+	{
+		startTime <- Sys.time()
+		the.names <- build.paths(theGCM=theGCMs[i])
+		cat('built names\n')
+
+		hexmap.time.series(
+			the.names=the.names, 
+			output.wksp=output.wksp, spp.folder=spp.folder, 
+			theGCM=theGCMs[i], 
+			hexmap.base.name='hist.biome', 
+			hex.grid=hex.grid, 
+			variable='biomes.a2',
+			end.yr=NA
+			)
+	}
+	source('veg.file.paths.r')
+	
+	theGCMs <- c('CCSM3','CGCM3.1_t47','GISS-ER','MIROC3.2_medres','UKMO-HadCM3')
+	
+	# file.path <- 'L:/Lawler_Share/pnwccva-vegetationdata/26jul13_outputs/biome_modal_30yr_a2/' # 'H:/vegetation/26jul13_outputs/biome_modal_30yr_a2/'
+	# file.name <- c('wna30sec_a2_','_biome_30-year_mean_')
+	# variable.folders <- 'snowfall_swe_balance_first_day_of_month_a2'
+
+	for (i in 1:5)
+	# for (i in 1)
+	{
+		startTime <- Sys.time()
+		the.names <- build.paths(theGCM=theGCMs[i])
+		cat('built names\n')
+
+		for (j in 2:length(the.names))
+		# for (j in 1)
+		{
+			test <- file.exists(paste(output.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/',theGCMs[i],'.biomes.a2/',theGCMs[i],'.biomes.a2.',j,'.hxn',sep=''))
+			if(test==TRUE) { cat(theGCMs[i],j,'\n'); next(j) }
+			
+			nc.2.hxn(
+				variable='biome', 
+				nc.file=the.names[j], 
+				hex.grid=hex.grid[[2]], 
+				theCentroids=hex.grid[[1]],
+				max.value=Inf,
+				changeTable=NA,
+				hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, 
+				hexmap.name=paste(theGCMs[i],'.biomes.a2',sep=''),
+				dimensions=c(1750,1859)
+				)
+
+			file.copy(
+				from=paste(output.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/',theGCMs[i],'.biomes.a2/',theGCMs[i],'.biomes.a2.1.hxn',sep=''), 
+				to=paste(output.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/',theGCMs[i],'.biomes.a2/',theGCMs[i],'.biomes.a2.',j,'.hxn',sep=''),
+				overwrite=TRUE
+				)
+			cat('Year',j,Sys.time()-startTime, 'minutes or seconds to create Hexmap', '\n') # 1.09 minutes...
+			# stop('cbw')
+		}
+		
+		# Present-day
+		nc.2.hxn(
+				variable='biome', 
+				nc.file=the.names[1], 
+				hex.grid=hex.grid[[2]], 
+				theCentroids=hex.grid[[1]],
+				max.value=Inf,
+				changeTable=NA,
+				hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, 
+				hexmap.name=paste(theGCMs[i],'.biomes.a2',sep=''),
+				dimensions=c(1750,1859)
+				)
+
+	}
+}
+
+# Just historical biomes
+if (run.hist.biomes=='y')
+{
+	source('veg.file.paths.r')
+	source('time.series.2.hexmaps.r')
+	theGCMs <- c('CCSM3','CGCM3.1_t47','GISS-ER','MIROC3.2_medres','UKMO-HadCM3')
+
+	for (i in 1)
+	{
+		startTime <- Sys.time()
+		the.names <- build.paths(theGCM=theGCMs[i])
+		cat('built names\n')
+
+		hexmap.time.series(
+			the.names=the.names, 
+			output.wksp=output.wksp, spp.folder=spp.folder, 
+			theGCM=theGCMs[i], 
+			hexmap.base.name='hist.biome', 
+			hex.grid=hex.grid, 
+			variable='biome',
+			end.yr=40 # NA
+			)
+	}
+}
 # ==========================================================================================
 if (run.move.ave=='y') # Make this a separate script, perhaps a function and apply to other variables.
 {
@@ -107,6 +217,7 @@ if (run.move.ave=='y') # Make this a separate script, perhaps a function and app
     file.remove(dir("C:/Documents and Settings/cbwilsey/Local Settings/Temp/4/R_raster_tmp/cbwilsey",full.names=TRUE))
   }
 }
+
 # ==========================================================================================================
 # HUCS
 
