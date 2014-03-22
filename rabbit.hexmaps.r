@@ -27,8 +27,8 @@ run.hex.grid.distn <- 	'n'
 run.distn <- 			'n'
 run.hex.grid <-			'y'
 run.move.ave <-			'n'
-run.biomes <- 			'n'
-run.hist.biomes <- 		'y'
+run.biomes <- 			'y'
+run.hist.biomes <- 		'n'
 run.initial <- 			'n' # Not updated for squirrel
 run.fire <- 			'n' # May need to add this
 run.all.huc <- 			'n'
@@ -103,67 +103,11 @@ if (run.biomes=='y')
 			the.names=the.names, 
 			output.wksp=output.wksp, spp.folder=spp.folder, 
 			theGCM=theGCMs[i], 
-			hexmap.base.name='hist.biome', 
+			hexmap.base.name='biomes.a2', 
 			hex.grid=hex.grid, 
-			variable='biomes.a2',
+			variable='biome',
 			end.yr=NA
 			)
-	}
-	source('veg.file.paths.r')
-	
-	theGCMs <- c('CCSM3','CGCM3.1_t47','GISS-ER','MIROC3.2_medres','UKMO-HadCM3')
-	
-	# file.path <- 'L:/Lawler_Share/pnwccva-vegetationdata/26jul13_outputs/biome_modal_30yr_a2/' # 'H:/vegetation/26jul13_outputs/biome_modal_30yr_a2/'
-	# file.name <- c('wna30sec_a2_','_biome_30-year_mean_')
-	# variable.folders <- 'snowfall_swe_balance_first_day_of_month_a2'
-
-	for (i in 1:5)
-	# for (i in 1)
-	{
-		startTime <- Sys.time()
-		the.names <- build.paths(theGCM=theGCMs[i])
-		cat('built names\n')
-
-		for (j in 2:length(the.names))
-		# for (j in 1)
-		{
-			test <- file.exists(paste(output.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/',theGCMs[i],'.biomes.a2/',theGCMs[i],'.biomes.a2.',j,'.hxn',sep=''))
-			if(test==TRUE) { cat(theGCMs[i],j,'\n'); next(j) }
-			
-			nc.2.hxn(
-				variable='biome', 
-				nc.file=the.names[j], 
-				hex.grid=hex.grid[[2]], 
-				theCentroids=hex.grid[[1]],
-				max.value=Inf,
-				changeTable=NA,
-				hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, 
-				hexmap.name=paste(theGCMs[i],'.biomes.a2',sep=''),
-				dimensions=c(1750,1859)
-				)
-
-			file.copy(
-				from=paste(output.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/',theGCMs[i],'.biomes.a2/',theGCMs[i],'.biomes.a2.1.hxn',sep=''), 
-				to=paste(output.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/',theGCMs[i],'.biomes.a2/',theGCMs[i],'.biomes.a2.',j,'.hxn',sep=''),
-				overwrite=TRUE
-				)
-			cat('Year',j,Sys.time()-startTime, 'minutes or seconds to create Hexmap', '\n') # 1.09 minutes...
-			# stop('cbw')
-		}
-		
-		# Present-day
-		nc.2.hxn(
-				variable='biome', 
-				nc.file=the.names[1], 
-				hex.grid=hex.grid[[2]], 
-				theCentroids=hex.grid[[1]],
-				max.value=Inf,
-				changeTable=NA,
-				hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, 
-				hexmap.name=paste(theGCMs[i],'.biomes.a2',sep=''),
-				dimensions=c(1750,1859)
-				)
-
 	}
 }
 
