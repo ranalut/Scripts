@@ -21,11 +21,11 @@ export.hexmaps <- function(hexsim.wksp2='F:\\PNWCCVA_Data2\\HexSim',spp.folder,s
 	shell(command)
 }
 
-export.hexmaps.spatial <- function(hexsim.wksp2='F:\\PNWCCVA_Data2\\HexSim',spp.folder,hexmap.name) # ,time.step)
+export.hexmaps.spatial <- function(hexsim.wksp2='F:\\PNWCCVA_Data2\\HexSim',spp.folder,hexmap.name, time.step=NA)
 {
 	this.workspace <- paste(hexsim.wksp2,'\\Workspaces\\',spp.folder,sep='')
 	
-	command <- paste(
+	command.1 <- paste(
 		# function call
 		substr(hexsim.wksp2,1,2),' && cd "',hexsim.wksp2,
 		'\\currentHexSim" && HexSimCommandLine.exe -exportCSV ',
@@ -33,11 +33,16 @@ export.hexmaps.spatial <- function(hexsim.wksp2='F:\\PNWCCVA_Data2\\HexSim',spp.
 		this.workspace,' "',
 		# hexmap folder
 		this.workspace,'\\Spatial Data\\Hexagons\\',
-		hexmap.name,'" "',
+		hexmap.name,
+		sep=''
+		)
+	command.2 <- paste(
 		# output csv
 		this.workspace,'\\Analysis\\',hexmap.name,'.csv"',
 		sep=''
-	)
+		)
+	if (is.na(time.step)==TRUE) { command <- paste(command.1,'" "',command.2,sep='') }
+	else { command <- paste(command.1,'\\',hexmap.name,'.',time.step,'.hxn" "',command.2,sep='') }
 	print(command)
 	shell(command)
 }
@@ -53,5 +58,5 @@ export.hexmaps.spatial <- function(hexsim.wksp2='F:\\PNWCCVA_Data2\\HexSim',spp.
 # export.hexmaps.spatial(hexsim.wksp2='F:\\PNWCCVA_Data2\\HexSim', spp.folder='sage_grouse_v2',hexmap.name='GISS-ER.biomes.2099')
 # export.hexmaps.spatial(hexsim.wksp2='F:\\PNWCCVA_Data2\\HexSim', spp.folder='sage_grouse_v2',hexmap.name='CGCM3.1_t47.biomes.2099')
 # export.hexmaps.spatial(hexsim.wksp2='F:\\PNWCCVA_Data2\\HexSim', spp.folder='sage_grouse_v2',hexmap.name='CCSM3.biomes.2099')
-export.hexmaps.spatial(hexsim.wksp2='F:\\PNWCCVA_Data2\\HexSim', spp.folder='sage_grouse_v2',hexmap.name='lulc.2000')
-export.hexmaps.spatial(hexsim.wksp2='F:\\PNWCCVA_Data2\\HexSim', spp.folder='sage_grouse_v2',hexmap.name='lulc.2099')
+# export.hexmaps.spatial(hexsim.wksp2='F:\\PNWCCVA_Data2\\HexSim', spp.folder='sage_grouse_v2',hexmap.name='lulc.2000')
+# export.hexmaps.spatial(hexsim.wksp2='F:\\PNWCCVA_Data2\\HexSim', spp.folder='sage_grouse_v2',hexmap.name='lulc.2099')
