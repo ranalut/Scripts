@@ -3,20 +3,29 @@ library(rgdal)
 library(raster)
 library(foreign)
 
-nc.2.hxn <- function(variable=NA, nc.file, hex.grid, theCentroids, max.value, hexsim.wksp, hexsim.wksp2, output.wksp, output.wksp2, hexmap.name, spp.folder, changeTable=NA, dimensions, band=NA, buffer=NA, fun=NULL) # dimensions=c(3131,2075)
+nc.2.hxn <- function(variable=NA, nc.file, hex.grid, theCentroids, max.value, hexsim.wksp, hexsim.wksp2, output.wksp, output.wksp2, hexmap.name, spp.folder, changeTable=NA, dimensions, band=NA, buffer=NA, ag.fact=NA, fun=NULL, crop=NA) # dimensions=c(3131,2075)
 {
-	
 	startTime <- Sys.time()
-	if (is.na(variable)==TRUE) { theData <- nc.file }
+	
+	if (is.na(variable)==TRUE) 
+	{ 
+		if (is.character(nc.file)==TRUE) { theData <- raster(nc.file) }
+		else { theData <- nc.file }
+		# print(theData)
+	}
 	else
 	{
-  	if (is.na(band)==TRUE) { theData <- raster(nc.file, varname=variable) }
-  	else { theData <- raster(nc.file, band=band) }
+		if (is.na(band)==TRUE) { theData <- raster(nc.file, varname=variable) }
+		else { theData <- raster(nc.file, band=band) }
 	}
-  if (is.na(changeTable)[1]==FALSE) { theData <- subs(theData, changeTable) }
-	# return(theData)
-	if (is.na(buffer)) { extractedData <- extract(theData, hex.grid) }
-	else { extractedData <- extract(theData, hex.grid, buffer=buffer, fun=fun, small=FALSE) }
+	
+	if (is.na(changeTable)[1]==FALSE) { theData <- subs(theData, changeTable) }
+	print(theData)
+	
+	if (is.na(buffer)==FALSE) { extractedData <- extract(theData, hex.grid, buffer=buffer, fun=fun, small=FALSE) }
+	if (is.na(crop)==FALSE) { theData <- crop(theData, hex.grid) }
+	if (is.na(ag.fact)==FALSE) { theAggregate <- aggregate(theData, fact=ag.fact, fun=fun); extractedData <- extract(theAggregate, hex.grid); cat('aggregated\n') }
+	if (is.na(buffer)==TRUE & is.na(ag.fact)==TRUE) { extractedData <- extract(theData, hex.grid); cat('buffer extraction\n') }
 	
 	extractedData[is.na(extractedData)==TRUE] <- 0
 	extractedData[extractedData > max.value] <- max.value
