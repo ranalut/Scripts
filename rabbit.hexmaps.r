@@ -17,23 +17,23 @@ source('plot.raster.stack.r')
 
 # Settings for this run.
 
-hexsim.wksp <- 'D:/data/wilsey/HexSim/' # 'H:/HexSim/' # 'F:/PNWCCVA_Data2/HexSim/' # 'D:/data/wilsey/HexSim/'
-hexsim.wksp2 <- 'D:\\data\\wilsey\\hexsim' # 'H:\\HexSim' # 'F:\\PNWCCVA_Data2\\HexSim' # 'D:\\data\\wilsey\\hexsim'
-output.wksp <- 'L:/Space_Lawler/Shared/Wilsey/PostDoc/HexSim/' # 'H:/HexSim/' # 'E:/HexSim/' # 'D:/data/wilsey/HexSim/' # 'F:/PNWCCVA_Data2/HexSim/' 
-output.wksp2 <- 'L:\\Space_Lawler\\Shared\\Wilsey\\PostDoc\\HexSim' # 'H:\\HexSim' # 'E:\\HexSim' # 'D:\\data\\wilsey\\hexsim' # 'F:\\PNWCCVA_Data2\\HexSim'
+hexsim.wksp <- 'F:/PNWCCVA_Data2/HexSim/' # 'H:/HexSim/' # 'F:/PNWCCVA_Data2/HexSim/' # 'D:/data/wilsey/HexSim/'
+hexsim.wksp2 <- 'F:\\PNWCCVA_Data2\\HexSim' # 'H:\\HexSim' # 'F:\\PNWCCVA_Data2\\HexSim' # 'D:\\data\\wilsey\\hexsim'
+output.wksp <- 'H:/HexSim/' # 'L:/Space_Lawler/Shared/Wilsey/PostDoc/HexSim/' # 'H:/HexSim/' # 'E:/HexSim/' # 'D:/data/wilsey/HexSim/' # 'F:/PNWCCVA_Data2/HexSim/' 
+output.wksp2 <- 'H:\\HexSim'# 'L:\\Space_Lawler\\Shared\\Wilsey\\PostDoc\\HexSim' # 'H:\\HexSim' # 'E:\\HexSim' # 'D:\\data\\wilsey\\hexsim' # 'F:\\PNWCCVA_Data2\\HexSim'
 spp.folder <- 'rabbit_v1'
 
 run.hex.grid.distn <- 	'n'
 run.distn <- 			'n'
-run.hex.grid.lulc <- 	'y'
-run.lulc <- 			'y'
+run.hex.grid.lulc <- 	'n'
+run.lulc <- 			'n'
 run.hist.lulc <- 		'n'
-run.hex.grid <-			'n'
+run.hex.grid <-			'y'
 run.move.ave <-			'n'
 run.biomes <- 			'n'
 run.hist.biomes <- 		'n'
 run.initial <- 			'n' # Not updated for squirrel
-run.fire <- 			'n' # May need to add this
+run.water <- 			'y'
 run.all.huc <- 			'n'
 run.pa <- 				'n'
 run.eco.reg <- 			'n'
@@ -164,7 +164,7 @@ if (run.hist.lulc=='y')
 if (run.hex.grid=='y')
 {
 	hex.grid <- load.hex.grid(
-		centroid.file="L:/Space_Lawler/Shared/Wilsey/Postdoc/HexSim/Workspaces/sage_grouse_v2/Spatial Data/albers_centroids_1km_wgs84.dbf", # "F:/PNWCCVA_Data2/HexSim/Workspaces/sage_grouse_v2/Spatial Data/albers_centroids_1km_wgs84.dbf",# "S:/Space/Lawler/Shared/Wilsey/Postdoc/HexSim/Workspaces/sage_grouse_v2/Spatial Data/albers_centroids_1km_wgs84.dbf", # 'F:/PNWCCVA_Data2/HexSim/Workspaces/centroids84.txt',  
+		centroid.file="F:/PNWCCVA_Data2/HexSim/Workspaces/sage_grouse_v2/Spatial Data/albers_centroids_1km_wgs84.dbf", # "L:/Space_Lawler/Shared/Wilsey/Postdoc/HexSim/Workspaces/sage_grouse_v2/Spatial Data/albers_centroids_1km_wgs84.dbf", # "S:/Space/Lawler/Shared/Wilsey/Postdoc/HexSim/Workspaces/sage_grouse_v2/Spatial Data/albers_centroids_1km_wgs84.dbf", # 'F:/PNWCCVA_Data2/HexSim/Workspaces/centroids84.txt',  
 		file.format='dbf',
 		proj4='+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0'
 		)
@@ -247,9 +247,32 @@ if (run.move.ave=='y') # Make this a separate script, perhaps a function and app
   }
 }
 
+# ==================================================================================
+# Water
+if (run.water=='y')
+{
+	nc.2.hxn(
+		variable='lake', 
+		nc.file="I:/HexSim/Workspaces/lynx_v1/Spatial Data/pnw_lakes4_wgs84.nc",
+		hex.grid=hex.grid[[2]], 
+		theCentroids=hex.grid[[1]],
+		max.value=Inf, 
+		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='lakes4',
+		dimensions=c(1750,1859)
+		)
+		
+	nc.2.hxn(
+		variable='water', 
+		nc.file="I:/HexSim/Workspaces/lynx_v1/Spatial Data/mask_water.nc",
+		hex.grid=hex.grid[[2]], 
+		theCentroids=hex.grid[[1]],
+		max.value=Inf, 
+		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='mask.water',
+		dimensions=c(1750,1859)
+		)
+}
 # ==========================================================================================================
 # HUCS
-
 if (run.all.huc=='y')
 {
 	nc.2.hxn(
