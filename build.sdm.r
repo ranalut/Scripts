@@ -1,5 +1,6 @@
 
 library(randomForest)
+library(PresenceAbsence)
 
 source('export.hexmaps.r')
 
@@ -21,12 +22,32 @@ for (i in 1:length(map.names))
 the.data <- read.csv(paste(hexsim.wksp,'workspaces/',spp.folder,'/Analysis/',map.names[1],'.csv',sep=''))
 for (i in 2:length(map.names))
 {
-	temp <- read.csv(paste(hexsim.wksp,spp.folder,'/Analysis/',map.names[i],'.csv',sep=''),row.names=1)
+	temp <- read.csv(paste(hexsim.wksp,'workspaces/',spp.folder,'/Analysis/',map.names[i],'.csv',sep=''),row.names=1)
 	the.data <- cbind(the.data,temp)
 }
 colnames(the.data) <- c('hexid','pyra2','water','def.mam','fire','mtco','mtwa','biomes','lulc')
 the.data <- the.data[the.data$water!=1 & the.data$def.mam!=0,]
+the.data <- the.data[-1,]
+the.data$obs <- the.data$pyra2
+the.data$obs[the.data$pyra2>=667] <- 1
+the.data$obs[the.data$pyra2<667] <- 0
+the.data$obs <- factor(the.data$obs,levels=c(0,1))
 
-# all.pts <- sample(the.data$hexid, size=10000)
+pres.pts <- sample(the.data$hexid[the.data$pyra2>=667], size=5000)
+abs.pts <- sample(the.data$hexid[the.data$pyra2<667], size=5000)
+
+train.pts <- c(pres.pts[1:4000],abs.pts[1:4000])
+test.pts <- c(pres.pts[4001:5000],abs.pts[4001:5000])
+save(train.pts,test.pts,file='l:/space_lawler/shared/wilsey/postdoc/hexsim/workspaces/rabbit_v1/analysis/train.test.v1.rdata')
+
+rf.model <- randomForest(data=the.data[the.data$hexid%in%train.pts,], obs ~ def.mam + fire + mtco + mtwa + biomes + lulc, importance=TRUE, xtest=the.data[the.data$hexid%in%test.pts,c('def.mam','fire','mtco','mtwa','biomes','lulc')], ytest=the.data[the.data$hexid%in%test.pts,'obs'], keep.forest=TRUE)
+
+print(rf.model)
+print(rf.model$importance)
+save(rf.model,file='l:/space_lawler/shared/wilsey/postdoc/hexsim/workspaces/rabbit_v1/analysis/rf.model.v1.rdata')
+
+pred.spp.distn <- predict(rf.model, newdata=the.data, type='response')
+
+write.csv(data.frame(hexid=the.data$hexid,Pred=(as.numeric(pred.spp.distn))-1),'l:/space_lawler/shared/wilsey/postdoc/hexsim/workspaces/rabbit_v1/analysis/rf.model.pred.v1.csv',row.names=FALSE)
 
 
