@@ -35,11 +35,11 @@ the.data$obs <- factor(the.data$obs,levels=c(0,1))
 the.data$biomes <- factor(the.data$biomes,levels=seq(0,11,1))
 the.data$lulc <- factor(the.data$lulc, levels=c(0,2,6,13,14,18))
 
-pres.pts <- sample(the.data$hexid[the.data$pyra2>=667], size=5000)
-abs.pts <- sample(the.data$hexid[the.data$pyra2<667], size=5000)
+pres.pts <- sample(the.data$hexid[the.data$pyra2>=667], size=10000)
+abs.pts <- sample(the.data$hexid[the.data$pyra2<667], size=10000)
 
-train.pts <- c(pres.pts[1:4000],abs.pts[1:4000])
-test.pts <- c(pres.pts[4001:5000],abs.pts[4001:5000])
+train.pts <- c(pres.pts[1:8000],abs.pts[1:8000])
+test.pts <- c(pres.pts[8001:10000],abs.pts[8001:10000])
 save(train.pts,test.pts,file='l:/space_lawler/shared/wilsey/postdoc/hexsim/workspaces/rabbit_v1/analysis/train.test.v1.rdata')
 
 # Build Model
@@ -56,7 +56,7 @@ thresh.table$obs <- as.numeric(thresh.table$obs) - 1
 print(auc(thresh.table))
 thresh.optim <- optimal.thresholds(DATA=thresh.table, opt.methods=c('Sens=Spec','MaxKappa','ReqSpec'),req.spec=0) # threshold=seq(0.2,0.8,0.05), 
 print(thresh.optim)
-cutoff <- thresh.optim[3,2]
+cutoff <- thresh.optim[2,2]
 
 test.pred <- predict(rf.model, newdata=the.data[the.data$hexid%in%test.pts,], type='prob')
 test.pred <- as.data.frame(test.pred)
