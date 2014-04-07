@@ -17,7 +17,7 @@ for (i in 1:length(map.names))
 	export.hexmaps.spatial(hexsim.wksp2=hexsim.wksp2, spp.folder=spp.folder, hexmap.name=map.names[i],time.step=time.steps[i]) # stop('cbw')
 }
 
-# Build random forest model
+# Assemble data
 
 the.data <- read.csv(paste(hexsim.wksp,'workspaces/',spp.folder,'/Analysis/',map.names[1],'.csv',sep=''))
 for (i in 2:length(map.names))
@@ -32,6 +32,8 @@ the.data$obs <- the.data$pyra2
 the.data$obs[the.data$pyra2>=667] <- 1
 the.data$obs[the.data$pyra2<667] <- 0
 the.data$obs <- factor(the.data$obs,levels=c(0,1))
+the.data$biomes <- factor(the.data$biomes,levels=seq(0,11,1))
+the.data$lulc <- factor(the.data$lulc, levels=c(0,2,6,13,14,18))
 
 pres.pts <- sample(the.data$hexid[the.data$pyra2>=667], size=5000)
 abs.pts <- sample(the.data$hexid[the.data$pyra2<667], size=5000)
@@ -40,14 +42,30 @@ train.pts <- c(pres.pts[1:4000],abs.pts[1:4000])
 test.pts <- c(pres.pts[4001:5000],abs.pts[4001:5000])
 save(train.pts,test.pts,file='l:/space_lawler/shared/wilsey/postdoc/hexsim/workspaces/rabbit_v1/analysis/train.test.v1.rdata')
 
-rf.model <- randomForest(data=the.data[the.data$hexid%in%train.pts,], obs ~ def.mam + fire + mtco + mtwa + biomes + lulc, importance=TRUE, xtest=the.data[the.data$hexid%in%test.pts,c('def.mam','fire','mtco','mtwa','biomes','lulc')], ytest=the.data[the.data$hexid%in%test.pts,'obs'], keep.forest=TRUE)
+# Build Model
+rf.model <- randomForest(data=the.data[the.data$hexid%in%train.pts,], obs ~ def.mam + fire + mtco + mtwa + biomes + lulc, importance=TRUE)
 
 print(rf.model)
 print(rf.model$importance)
 save(rf.model,file='l:/space_lawler/shared/wilsey/postdoc/hexsim/workspaces/rabbit_v1/analysis/rf.model.v1.rdata')
 
-pred.spp.distn <- predict(rf.model, newdata=the.data, type='response')
+# Threshold
+train.pred <- predict(rf.model, newdata=the.data[the.data$hexid%in%train.pts,], type='prob')
+thresh.table <- data.frame(the.data[the.data$hexid%in%train.pts,c('hexid','obs')],train.pred[,2])
+thresh.table$obs <- as.numeric(thresh.table$obs) - 1
+print(auc(thresh.table))
+thresh.optim <- optimal.thresholds(DATA=thresh.table, opt.methods=c('Sens=Spec','MaxKappa','ReqSpec'),req.spec=0) # threshold=seq(0.2,0.8,0.05), 
+print(thresh.optim)
+cutoff <- thresh.optim[3,2]
 
-write.csv(data.frame(hexid=the.data$hexid,Pred=(as.numeric(pred.spp.distn))-1),'l:/space_lawler/shared/wilsey/postdoc/hexsim/workspaces/rabbit_v1/analysis/rf.model.pred.v1.csv',row.names=FALSE)
+test.pred <- predict(rf.model, newdata=the.data[the.data$hexid%in%test.pts,], type='prob')
+test.pred <- as.data.frame(test.pred)
+test.pred$pred <- ifelse(as.numeric(test.pred[,2]) >= cutoff,1,0)
+test.pred$obs <- as.numeric(the.data[the.data$hexid%in%test.pts,'obs']) - 1
+print(table(test.pred[,3:4]))
+
+pred.spp.distn <- predict(rf.model, newdata=the.data, type='prob')
+
+write.csv(data.frame(hexid=the.data$hexid,Pred=pred.spp.distn[,2]),'l:/space_lawler/shared/wilsey/postdoc/hexsim/workspaces/rabbit_v1/analysis/rf.model.pred.v1.csv',row.names=FALSE)
 
 
