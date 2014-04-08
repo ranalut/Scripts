@@ -54,7 +54,7 @@ train.pred <- predict(rf.model, newdata=the.data[the.data$hexid%in%train.pts,], 
 thresh.table <- data.frame(the.data[the.data$hexid%in%train.pts,c('hexid','obs')],train.pred[,2])
 thresh.table$obs <- as.numeric(thresh.table$obs) - 1
 print(auc(thresh.table))
-thresh.optim <- optimal.thresholds(DATA=thresh.table, opt.methods=c('Sens=Spec','MaxKappa','ReqSpec'),req.spec=0) # threshold=seq(0.2,0.8,0.05), 
+thresh.optim <- optimal.thresholds(DATA=thresh.table, opt.methods=c('Sens=Spec','MaxKappa','ReqSpec'),req.spec=1) # threshold=seq(0.2,0.8,0.05), 
 print(thresh.optim)
 cutoff <- thresh.optim[2,2]
 
