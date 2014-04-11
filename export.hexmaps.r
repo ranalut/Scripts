@@ -21,7 +21,7 @@ export.hexmaps <- function(hexsim.wksp2='F:\\PNWCCVA_Data2\\HexSim',spp.folder,s
 	shell(command)
 }
 
-export.hexmaps.spatial <- function(hexsim.wksp2='F:\\PNWCCVA_Data2\\HexSim',spp.folder,hexmap.name, time.step=NA)
+export.hexmaps.spatial <- function(hexsim.wksp2='F:\\PNWCCVA_Data2\\HexSim',spp.folder,hexmap.name, time.step=NA, marker='')
 {
 	this.workspace <- paste(hexsim.wksp2,'\\Workspaces\\',spp.folder,sep='')
 	
@@ -38,7 +38,7 @@ export.hexmaps.spatial <- function(hexsim.wksp2='F:\\PNWCCVA_Data2\\HexSim',spp.
 		)
 	command.2 <- paste(
 		# output csv
-		this.workspace,'\\Analysis\\',hexmap.name,'.csv"',
+		this.workspace,'\\Analysis\\',hexmap.name,marker,'.csv"',
 		sep=''
 		)
 	if (is.na(time.step)==TRUE) { command <- paste(command.1,'" "',command.2,sep='') }

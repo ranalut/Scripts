@@ -12,7 +12,7 @@ import.hexmaps <- function(hexsim.wksp2,spp.folder,csv.name,hexmap.name)
 		# hexmap folder
 		this.workspace,'\\Analysis\\',csv.name,'.csv" ',
 		hexmap.name,
-		' TRUE TRUE',
+		' true true',
 		sep=''
 		)
 	print(command)
