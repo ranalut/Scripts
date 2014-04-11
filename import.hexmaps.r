@@ -1,5 +1,5 @@
 
-import.hexmaps <- function(hexsim.wksp2='F:\\PNWCCVA_Data2\\HexSim',hexsim.wksp1,spp.folder,csv.name,hexmap.name)
+import.hexmaps <- function(hexsim.wksp2,spp.folder,csv.name,hexmap.name)
 {
 	this.workspace <- paste(hexsim.wksp2,'\\Workspaces\\',spp.folder,sep='')
 	
@@ -10,7 +10,7 @@ import.hexmaps <- function(hexsim.wksp2='F:\\PNWCCVA_Data2\\HexSim',hexsim.wksp1
 		# workspace
 		this.workspace,' "',
 		# hexmap folder
-		this.workspace,'\\Analysis\\',hexmap.name,'.csv" ',
+		this.workspace,'\\Analysis\\',csv.name,'.csv" ',
 		hexmap.name,
 		' TRUE TRUE',
 		sep=''

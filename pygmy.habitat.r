@@ -15,7 +15,7 @@ col.names <- c('hexid','water','def.mam','fire','mtco','mtwa','biomes','lulc') #
 
 time.step.adj <- c(rep(0,6),29,29)
 
-for (n in 1:110)
+for (n in c(seq(1,110,1),1))
 {
 	time.steps <- n + time.step.adj
 	if (time.steps[length(time.steps)] < 32) { time.steps[length(time.steps)] <- 32 }
@@ -49,10 +49,12 @@ for (n in 1:110)
 
 	write.csv(data.frame(hexid=the.data$hexid,Pred=pred.spp.distn[,2]),'l:/space_lawler/shared/wilsey/postdoc/hexsim/workspaces/rabbit_v1/analysis/rf.model.pred.csv',row.names=FALSE)
 	
-	import.hexmaps <- function(hexsim.wksp2='F:\\PNWCCVA_Data2\\HexSim',hexsim.wksp1,spp.folder,csv.name,hexmap.name,time.step)
+	hexmap.name <- 'ccsm3.hab'
+	import.hexmaps(hexsim.wksp2=hexsim.wksp2,spp.folder=spp.folder,csv.name='rf.model.pred.csv',hexmap.name=hexmap.name)
 	
-	file.copy(from=paste(hexsim.wksp1,'/Workspaces/',spp.folder,'/Spatial Data/Hexagons/',hexmap.name,'/',hexmap.name,'.1.hxn',sep=''),
-		to=paste(hexsim.wksp1,'/Workspaces/',spp.folder,'/Spatial Data/Hexagons/',hexmap.name,'/',hexmap.name,'.',n,'.hxn',sep='')
+	file.copy(from=paste(hexsim.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/',hexmap.name,'/',hexmap.name,'.1.hxn',sep=''),
+		to=paste(hexsim.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/',hexmap.name,'/',hexmap.name,'.',n,'.hxn',sep='')
 		)
+	stop('cbw')
 }
 
