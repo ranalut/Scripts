@@ -60,11 +60,11 @@ for (n in c(seq(1,110,1),1))
 	
 	pred.spp.distn <- predict(rf.model, newdata=the.data, type='prob',progress='window')
 
-	write.csv(data.frame(hexid=the.data$hexid,Pred=pred.spp.distn[,2]),'l:/space_lawler/shared/wilsey/postdoc/hexsim/workspaces/rabbit_v1/analysis/rf.model.pred.csv',row.names=FALSE)
+	write.csv(data.frame(hexid=the.data$hexid,Pred=pred.spp.distn[,2]),paste('l:/space_lawler/shared/wilsey/postdoc/hexsim/workspaces/rabbit_v1/analysis/rf.model.pred.',index,'.csv',sep=''),row.names=FALSE)
 	cat('completed prediction\n')
 	
 	hexmap.name <- paste('hab.',theGCM,sep='')
-	import.hexmaps(hexsim.wksp2=hexsim.wksp2, spp.folder=spp.folder, csv.name='rf.model.pred', hexmap.name=paste('temp.', hexmap.name, sep=''))
+	import.hexmaps(hexsim.wksp2=hexsim.wksp2, spp.folder=spp.folder, csv.name=paste('rf.model.pred.',index,sep=''), hexmap.name=paste('temp.', hexmap.name, sep=''))
 	
 	dir.create(paste(hexsim.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/',hexmap.name,'/',sep=''))
 	file.copy(
