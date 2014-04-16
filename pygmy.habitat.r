@@ -12,22 +12,24 @@ hexsim.wksp2 <- 'L:\\Space_Lawler\\Shared\\Wilsey\\Postdoc\\HexSim' # 'D:\\data\
 spp.folder <- 'rabbit_v1'
 theGCMs <- c('CCSM3','CGCM3.1_t47','GISS-ER','MIROC3.2_medres','UKMO-HadCM3')
 
-index <- 1
+# index <- 1
+scenario <- 'clim.' # '' # 'lulc.' # 'veg.'
 theGCM <- theGCMs[index]
-map.names <- c('all.water',paste(c('ave.def.mam.','ave.fire.','ave.mtco.','ave.mtwa.'),theGCM,sep=''),paste(theGCM,'.biomes.a2',sep=''),'lulc.hist.a2') # 'pyra2',
+map.names <- c('all.water',paste(c('ave.def.mam.','ave.fire.','ave.mtco.','ave.mtwa.'),theGCM,sep=''),paste(theGCM,'.biomes.a2',sep=''),'lulc.a2') # 'pyra2',
 col.names <- c('hexid','water','def.mam','fire','mtco','mtwa','biomes','lulc') # 'pyra2',
 
 time.step.adj <- c(rep(0,5),29,29)
-markers <- c(index,rep('',5),index)
-
-# dir.create(paste(hexsim.wksp,'workspaces/',spp.folder,'/Analysis/temp.',theGCM,'/',sep=''))
+markers <- rep('',7) # c(index,rep('',5),index)
 
 for (n in c(seq(1,110,1),1))
 {
 	time.steps <- n + time.step.adj
-	if (time.steps[length(time.steps)] < 32) { time.steps[length(time.steps)] <- 32 }
-	time.steps[1] <- 1 # Water only has one hexmap.
+	names(time.steps) <- col.names[-1]
 	print(time.steps)
+	if (time.steps['lulc'] < 32) { time.steps['lulc'] <- 32 }
+	time.steps['water'] <- 1 # Water only has one hexmap.
+	if (scenario=='clim.') { time.steps['biomes'] <- 30; time.steps['lulc'] <- 32 } # Only climate changes.
+	print(time.steps); stop('cbw')
 	
 	for (i in 1:length(map.names))
 	{
@@ -42,15 +44,11 @@ for (n in c(seq(1,110,1),1))
 		temp <- read.csv(paste(hexsim.wksp,'workspaces/',spp.folder,'/Analysis/',map.names[i],markers[i],'.csv',sep=''),row.names=1)
 		the.data <- cbind(the.data,temp)
 	}
-	file.remove(paste(hexsim.wksp,'workspaces/',spp.folder,'/Analysis/',map.names,markers,'.csv',sep=''))
 	
 	colnames(the.data) <- col.names
 	the.data <- the.data[the.data$water!=1 & the.data$def.mam!=0,]
 	the.data <- the.data[-1,]
 	the.data$obs <- the.data$pyra2
-	# the.data$obs[the.data$pyra2>=667] <- 1
-	# the.data$obs[the.data$pyra2<667] <- 0
-	# the.data$obs <- factor(the.data$obs,levels=c(0,1))
 	the.data$biomes <- factor(the.data$biomes,levels=seq(0,11,1))
 	the.data$lulc <- factor(the.data$lulc, levels=c(0,2,6,13,14,18))
 	cat('assembled data...')
@@ -61,9 +59,10 @@ for (n in c(seq(1,110,1),1))
 	pred.spp.distn <- predict(rf.model, newdata=the.data, type='prob',progress='window')
 
 	write.csv(data.frame(hexid=the.data$hexid,Pred=pred.spp.distn[,2]),paste('l:/space_lawler/shared/wilsey/postdoc/hexsim/workspaces/rabbit_v1/analysis/rf.model.pred.',index,'.csv',sep=''),row.names=FALSE)
+	file.remove(paste(hexsim.wksp,'workspaces/',spp.folder,'/Analysis/',map.names,markers,'.csv',sep=''))
 	cat('completed prediction\n')
 	
-	hexmap.name <- paste('hab.',theGCM,sep='')
+	hexmap.name <- paste('hab.',scenario,theGCM,sep='')
 	import.hexmaps(hexsim.wksp2=hexsim.wksp2, spp.folder=spp.folder, csv.name=paste('rf.model.pred.',index,sep=''), hexmap.name=paste('temp.', hexmap.name, sep=''))
 	
 	dir.create(paste(hexsim.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/',hexmap.name,'/',sep=''))
