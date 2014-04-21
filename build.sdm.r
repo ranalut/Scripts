@@ -43,11 +43,12 @@ test.pts <- c(pres.pts[8001:10000],abs.pts[8001:10000])
 save(train.pts,test.pts,file='l:/space_lawler/shared/wilsey/postdoc/hexsim/workspaces/rabbit_v1/analysis/train.test.v1.rdata')
 
 # Build Model
-rf.model <- randomForest(data=the.data[the.data$hexid%in%train.pts,], obs ~ def.mam + fire + mtco + mtwa + biomes + lulc, importance=TRUE)
+# rf.model <- randomForest(data=the.data[the.data$hexid%in%train.pts,], obs ~ def.mam + fire + mtco + mtwa + biomes + lulc, importance=TRUE)
 
-print(rf.model)
-print(rf.model$importance)
-save(rf.model,file='l:/space_lawler/shared/wilsey/postdoc/hexsim/workspaces/rabbit_v1/analysis/rf.model.v1.rdata')
+# print(rf.model)
+# print(rf.model$importance)
+# save(rf.model,file='l:/space_lawler/shared/wilsey/postdoc/hexsim/workspaces/rabbit_v1/analysis/rf.model.v1.rdata')
+load('l:/space_lawler/shared/wilsey/postdoc/hexsim/workspaces/rabbit_v1/analysis/rf.model.v1.rdata')
 
 # Threshold
 train.pred <- predict(rf.model, newdata=the.data[the.data$hexid%in%train.pts,], type='prob')
@@ -64,8 +65,9 @@ test.pred$pred <- ifelse(as.numeric(test.pred[,2]) >= cutoff,1,0)
 test.pred$obs <- as.numeric(the.data[the.data$hexid%in%test.pts,'obs']) - 1
 print(table(test.pred[,3:4]))
 
-pred.spp.distn <- predict(rf.model, newdata=the.data, type='prob')
+# Predict
+# pred.spp.distn <- predict(rf.model, newdata=the.data, type='prob')
 
-write.csv(data.frame(hexid=the.data$hexid,Pred=pred.spp.distn[,2]),'l:/space_lawler/shared/wilsey/postdoc/hexsim/workspaces/rabbit_v1/analysis/rf.model.pred.v1.csv',row.names=FALSE)
+# write.csv(data.frame(hexid=the.data$hexid,Pred=pred.spp.distn[,2]),'l:/space_lawler/shared/wilsey/postdoc/hexsim/workspaces/rabbit_v1/analysis/rf.model.pred.v1.csv',row.names=FALSE)
 
 
