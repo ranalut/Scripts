@@ -14,8 +14,8 @@ for (i in theGCMs)
 	{
 		temp <- gsub(pattern='hab.ccsm3',replacement=paste('hab.',j,i,sep=''),x=base, ignore.case=TRUE)
 		print(temp[c(61,93,162,209)])# ; stop('cbw')
-		writeLines(temp, paste(workspace,'rabbit.020.hab.',i,'.',j,'.xml',sep=''))
-		stop('cbw')
+		writeLines(temp, paste(workspace,'rabbit.020.hab.',j,i,'.xml',sep=''))
+		# stop('cbw')
 	}
 }
 
