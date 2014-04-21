@@ -35,12 +35,13 @@ the.data$obs <- factor(the.data$obs,levels=c(0,1))
 the.data$biomes <- factor(the.data$biomes,levels=seq(0,11,1))
 the.data$lulc <- factor(the.data$lulc, levels=c(0,2,6,13,14,18))
 
-pres.pts <- sample(the.data$hexid[the.data$pyra2>=667], size=10000)
-abs.pts <- sample(the.data$hexid[the.data$pyra2<667], size=10000)
+# pres.pts <- sample(the.data$hexid[the.data$pyra2>=667], size=10000)
+# abs.pts <- sample(the.data$hexid[the.data$pyra2<667], size=10000)
 
-train.pts <- c(pres.pts[1:8000],abs.pts[1:8000])
-test.pts <- c(pres.pts[8001:10000],abs.pts[8001:10000])
-save(train.pts,test.pts,file='l:/space_lawler/shared/wilsey/postdoc/hexsim/workspaces/rabbit_v1/analysis/train.test.v1.rdata')
+# train.pts <- c(pres.pts[1:8000],abs.pts[1:8000])
+# test.pts <- c(pres.pts[8001:10000],abs.pts[8001:10000])
+# save(train.pts,test.pts, file='l:/space_lawler/shared/wilsey/postdoc/hexsim/workspaces/rabbit_v1/analysis/train.test.v1.rdata')
+load('l:/space_lawler/shared/wilsey/postdoc/hexsim/workspaces/rabbit_v1/analysis/train.test.v1.rdata')
 
 # Build Model
 # rf.model <- randomForest(data=the.data[the.data$hexid%in%train.pts,], obs ~ def.mam + fire + mtco + mtwa + biomes + lulc, importance=TRUE)
@@ -54,16 +55,19 @@ load('l:/space_lawler/shared/wilsey/postdoc/hexsim/workspaces/rabbit_v1/analysis
 train.pred <- predict(rf.model, newdata=the.data[the.data$hexid%in%train.pts,], type='prob')
 thresh.table <- data.frame(the.data[the.data$hexid%in%train.pts,c('hexid','obs')],train.pred[,2])
 thresh.table$obs <- as.numeric(thresh.table$obs) - 1
-print(auc(thresh.table))
 thresh.optim <- optimal.thresholds(DATA=thresh.table, opt.methods=c('Sens=Spec','MaxKappa','ReqSpec'),req.spec=1) # threshold=seq(0.2,0.8,0.05), 
-print(thresh.optim)
 cutoff <- thresh.optim[2,2]
 
 test.pred <- predict(rf.model, newdata=the.data[the.data$hexid%in%test.pts,], type='prob')
 test.pred <- as.data.frame(test.pred)
 test.pred$pred <- ifelse(as.numeric(test.pred[,2]) >= cutoff,1,0)
 test.pred$obs <- as.numeric(the.data[the.data$hexid%in%test.pts,'obs']) - 1
-print(table(test.pred[,3:4]))
+
+sink('l:/space_lawler/shared/wilsey/postdoc/hexsim/workspaces/rabbit_v1/analysis/rf.model.v1.thresholds.txt')
+	print(auc(thresh.table))
+	print(thresh.optim)
+	print(table(test.pred[,3:4]))
+sink()
 
 # Predict
 # pred.spp.distn <- predict(rf.model, newdata=the.data, type='prob')
