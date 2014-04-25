@@ -23,7 +23,7 @@ output.wksp <- 'H:/HexSim/' # 'L:/Space_Lawler/Shared/Wilsey/PostDoc/HexSim/' # 
 output.wksp2 <- 'H:\\HexSim'# 'L:\\Space_Lawler\\Shared\\Wilsey\\PostDoc\\HexSim' # 'H:\\HexSim' # 'E:\\HexSim' # 'D:\\data\\wilsey\\hexsim' # 'F:\\PNWCCVA_Data2\\HexSim'
 spp.folder <- 'rabbit_v1'
 
-run.hex.grid.distn <- 	'n'
+run.hex.grid.distn <- 	'y'
 run.distn <- 			'n'
 run.hex.grid.lulc <- 	'n'
 run.lulc <- 			'n'
@@ -33,10 +33,10 @@ run.move.ave <-			'n'
 run.biomes <- 			'n'
 run.hist.biomes <- 		'n'
 run.initial <- 			'n' # Not updated for squirrel
-run.water <- 			'y'
-run.all.huc <- 			'n'
-run.pa <- 				'n'
-run.eco.reg <- 			'n'
+run.water <- 			'n'
+run.all.huc <- 			'y'
+run.pa <- 				'y'
+run.eco.reg <- 			'y'
 
 startTime <- Sys.time()
 
