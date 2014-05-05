@@ -1,0 +1,10 @@
+
+To Do List:
+
+1. Draft scripts for processing Pygmy Rabbit output
+	export HUCS, PA to CSV
+	Sequentially export hexmap(s), merge with HUCS, calculate % occupancy, store in table with columns for 25 reps
+	Create table for each GCM x Scenario (20 tables)
+	Build maps with mean and SD per huc for each GCM
+	Agreement maps (presence/absence in a HUC) across GCM
+
