@@ -31,7 +31,7 @@ for (i in 2:length(map.names))
 	the.data <- cbind(the.data,temp)
 }
 colnames(the.data) <- c('hexid',spp.file,'water','def.mam','fire','mtco','mtwa','biomes','lulc')
-the.data <- the.data[the.data$water!=1 & the.data$def.mam!=0,]
+the.data <- the.data[the.data$water!=1 & the.data$mtwa!=0 & the.data$lulc!=0,]
 the.data <- the.data[-1,]
 the.data$obs <- the.data[,spp.file]
 the.data$obs[the.data[,spp.file]>=threshold] <- 1
@@ -53,11 +53,14 @@ if (test.train=='y')
 load(paste('l:/space_lawler/shared/wilsey/postdoc/hexsim/workspaces/',spp.folder,'/analysis/train.test.v1.rdata',sep=''))
 
 # Build Model
-rf.model <- randomForest(data=the.data[the.data$hexid%in%train.pts,], obs ~ def.mam + fire + mtco + mtwa + biomes + lulc, importance=TRUE)
+if (build.model=='y')
+{
+	rf.model <- randomForest(data=the.data[the.data$hexid%in%train.pts,], obs ~ def.mam + fire + mtco + mtwa + biomes + lulc, importance=TRUE)
 
-print(rf.model)
-print(rf.model$importance)
-save(rf.model,file=paste('l:/space_lawler/shared/wilsey/postdoc/hexsim/workspaces/',spp.folder,'/analysis/rf.model.v1.rdata',sep=''))
+	print(rf.model)
+	print(rf.model$importance)
+	save(rf.model,file=paste('l:/space_lawler/shared/wilsey/postdoc/hexsim/workspaces/',spp.folder,'/analysis/rf.model.v1.rdata',sep=''))
+}
 load(paste('l:/space_lawler/shared/wilsey/postdoc/hexsim/workspaces/',spp.folder,'/analysis/rf.model.v1.rdata',sep=''))
 
 # Threshold
@@ -84,3 +87,7 @@ pred.spp.distn <- predict(rf.model, newdata=the.data, type='prob')
 write.csv(data.frame(hexid=the.data$hexid,Pred=pred.spp.distn[,2]), paste('l:/space_lawler/shared/wilsey/postdoc/hexsim/workspaces/',spp.folder,'/analysis/rf.model.pred.v1.csv',sep=''),row.names=FALSE)
 
 # Partial Plots
+predictors <- c('def.mam','fire','mtco','mtwa','biomes','lulc')
+for (i in predictors) { partialPlot(rf.model, the.data[the.data$hexid%in%train.pts,], x.var='def.mam', which.class='1') }
+
+ 
