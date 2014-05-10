@@ -32,7 +32,6 @@ run.hex.grid <-			'y'
 run.move.ave <-			'n'
 run.biomes <- 			'n'
 run.hist.biomes <- 		'n'
-run.initial <- 			'n' # Not updated for squirrel
 run.water <- 			'n'
 run.all.huc <- 			'y'
 run.pa <- 				'y'
