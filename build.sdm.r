@@ -8,9 +8,9 @@ source('export.hexmaps.r')
 hexsim.wksp <- 'L:/Space_Lawler/Shared/Wilsey/PostDoc/HexSim/' # 'D:/data/wilsey/HexSim/' # 'H:/HexSim/' # 'F:/PNWCCVA_Data2/HexSim/' # 'D:/data/wilsey/HexSim/'
 hexsim.wksp2 <- 'L:\\Space_Lawler\\Shared\\Wilsey\\Postdoc\\HexSim' # 'D:\\data\\wilsey\\hexsim' # 'H:\\HexSim' # 'F:\\PNWCCVA_Data2\\HexSim' # 'D:\\data\\wilsey\\hexsim'
 data.folder <- 'rabbit_v1'
-spp.folder <- 'sage_grouse_v3'
-spp.file <- 'current' # 'pyra2'
-threshold <- 1 # 667 # Minimum area requirement
+spp.folder <- 'krat_v1' # 'sage_grouse_v3' # 'rabbit_v1'
+spp.file <- 'krat' # 'current' # 'pyra2'
+threshold <- 33 # 1 # 667 # Minimum area requirement
 test.train <- 	'y' # Don't forget to change the version if you turn this on.
 build.model <- 	'y'
 
@@ -87,7 +87,9 @@ pred.spp.distn <- predict(rf.model, newdata=the.data, type='prob')
 write.csv(data.frame(hexid=the.data$hexid,Pred=pred.spp.distn[,2]), paste('l:/space_lawler/shared/wilsey/postdoc/hexsim/workspaces/',spp.folder,'/analysis/rf.model.pred.v1.csv',sep=''),row.names=FALSE)
 
 # Partial Plots
-predictors <- c('def.mam','fire','mtco','mtwa','biomes','lulc')
-for (i in predictors) { partialPlot(rf.model, the.data[the.data$hexid%in%train.pts,], x.var='def.mam', which.class='1') }
-
- 
+partialPlot(rf.model, the.data[the.data$hexid%in%train.pts,], x.var='def.mam', which.class='1')
+partialPlot(rf.model, the.data[the.data$hexid%in%train.pts,], x.var='fire', which.class='1')
+partialPlot(rf.model, the.data[the.data$hexid%in%train.pts,], x.var='mtco', which.class='1')
+partialPlot(rf.model, the.data[the.data$hexid%in%train.pts,], x.var='mtwa', which.class='1')
+partialPlot(rf.model, the.data[the.data$hexid%in%train.pts,], x.var='biomes', which.class='1')
+partialPlot(rf.model, the.data[the.data$hexid%in%train.pts,], x.var='lulc', which.class='1')
