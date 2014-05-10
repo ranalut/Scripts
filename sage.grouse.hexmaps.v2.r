@@ -1,3 +1,9 @@
+
+###########################################################
+# This is actually the original sage.grouse.hexmaps script saved as v2.  
+# Do not use.  This is now outdated.  Use sage.grouse.hexmaps.r
+#########################################################
+
 library(ncdf)
 library(rgdal)
 library(raster)
