@@ -1,5 +1,5 @@
 
-hexmap.time.series <- function(the.names, output.wksp, spp.folder, theGCM, hexmap.base.name, hex.grid, variable, start.yr, end.yr=NA, changeTable=NA, buffer=NA, ag.fact=NA, fun=NA, crop=NA, ver)
+hexmap.time.series <- function(the.names, output.wksp, spp.folder, theGCM, hexmap.base.name, hex.grid, variable, start.yr=1, end.yr=NA, changeTable=NA, buffer=NA, ag.fact=NA, fun=NA, crop=NA, ver, dimensions)
 {
 	dir.create(paste(output.wksp,'scratch_workspace/raster_v',ver,sep=''))
 	rasterOptions(tmpdir=paste(output.wksp,'scratch_workspace/raster_v',ver,sep=''))
@@ -19,10 +19,10 @@ hexmap.time.series <- function(the.names, output.wksp, spp.folder, theGCM, hexma
 			changeTable=changeTable,
 			hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, 
 			hexmap.name=paste(hexmap.base.name,'.',theGCM,sep=''),
-			dimensions=c(1750,1859),
+			dimensions=dimensions, # c(1750,1859) # c(3131,2075)
 			buffer=buffer, ag.fact=ag.fact, fun=fun, crop=crop
 			)
-
+		
 		file.copy(
 			from=paste(output.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/',hexmap.base.name,'.',theGCM,'/',hexmap.base.name,'.',theGCM,'.1.hxn',sep=''), 
 			to=paste(output.wksp,'Workspaces/',spp.folder,'/Spatial Data/Hexagons/',hexmap.base.name,'.',theGCM,'/',hexmap.base.name,'.',theGCM,'.',j,'.hxn',sep=''),
@@ -43,8 +43,8 @@ hexmap.time.series <- function(the.names, output.wksp, spp.folder, theGCM, hexma
 			changeTable=changeTable,
 			hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, 
 			hexmap.name=paste(hexmap.base.name,'.',theGCM,sep=''),
-			dimensions=c(1750,1859),
+			dimensions=dimensions, # c(1750,1859) # c(3131,2075)
 			buffer=buffer, ag.fact=ag.fact, fun=fun, crop=crop
 			)
-	file.remove(dir("C:/Documents and Settings/cbwilsey/Local Settings/Temp/4/R_raster_tmp/cbwilsey",full.names=TRUE))
+	file.remove(dir(paste(output.wksp,'scratch_workspace/raster_v',ver,sep=''),full.names=TRUE))
 }
