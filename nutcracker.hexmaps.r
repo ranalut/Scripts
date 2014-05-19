@@ -26,9 +26,9 @@ spp.folder <- 'nutcracker_v1'
 
 run.hex.grid.distn <- 	'n'
 run.distn <- 			'n'
-run.hex.grid <-			'n'
-run.biomes <- 			'y'
-run.move.ave <-			'n'
+run.hex.grid <-			'y'
+run.biomes <- 			'n'
+run.move.ave <-			'y'
 run.water <- 			'n'
 run.all.huc <- 			'n'
 run.pa <- 				'n'
@@ -110,7 +110,7 @@ if (run.biomes=='y')
 			hexmap.base.name='biomes.a2', 
 			hex.grid=hex.grid, 
 			variable='biome',
-			start.yr=1, end.yr=NA, ver=1,
+			start.yr=2, end.yr=NA, ver=1,
 			dimensions=c(3131,2075), # c(1750,1859) # c(3131,2075)
 			)
 	}

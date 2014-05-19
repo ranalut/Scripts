@@ -1,5 +1,5 @@
 
-hexmap.time.series <- function(the.names, output.wksp, spp.folder, theGCM, hexmap.base.name, hex.grid, variable, start.yr=1, end.yr=NA, changeTable=NA, buffer=NA, ag.fact=NA, fun=NA, crop=NA, ver, dimensions)
+hexmap.time.series <- function(the.names, output.wksp, spp.folder, theGCM, hexmap.base.name, hex.grid, variable, start.yr=2, end.yr=NA, changeTable=NA, buffer=NA, ag.fact=NA, fun=NA, crop=NA, ver, dimensions)
 {
 	dir.create(paste(output.wksp,'scratch_workspace/raster_v',ver,sep=''))
 	rasterOptions(tmpdir=paste(output.wksp,'scratch_workspace/raster_v',ver,sep=''))
