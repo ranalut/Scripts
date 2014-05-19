@@ -1,6 +1,6 @@
 library(raster)
 
-move.ave <- function(the.names, hex.grid, theGCM, hexmap.name, hexsim.wksp, hexsim.wksp2, output.wksp, output.wksp2, spp.folder)
+move.ave <- function(the.names, hex.grid, theGCM, hexmap.name, hexsim.wksp, hexsim.wksp2, output.wksp, output.wksp2, spp.folder, dimensions)
 {
     the.stack <- stack(the.names[1:30])
     cat('stacked...')
@@ -15,7 +15,7 @@ move.ave <- function(the.names, hex.grid, theGCM, hexmap.name, hexsim.wksp, hexs
   		theCentroids=hex.grid[[1]],
   		max.value=Inf, 
   		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name=paste(hexmap.name,theGCM,sep=''),
-  		dimensions=c(1750,1859)
+  		dimensions=dimensions # c(1750,1859)
   		)
     cat('hexmap\n')
     # stop('cbw')
@@ -35,7 +35,7 @@ move.ave <- function(the.names, hex.grid, theGCM, hexmap.name, hexsim.wksp, hexs
     		theCentroids=hex.grid[[1]],
     		max.value=Inf, 
     		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name=paste(hexmap.name,theGCM,sep=''),
-    		dimensions=c(1750,1859)
+    		dimensions=dimensions # c(1750,1859)
     		)
       cat('hexmap\n')
       file.copy(
@@ -58,7 +58,7 @@ move.ave <- function(the.names, hex.grid, theGCM, hexmap.name, hexsim.wksp, hexs
   		theCentroids=hex.grid[[1]],
   		max.value=Inf, 
   		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name=paste(hexmap.name,theGCM,sep=''),
-  		dimensions=c(1750,1859)
+  		dimensions=dimensions # c(1750,1859)
   		)
     cat('hexmap\n')
 }
