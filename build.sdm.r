@@ -31,7 +31,7 @@ for (i in 2:length(map.names))
 	the.data <- cbind(the.data,temp)
 }
 colnames(the.data) <- c('hexid',spp.file,'water','def.mam','fire','mtco','mtwa','biomes','lulc')
-the.data <- the.data[the.data$water!=1 & the.data$mtwa!=0 & the.data$lulc!=0,]
+the.data <- the.data[the.data$water!=1 & the.data$mtwa!=0 & the.data$lulc!=0 & the.data$biomes!=0,]
 the.data <- the.data[-1,]
 the.data$obs <- the.data[,spp.file]
 the.data$obs[the.data[,spp.file]>=threshold] <- 1
