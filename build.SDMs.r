@@ -8,18 +8,22 @@ source('export.hexmaps.r')
 hexsim.wksp <- 'L:/Space_Lawler/Shared/Wilsey/PostDoc/HexSim/' # 'D:/data/wilsey/HexSim/' # 'H:/HexSim/' # 'F:/PNWCCVA_Data2/HexSim/' # 'D:/data/wilsey/HexSim/'
 hexsim.wksp2 <- 'L:\\Space_Lawler\\Shared\\Wilsey\\Postdoc\\HexSim' # 'D:\\data\\wilsey\\hexsim' # 'H:\\HexSim' # 'F:\\PNWCCVA_Data2\\HexSim' # 'D:\\data\\wilsey\\hexsim'
 data.folder <- 'rabbit_v1'
-spp.folder <- 'sage_grouse_v3' # 'krat_v1' # 'sage_grouse_v3' # 'rabbit_v1'
-spp.file <- 'current' # 'krat' # 'current' # 'pyra2'
-threshold <- 1 # 33 # 1 # 667 # Minimum area requirement
-test.train <- 	'n' # Don't forget to change the version if you turn this on.
+spp.folder <- 'krat_v1' # 'krat_v1' # 'sage_grouse_v3' # 'rabbit_v1'
+spp.file <- 'krat' # 'krat' # 'current' # 'pyra2'
+threshold <- 33 # 33 # 1 # 667 # Minimum area requirement
+test.train <- 	'y'; ver <- 2 # Don't forget to change the version if you turn this on.
+export.hexmaps <- 'y'
 build.model <- 	'y'
 
 map.names <- c(spp.file,'all.water','ave.def.mam.ccsm3','ave.fire.ccsm3','ave.mtco.ccsm3','ave.mtwa.ccsm3','ccsm3.hist.biome','lulc.hist.a2')
 time.steps <- c(rep(1,6),30,32)
 
-for (i in 1:length(map.names))
+if (export.hexmaps=='y')
 {
-	export.hexmaps.spatial(hexsim.wksp2=hexsim.wksp2, spp.folder=data.folder, hexmap.name=map.names[i],time.step=time.steps[i]) # stop('cbw')
+  for (i in 1:length(map.names))
+  {
+  	export.hexmaps.spatial(hexsim.wksp2=hexsim.wksp2, spp.folder=data.folder, hexmap.name=map.names[i],time.step=time.steps[i]) # stop('cbw')
+  }
 }
 
 # Assemble data
@@ -46,31 +50,32 @@ if (test.train=='y')
 
 	train.pts <- c(pres.pts[1:8000],abs.pts[1:8000])
 	test.pts <- c(pres.pts[8001:10000],abs.pts[8001:10000])
-	save(train.pts,test.pts, file=paste('l:/space_lawler/shared/wilsey/postdoc/hexsim/workspaces/',spp.folder,'/analysis/train.test.v1.rdata',sep=''))
+	save(train.pts,test.pts, file=paste('l:/space_lawler/shared/wilsey/postdoc/hexsim/workspaces/',spp.folder,'/analysis/train.test.v',ver,'.rdata',sep=''))
 	
 }
-load(paste('l:/space_lawler/shared/wilsey/postdoc/hexsim/workspaces/',spp.folder,'/analysis/train.test.v1.rdata',sep=''))
+load(paste('l:/space_lawler/shared/wilsey/postdoc/hexsim/workspaces/',spp.folder,'/analysis/train.test.v',ver,'.rdata',sep=''))
 
 # Build Model
 if (build.model=='y')
 {
 	rf.model <- randomForest(data=the.data[the.data$hexid%in%train.pts,], obs ~ def.mam + fire + mtco + mtwa + biomes + lulc, importance=TRUE)
 	# print(rf.model); print(rf.model$importance)
-	save(rf.model,file=paste('l:/space_lawler/shared/wilsey/postdoc/hexsim/workspaces/',spp.folder,'/analysis/rf.model.v2a.rdata',sep=''))
+	save(rf.model,file=paste('l:/space_lawler/shared/wilsey/postdoc/hexsim/workspaces/',spp.folder,'/analysis/rf.model.v',ver,'a.rdata',sep=''))
 	
 	rf.model <- randomForest(data=the.data[the.data$hexid%in%train.pts,], obs ~ def.mam + mtco + mtwa, importance=TRUE)
 	# print(rf.model); print(rf.model$importance)
-	save(rf.model,file=paste('l:/space_lawler/shared/wilsey/postdoc/hexsim/workspaces/',spp.folder,'/analysis/rf.model.v2b.rdata',sep=''))
+	save(rf.model,file=paste('l:/space_lawler/shared/wilsey/postdoc/hexsim/workspaces/',spp.folder,'/analysis/rf.model.v',ver,'b.rdata',sep=''))
 	
 	rf.model <- randomForest(data=the.data[the.data$hexid%in%train.pts,], obs ~ fire + biomes + lulc, importance=TRUE)
 	# print(rf.model); print(rf.model$importance)
-	save(rf.model,file=paste('l:/space_lawler/shared/wilsey/postdoc/hexsim/workspaces/',spp.folder,'/analysis/rf.model.v2c.rdata',sep=''))
+	save(rf.model,file=paste('l:/space_lawler/shared/wilsey/postdoc/hexsim/workspaces/',spp.folder,'/analysis/rf.model.v',ver,'c.rdata',sep=''))
 }
 
-sink(paste('l:/space_lawler/shared/wilsey/postdoc/hexsim/workspaces/',spp.folder,'/analysis/rf.model.v2.thresholds.txt',sep=''))
+sink(paste('l:/space_lawler/shared/wilsey/postdoc/hexsim/workspaces/',spp.folder,'/analysis/rf.model.v',ver,'.thresholds.txt',sep=''))
+
 for (i in letters[1:3])
 {
-	load(paste('l:/space_lawler/shared/wilsey/postdoc/hexsim/workspaces/',spp.folder,'/analysis/rf.model.v2',i,'.rdata',sep=''))
+	load(paste('l:/space_lawler/shared/wilsey/postdoc/hexsim/workspaces/',spp.folder,'/analysis/rf.model.v',ver,i,'.rdata',sep=''))
 
 	# Threshold
 	train.pred <- predict(rf.model, newdata=the.data[the.data$hexid%in%train.pts,], type='prob')
@@ -80,15 +85,27 @@ for (i in letters[1:3])
 	cutoff <- thresh.optim[2,2]
 
 	test.pred <- predict(rf.model, newdata=the.data[the.data$hexid%in%test.pts,], type='prob')
-	test.pred <- as.data.frame(test.pred)
-	test.pred$pred <- ifelse(as.numeric(test.pred[,2]) >= cutoff,1,0)
-	test.pred$obs <- as.numeric(the.data[the.data$hexid%in%test.pts,'obs']) - 1
-
+	# test.pred <- as.data.frame(test.pred)
+	# test.pred$pred <- ifelse(as.numeric(test.pred[,2]) >= cutoff,1,0)
+	# test.pred$obs <- as.numeric(the.data[the.data$hexid%in%test.pts,'obs']) - 1
+  test.table <- data.frame(the.data[the.data$hexid%in%test.pts,c('hexid','obs')],test.pred[,2])
+	test.table$obs <- as.numeric(test.table$obs) - 1
+	c.mat <- cmx(test.table,threshold=cutoff)
+	
 	print(rf.model$call)
 	print(rf.model$importance)
-	print(auc(thresh.table))
 	print(thresh.optim)
-	print(table(test.pred[,3:4]))
+	print(cmx(test.table,threshold=cutoff))
+	
+	cat('Evaluation: value then standard deviation\n')
+  cat('auc',as.numeric(auc(test.table)),'\n')
+  cat('kappa',as.numeric(Kappa(c.mat)),'\n')
+  sens <- as.numeric(sensitivity(c.mat))
+  cat('omission',1-sens[1],sens[2],'\n')
+  speci <- as.numeric(specificity(c.mat))
+  cat('comission',1-speci[1],speci[2],'\n')
+  
+  # print(table(test.pred[,3:4]))
 	cat('\n\n\n')
 }
 sink()
@@ -97,7 +114,7 @@ stop('cbw')
 # Predict
 pred.spp.distn <- predict(rf.model, newdata=the.data, type='prob')
 
-write.csv(data.frame(hexid=the.data$hexid,Pred=pred.spp.distn[,2]), paste('l:/space_lawler/shared/wilsey/postdoc/hexsim/workspaces/',spp.folder,'/analysis/rf.model.pred.v2.csv',sep=''),row.names=FALSE)
+write.csv(data.frame(hexid=the.data$hexid,Pred=pred.spp.distn[,2]), paste('l:/space_lawler/shared/wilsey/postdoc/hexsim/workspaces/',spp.folder,'/analysis/rf.model.pred.v',ver,'.csv',sep=''),row.names=FALSE)
 
 # Partial Plots
 partialPlot(rf.model, the.data[the.data$hexid%in%train.pts,], x.var='def.mam', which.class='1')
