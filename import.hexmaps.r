@@ -1,7 +1,7 @@
 
-import.hexmaps <- function(hexsim.wksp2,spp.folder,csv.name,hexmap.name)
+import.hexmaps <- function(hexsim.wksp2,output.wksp2,spp.folder,csv.name,hexmap.name)
 {
-	this.workspace <- paste(hexsim.wksp2,'\\Workspaces\\',spp.folder,sep='')
+	this.workspace <- paste(output.wksp2,'\\Workspaces\\',spp.folder,sep='')
 	
 	command <- paste(
 		# function call
