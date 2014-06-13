@@ -14,16 +14,16 @@ data.folder <- 'rabbit_v1'
 spp.folder <- 'sage_grouse_v3' # 'krat_v1' # 'sage_grouse_v3' # 'rabbit_v1'
 spp.file <- 'current' # 'krat' # 'current' # 'pyra2'
 threshold <- 1 # 33 # 1 # 667 # Minimum area requirement
-test.train <- 	'y'; ver <- 2 # Don't forget to change the version if you turn this on.
-export.hexmaps <- 'y'
-build.model <- 	'y'
+test.train <- 	'n'; ver <- 2 # Don't forget to change the version if you turn this on.
+export.hexmaps <- 'n'
+build.model <- 	'n'
 
 map.names <- c(spp.file,'all.water','ave.def.mam.ccsm3','ave.fire.ccsm3','ave.mtco.ccsm3','ave.mtwa.ccsm3','ccsm3.hist.biome','lulc.hist.a2')
 time.steps <- c(rep(1,6),30,32)
 
 if (export.hexmaps=='y')
 {
-  for (i in 1:length(map.names))
+  for (i in 1) # 1:length(map.names))
   {
   	export.hexmaps.spatial(hexsim.wksp2=hexsim.wksp2, output.wksp2=output.wksp2, spp.folder=data.folder, hexmap.name=map.names[i],time.step=time.steps[i]) # stop('cbw')
   }
@@ -54,7 +54,6 @@ if (test.train=='y')
 	train.pts <- c(pres.pts[1:8000],abs.pts[1:8000])
 	test.pts <- c(pres.pts[8001:10000],abs.pts[8001:10000])
 	save(train.pts,test.pts, file=paste(output.wksp,'workspaces/',spp.folder,'/analysis/train.test.v',ver,'.rdata',sep=''))
-	
 }
 load(paste(output.wksp,'workspaces/',spp.folder,'/analysis/train.test.v',ver,'.rdata',sep=''))
 
@@ -74,6 +73,19 @@ if (build.model=='y')
 	save(rf.model,file=paste(output.wksp,'workspaces/',spp.folder,'/analysis/rf.model.v',ver,'c.rdata',sep=''))
 }
 
+cat.performance <- function(test.table, cutoff)
+{
+	c.mat <- cmx(test.table,threshold=cutoff)
+	print(c.mat)
+	cat('Evaluation: value then standard deviation\n')
+	cat('auc',as.numeric(auc(test.table)),'\n')
+	cat('kappa',as.numeric(Kappa(c.mat)),'\n')
+	sens <- as.numeric(sensitivity(c.mat))
+	cat('omission',1-sens[1],sens[2],'\n')
+	speci <- as.numeric(specificity(c.mat))
+	cat('comission',1-speci[1],speci[2],'\n')
+}
+
 sink(paste(output.wksp,'workspaces/',spp.folder,'/analysis/rf.model.v',ver,'.thresholds.txt',sep=''))
 
 for (i in letters[1:3])
@@ -84,36 +96,39 @@ for (i in letters[1:3])
 	train.pred <- predict(rf.model, newdata=the.data[the.data$hexid%in%train.pts,], type='prob')
 	thresh.table <- data.frame(the.data[the.data$hexid%in%train.pts,c('hexid','obs')],train.pred[,2])
 	thresh.table$obs <- as.numeric(thresh.table$obs) - 1
-	thresh.optim <- optimal.thresholds(DATA=thresh.table, opt.methods=c('Sens=Spec','MaxKappa','ReqSpec'),req.spec=1) # threshold=seq(0.2,0.8,0.05), 
+	thresh.optim <- optimal.thresholds(DATA=thresh.table, opt.methods=c('Sens=Spec','MaxKappa','ReqSpec','MaxSens+Spec','Cost'),req.spec=0.72,FPC=1.5, FNC=1, smoothing=5) # threshold=seq(0.2,0.8,0.05), 
 	cutoff <- thresh.optim[2,2]
 
 	test.pred <- predict(rf.model, newdata=the.data[the.data$hexid%in%test.pts,], type='prob')
 	# test.pred <- as.data.frame(test.pred)
 	# test.pred$pred <- ifelse(as.numeric(test.pred[,2]) >= cutoff,1,0)
 	# test.pred$obs <- as.numeric(the.data[the.data$hexid%in%test.pts,'obs']) - 1
-  test.table <- data.frame(the.data[the.data$hexid%in%test.pts,c('hexid','obs')],test.pred[,2])
+	test.table <- data.frame(the.data[the.data$hexid%in%test.pts,c('hexid','obs')],test.pred[,2])
 	test.table$obs <- as.numeric(test.table$obs) - 1
-	c.mat <- cmx(test.table,threshold=cutoff)
 	
 	print(rf.model$call)
 	print(rf.model$importance)
 	print(thresh.optim)
-	print(cmx(test.table,threshold=cutoff))
 	
-	cat('Evaluation: value then standard deviation\n')
-  cat('auc',as.numeric(auc(test.table)),'\n')
-  cat('kappa',as.numeric(Kappa(c.mat)),'\n')
-  sens <- as.numeric(sensitivity(c.mat))
-  cat('omission',1-sens[1],sens[2],'\n')
-  speci <- as.numeric(specificity(c.mat))
-  cat('comission',1-speci[1],speci[2],'\n')
-  
-  # print(table(test.pred[,3:4]))
+	
+	cat.performance(test.table=test.table, cutoff=thresh.optim[2,2])
+	cat.performance(test.table=test.table, cutoff=thresh.optim[5,2])
+	
+	for (j in seq(1.6,2,0.1))
+	{
+		thresh.optim <- optimal.thresholds(DATA=thresh.table, opt.methods=c('Sens=Spec','MaxKappa','ReqSpec','MaxSens+Spec','Cost'),req.spec=0.72,FPC=j, FNC=1, smoothing=5)
+		cat('\n\ncost ratio= ',j,'\n')
+		print(thresh.optim)
+		cat.performance(test.table=test.table, cutoff=thresh.optim[5,2])
+	}
+
+	# print(table(test.pred[,3:4]))
 	cat('\n\n\n')
 }
 sink()
 
 stop('cbw')
+
 # Predict
 pred.spp.distn <- predict(rf.model, newdata=the.data, type='prob')
 
