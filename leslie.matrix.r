@@ -1,4 +1,4 @@
-0
+
 library(popbio)
 
 build.matrix <- function(max.age,stage.thresh,vitals,yr1.multiplier) # yr1.multiplier used for things like females only model (0.5).
@@ -41,9 +41,17 @@ build.matrix <- function(max.age,stage.thresh,vitals,yr1.multiplier) # yr1.multi
 # print('age distribution')
 # print(round(stable.stage(best.mat),3))
 
-# Fisher
-# best.mat <- build.matrix(max.age=10,stage.thresh=c(0,1,2,3),vitals=list(fertility=c(0,1.46,1.65,1.81),survival=c(0.25,0.75,0.75,0.75)),yr1.multiplier=1) # Literature values, only female offspring. Buskirk et al 2012.
-best.mat <- build.matrix(max.age=10,stage.thresh=c(0,1,2,3),vitals=list(fertility=c(0,1.46,1.65,1.81),survival=c(0.25,0.7,0.7,0.7)),yr1.multiplier=1)
+# # Fisher
+# # best.mat <- build.matrix(max.age=10,stage.thresh=c(0,1,2,3),vitals=list(fertility=c(0,1.46,1.65,1.81),survival=c(0.25,0.75,0.75,0.75)),yr1.multiplier=1) # Literature values, only female offspring. Buskirk et al 2012.
+# best.mat <- build.matrix(max.age=10,stage.thresh=c(0,1,2,3),vitals=list(fertility=c(0,1.46,1.65,1.81),survival=c(0.25,0.7,0.7,0.7)),yr1.multiplier=1)
+# print(best.mat)
+# theLambda <- lambda(best.mat)
+# cat("Lambda = ",theLambda,'\n')
+# print('age distribution')
+# print(round(stable.stage(best.mat),3))
+
+# Sage-grouse
+best.mat <- build.matrix(max.age=8,stage.thresh=c(0,1,2),vitals=list(fertility=c(0,0.429,0.745),survival=c(1,0.65,0.58)),yr1.multiplier=1)
 print(best.mat)
 theLambda <- lambda(best.mat)
 cat("Lambda = ",theLambda,'\n')
