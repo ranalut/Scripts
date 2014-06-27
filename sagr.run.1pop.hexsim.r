@@ -4,7 +4,7 @@
 library(foreign)
 library(raster)
 
-simNumber <- 			'109'
+simNumber <- 			'126'
 runHexSim <- 			'n'
 runTransformerRanges <- 'y'
 runTransformerMove <- 	'n'
@@ -13,8 +13,8 @@ runTransformerDeaths <- 'n'
 runTransformerBD <- 	'n'
 movePlot <- 			'n'
 spPlot <- 				'n'
-startStep <- 			10
-stopStep <- 			10
+startStep <- 			15
+stopStep <- 			15
 n.rows <- 				1750
 n.cols <- 				1859
 # workspace <- 'c:/users/cbwilsey/documents/postdoc/HexSim/Workspaces/sage_grouse_v2/'
@@ -134,6 +134,20 @@ theRanges.zones <- theRanges.end[,1:9]
 colnames(theRanges.zones) <- c('Replicate','TimeStep','EventName','EventType','PopID','GroupID','GroupSize','Resources','NumberHexagons')
 theRanges.zones <- data.frame(theRanges.zones,smz=groupZone)
 the.smz <- c('g.plains','wyoming ','s.g.basin','snake.r ','n.g.basin','columbia','colorado')
+
+# current <- read.csv('H:/HexSim/Workspaces/sage_grouse_v3/Analysis/current.csv',header=TRUE)
+current <- read.csv('H:/HexSim/Workspaces/sage_grouse_v3/Analysis/hab.v2.baseline.csv',header=TRUE)
+hab.smz <- data.frame(mgmt.zones,current[,2])
+colnames(hab.smz) <- c('hex_id','zone','current')
+hab.smz$current <- ifelse(hab.smz$current>=0.59,1,0)
+hab.smz$count <- 1
+areas <- aggregate(count~zone+current,hab.smz,sum)
+areas <- areas[areas$current==1 & areas$zone>0,]
+areas$km2 <- areas$count * 86.6/10000 # Per 100km2
+leks.table <- data.frame(zone=as.integer(names(leks)),leks=as.integer(leks))
+areas <- merge(areas,leks.table,all.x=TRUE)
+areas$dens100km2 <- areas$leks/areas$km2
+print(areas)
 
 for (i in 1:7)
 { 
