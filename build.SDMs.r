@@ -11,9 +11,9 @@ output.wksp <- 'H:/HexSim/' # '//cfr.washington.edu/main/Space/Lawler/Shared/Wil
 output.wksp2 <- 'H:\\HexSim' # '\\\\cfr.washington.edu\\main\\Space\\Lawler\\Shared\\Wilsey\\PostDoc\\HexSim'
 
 data.folder <- 'rabbit_v1'
-spp.folder <- 'sage_grouse_v3' # 'krat_v1' # 'sage_grouse_v3' # 'rabbit_v1'
-spp.file <- 'current' # 'krat' # 'current' # 'pyra2'
-threshold <- 1 # 33 # 1 # 667 # Minimum area requirement
+spp.folder <- 'rabbit_v1' # 'krat_v1' # 'sage_grouse_v3' # 'rabbit_v1'
+spp.file <- 'pyra2' # 'krat' # 'current' # 'pyra2'
+threshold <- 667 # 33 # 1 # 667 # Minimum area requirement
 test.train <- 	'n'; ver <- 2 # Don't forget to change the version if you turn this on.
 export.hexmaps <- 'n'
 build.model <- 	'n'
