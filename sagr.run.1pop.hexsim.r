@@ -4,7 +4,8 @@
 library(foreign)
 library(raster)
 
-simNumber <- 			'126'
+simNumber <- 			'127'
+repl <- 				1
 runHexSim <- 			'n'
 runTransformerRanges <- 'y'
 runTransformerMove <- 	'n'
@@ -13,20 +14,22 @@ runTransformerDeaths <- 'n'
 runTransformerBD <- 	'n'
 movePlot <- 			'n'
 spPlot <- 				'n'
-startStep <- 			15
-stopStep <- 			15
+startStep <- 			5
+stopStep <- 			5
 n.rows <- 				1750
 n.cols <- 				1859
 # workspace <- 'c:/users/cbwilsey/documents/postdoc/HexSim/Workspaces/sage_grouse_v2/'
-workspace <- 'H:/HexSim/Workspaces/sage_grouse_v3/' # 'F:/PNWCCVA_Data2/HexSim/Workspaces/sage_grouse_v2/'
+workspace <- 'L:/Space_Lawler/Shared/Wilsey/PostDoc/HexSim/Workspaces/sage_grouse_v3/' 
+# workspace <- 'H:/HexSim/Workspaces/sage_grouse_v3/' # 'F:/PNWCCVA_Data2/HexSim/Workspaces/sage_grouse_v2/'
 # hexSimDir <- 'c:/users/cbwilsey/documents/postdoc/'
-hexSimDir <- 'H:/' # 'F:/PNWCCVA_Data2/'
+# hexSimDir <- 'H:/' # 'F:/PNWCCVA_Data2/'
+hexSimDir <- 'D:/Data/wilsey/'
 cat('scenario number',simNumber,'\n')
 
 command <- paste('cd ',hexSimDir,'HexSim/currentHexSim/ && HexSimEngine64.exe ',workspace,'Scenarios/sagr.',simNumber,'.xml',sep='')
 if (runHexSim=='y') { shell(command, translate=TRUE) }
 
-command1 <- paste('H: && cd ',hexSimDir,'HexSim/currentHexSim/ && OutputTransformer.exe -ranges ',workspace,'Results/sagr.',simNumber,'/sagr.',simNumber,'-[1]/sagr.',simNumber,'.log',sep='')
+command1 <- paste('D: && cd ',hexSimDir,'HexSim/currentHexSim/ && OutputTransformer.exe -ranges ',workspace,'Results/sagr.',simNumber,'/sagr.',simNumber,'-[',repl,']/sagr.',simNumber,'.log',sep='')
 command2 <- paste('cd ',hexSimDir,'HexSim/currentHexSim/ && OutputTransformer.exe -movement ',workspace,'Results/sagr.',simNumber,'/sagr.',simNumber,'.log',sep='')
 command3 <- paste('cd ',hexSimDir,'HexSim/currentHexSim/ && OutputTransformer.exe -csv:b:',n.rows,':',n.cols,':true:',startStep,'-',stopStep,':True,False ',workspace,'Results/sagr.',simNumber,'/sagr.',simNumber,'.log',sep='')
 command4 <- paste('cd ',hexSimDir,'HexSim/currentHexSim/ && OutputTransformer.exe -csv:d:',n.rows,':',n.cols,':true:',startStep,'-',stopStep,':True,False ',workspace,'Results/sagr.',simNumber,'/sagr.',simNumber,'.log',sep='')
@@ -39,8 +42,8 @@ if (runTransformerBD=='y') { shell(command5, translate=TRUE) }
 
 # stop('cbw')
 
-mgmt.zones <- read.csv('F:/PNWCCVA_Data2/HexSim/Workspaces/sage_grouse_v2/Spatial Data/mgmt.zones.step0.csv',header=TRUE)
-theRanges.orig <- read.table(paste(workspace,'Results/sagr.',simNumber,'/sagr.',simNumber,'-[1]/sagr.',simNumber,'_REPORT_ranges_sage_grouse.csv',sep=''),sep=',',fill=TRUE,skip=1,stringsAsFactors=FALSE,col.names=paste('V',seq(1,1000,1),sep=''))
+mgmt.zones <- read.csv(paste(workspace,'Spatial Data/mgmt.zones.step0.csv',sep=''),header=TRUE)
+theRanges.orig <- read.table(paste(workspace,'Results/sagr.',simNumber,'/sagr.',simNumber,'-[',repl,']/sagr.',simNumber,'_REPORT_ranges_sage_grouse.csv',sep=''),sep=',',fill=TRUE,skip=1,stringsAsFactors=FALSE,col.names=paste('V',seq(1,1000,1),sep=''))
 print('read in zones and ranges')
 
 theRanges <- theRanges.orig[,1:9]
@@ -48,12 +51,12 @@ colnames(theRanges) <- c('Replicate','TimeStep','EventName','EventType','PopID',
 # print(theRanges[1:10,])
 # theRanges <- data.frame(theRanges,groupZone)
 
-theCensus <- read.csv(paste(workspace,'Results/sagr.',simNumber,'/sagr.',simNumber,'-[1]/sagr.',simNumber,'.0.csv',sep=''),header=TRUE)
+theCensus <- read.csv(paste(workspace,'Results/sagr.',simNumber,'/sagr.',simNumber,'-[',repl,']/sagr.',simNumber,'.0.csv',sep=''),header=TRUE)
 print('Census Numbers')
 print(theCensus[,2:6])
 cat('scenario number',simNumber,'\n')
 
-theCensus2 <- read.csv(paste(workspace,'Results/sagr.',simNumber,'/sagr.',simNumber,'-[1]/sagr.',simNumber,'.4.csv',sep=''),header=TRUE)
+theCensus2 <- read.csv(paste(workspace,'Results/sagr.',simNumber,'/sagr.',simNumber,'-[',repl,']/sagr.',simNumber,'.4.csv',sep=''),header=TRUE)
 theCensus2 <- theCensus2[,(6+seq(2,8,1))] # theCensus2[,(6+seq(4,16,2))]
 theCensus2 <- data.frame(seq(0,stopStep,1),theCensus2)
 colnames(theCensus2) <- c('Time.Step','g.plains','wyoming','s.g.basin','snake.r','n.g.basin','columbia','colorado')
@@ -136,7 +139,7 @@ theRanges.zones <- data.frame(theRanges.zones,smz=groupZone)
 the.smz <- c('g.plains','wyoming ','s.g.basin','snake.r ','n.g.basin','columbia','colorado')
 
 # current <- read.csv('H:/HexSim/Workspaces/sage_grouse_v3/Analysis/current.csv',header=TRUE)
-current <- read.csv('H:/HexSim/Workspaces/sage_grouse_v3/Analysis/hab.v2.baseline.csv',header=TRUE)
+current <- read.csv(paste(workspace,'Analysis/hab.v2.baseline.csv',sep=''),header=TRUE)
 hab.smz <- data.frame(mgmt.zones,current[,2])
 colnames(hab.smz) <- c('hex_id','zone','current')
 hab.smz$current <- ifelse(hab.smz$current>=0.59,1,0)
