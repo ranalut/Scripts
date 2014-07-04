@@ -4,18 +4,18 @@
 library(foreign)
 library(raster)
 
-simNumber <- 			'127'
+simNumber <- 			'150'
 repl <- 				1
 runHexSim <- 			'n'
-runTransformerRanges <- 'y'
+runTransformerRanges <- 'n'
 runTransformerMove <- 	'n'
 runTransformerBirths <- 'n'
 runTransformerDeaths <- 'n'
 runTransformerBD <- 	'n'
-movePlot <- 			'n'
+movePlot <- 			'y'
 spPlot <- 				'n'
-startStep <- 			5
-stopStep <- 			5
+startStep <- 			2
+stopStep <- 			2
 n.rows <- 				1750
 n.cols <- 				1859
 # workspace <- 'c:/users/cbwilsey/documents/postdoc/HexSim/Workspaces/sage_grouse_v2/'
@@ -30,7 +30,7 @@ command <- paste('cd ',hexSimDir,'HexSim/currentHexSim/ && HexSimEngine64.exe ',
 if (runHexSim=='y') { shell(command, translate=TRUE) }
 
 command1 <- paste('D: && cd ',hexSimDir,'HexSim/currentHexSim/ && OutputTransformer.exe -ranges ',workspace,'Results/sagr.',simNumber,'/sagr.',simNumber,'-[',repl,']/sagr.',simNumber,'.log',sep='')
-command2 <- paste('cd ',hexSimDir,'HexSim/currentHexSim/ && OutputTransformer.exe -movement ',workspace,'Results/sagr.',simNumber,'/sagr.',simNumber,'.log',sep='')
+command2 <- paste('D: && cd ',hexSimDir,'HexSim/currentHexSim/ && OutputTransformer.exe -movement ',workspace,'Results/sagr.',simNumber,'/sagr.',simNumber,'-[',repl,']/sagr.',simNumber,'.log',sep='')
 command3 <- paste('cd ',hexSimDir,'HexSim/currentHexSim/ && OutputTransformer.exe -csv:b:',n.rows,':',n.cols,':true:',startStep,'-',stopStep,':True,False ',workspace,'Results/sagr.',simNumber,'/sagr.',simNumber,'.log',sep='')
 command4 <- paste('cd ',hexSimDir,'HexSim/currentHexSim/ && OutputTransformer.exe -csv:d:',n.rows,':',n.cols,':true:',startStep,'-',stopStep,':True,False ',workspace,'Results/sagr.',simNumber,'/sagr.',simNumber,'.log',sep='')
 command5 <- paste('cd ',hexSimDir,'HexSim/currentHexSim/ && OutputTransformer.exe -csv:n:',n.rows,':',n.cols,':true:',startStep,'-',stopStep,':True,False ',workspace,'Results/sagr.',simNumber,'/sagr.',simNumber,'.log',sep='')
@@ -78,7 +78,7 @@ cat('scenario number',simNumber,'\n')
 
 if (movePlot=='y') 
 {
-	theMove <- read.table(paste(workspace,'Results/sagr.',simNumber,'/sagr.',simNumber,'_move_sage_grouse.csv',sep=''),sep=',',fill=TRUE,skip=1,stringsAsFactors=FALSE)
+	theMove <- read.table(paste(workspace,'Results/sagr.',simNumber,'/sagr.',simNumber,'-[',repl,']/sagr.',simNumber,'_REPORT_move_sage_grouse.csv',sep=''),sep=',',fill=TRUE,skip=1,stringsAsFactors=FALSE)
 	colnames(theMove) <- c('Replicate','Time.Step','Event.Name','Pop.ID','Individual.ID','IndivTraitIndex','Num.Dispersal','Hex.Dispersed','Meters.Displaced','No.Explore','Hex.Explored','Outcome')
 	# print(head(theMove)); stop('cbw')
 	par(mfrow=c(2,2))
