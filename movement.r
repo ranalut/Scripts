@@ -26,15 +26,16 @@ move <- function(workspace,scenario,event,outcome,breaks,time.step=NA,population
 }
 
 # SAGR
-run.report <- 'n'
+run.report <- 'y'
 population <- 'sage_grouse'
-workspace <- 'H:/HexSim/Workspaces/sage_grouse_v3' # 'F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1'
-scenario <- 'sagr.103b'
+# workspace <- 'H:/HexSim/Workspaces/sage_grouse_v3' # 'F:/PNWCCVA_Data2/HexSim/Workspaces/lynx_v1'
+workspace <- 'L:/Space_Lawler/Shared/Wilsey/PostDoc/HexSim/Workspaces/sage_grouse_v3/'
+scenario <- 'sagr.150'
 breaks <- seq(0,80,2)
 par(mfrow=c(2,2))
 events <- 'Annual dispersal' # previously c('ranges','young','subadult')
 outcomes <- list(c(NA,'join','start','floater')) # list(c(NA,'start','floater')) # previously list('start','join',c('start','floater'))
-time.steps <- seq(10,10,1)
+time.steps <- seq(2,2,1)
 
 # # Lynx
 # run.report <- 'y'
@@ -58,7 +59,9 @@ time.steps <- seq(10,10,1)
 # outcomes <- list(c(NA,'start','floater'))
 # time.steps <- seq(18,20,1)
 
-command <- paste('H:/hexsim/currenthexsim/OutputTransformer.exe -movement ',workspace,'/Results/',scenario,'/',scenario,'-[1]/',scenario,'.log',sep='')
+# command <- paste('H:/hexsim/currenthexsim/OutputTransformer.exe -movement ',workspace,'/Results/',scenario,'/',scenario,'-[1]/',scenario,'.log',sep='')
+command <- paste('D: && cd D:/Data/Wilsey/HexSim/currentHexSim/ && OutputTransformer.exe -movement ',workspace,'Results/',scenario,'/',scenario,'-[1]/',scenario,'.log',sep='')
+
 if (run.report=='y') { shell(command) }
 
 for (n in time.steps)
