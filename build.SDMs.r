@@ -11,12 +11,12 @@ output.wksp <- 'H:/HexSim/' # '//cfr.washington.edu/main/Space/Lawler/Shared/Wil
 output.wksp2 <- 'H:\\HexSim' # '\\\\cfr.washington.edu\\main\\Space\\Lawler\\Shared\\Wilsey\\PostDoc\\HexSim'
 
 data.folder <- 'rabbit_v1'
-spp.folder <- 'rabbit_v1' # 'krat_v1' # 'sage_grouse_v3' # 'rabbit_v1'
-spp.file <- 'pyra2' # 'krat' # 'current' # 'pyra2'
-threshold <- 667 # 33 # 1 # 667 # Minimum area requirement
-test.train <- 	'n'; ver <- 2 # Don't forget to change the version if you turn this on.
-export.hexmaps <- 'n'
-build.model <- 	'n'
+spp.folder <- 'town_squirrel_v1' # 'rabbit_v1' # 'krat_v1' # 'sage_grouse_v3' # 'rabbit_v1'
+spp.file <- 'town' # 'krat' # 'current' # 'pyra2'
+threshold <- 27 # 33 # 1 # 667 # Minimum area requirement
+test.train <- 	'y'; ver <- 2 # Don't forget to change the version if you turn this on.
+export.hexmaps <- 'y'
+build.model <- 	'y'
 
 map.names <- c(spp.file,'all.water','ave.def.mam.ccsm3','ave.fire.ccsm3','ave.mtco.ccsm3','ave.mtwa.ccsm3','ccsm3.hist.biome','lulc.hist.a2')
 time.steps <- c(rep(1,6),30,32)
@@ -127,7 +127,7 @@ for (i in letters[1:3])
 }
 sink()
 
-stop('cbw')
+# stop('cbw')
 
 # Predict
 pred.spp.distn <- predict(rf.model, newdata=the.data, type='prob')
