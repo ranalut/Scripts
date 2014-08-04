@@ -124,15 +124,21 @@ for (i in letters[1:3])
 
 	# print(table(test.pred[,3:4]))
 	cat('\n\n\n')
+	
+	# Predict
+	pred.spp.distn <- predict(rf.model, newdata=the.data, type='prob')
+
+	write.csv(data.frame(hexid=the.data$hexid,Pred=pred.spp.distn[,2]), paste(output.wksp,'workspaces/',spp.folder,'/analysis/rf.model.pred.v',ver,i,'.csv',sep=''),row.names=FALSE)
 }
 sink()
 
-# stop('cbw')
+stop('cbw')
 
 # Predict
 pred.spp.distn <- predict(rf.model, newdata=the.data, type='prob')
 
 write.csv(data.frame(hexid=the.data$hexid,Pred=pred.spp.distn[,2]), paste(output.wksp,'workspaces/',spp.folder,'/analysis/rf.model.pred.v',ver,'.csv',sep=''),row.names=FALSE)
+stop('cbw')
 
 # Partial Plots
 partialPlot(rf.model, the.data[the.data$hexid%in%train.pts,], x.var='def.mam', which.class='1')
