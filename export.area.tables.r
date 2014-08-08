@@ -82,7 +82,7 @@ for (k in 1:5)
 		
 		# Grasslands
 		cells <- length(the.data$biomes[the.data$biomes==9])
-		output <- rbind(output,c(n,'veg',theGCM,'shrublands',round(cells*86.6/100)))
+		output <- rbind(output,c(n,'veg',theGCM,'shrubland',round(cells*86.6/100)))
 		
 		# Developed Land-uses (Urban, Ag, Mining)
 		cells <- length(the.data$lulc[the.data$lulc%in%c(2,6,13,14)])
