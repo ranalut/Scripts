@@ -1,6 +1,6 @@
 
 # =========================================================================================
-# Generate HexMaps from spatial data layers for the pygmy rabbit workspace.
+# Generate HexMaps from spatial data layers for the nutcracker workspace.
 # =========================================================================================
 
 # ========================================================================================
@@ -123,13 +123,13 @@ if (run.move.ave=='y') # Make this a separate script, perhaps a function and app
   source('move.ave.r')
   source('move.ave.file.paths.r')
   theGCMs <- c('CCSM3','CGCM3.1_t47','GISS-ER','MIROC3.2_medres','UKMO-HadCM3')
-  hexmap.names <- c('ave.def.mam.','ave.fire.','ave.mtco.','ave.mtwa.')
+  hexmap.names <- c('ave.def.ann.','ave.fire.','ave.mtco.','ave.mtwa.') # 'ave.def.mam.'
   
   for (i in 1:length(theGCMs))
   {
-    for (n in 3:4) # 3:4 # 1:length(hexmap.names))
+    for (n in 1:2) # 3:4 # 1:length(hexmap.names))
     {
-      the.names <- build.paths(var.index=n, theGCM=theGCMs[i])
+      the.names <- build.paths2(var.index=n, theGCM=theGCMs[i])
       # print(the.names); stop('cbw')
       move.ave(
         the.names=the.names, 
@@ -141,7 +141,7 @@ if (run.move.ave=='y') # Make this a separate script, perhaps a function and app
 		dimensions=c(3131,2075)
         )
     }
-    file.remove(dir("C:/Documents and Settings/cbwilsey/Local Settings/Temp/4/R_raster_tmp/cbwilsey",full.names=TRUE))
+    file.remove(dir("C:/Documents and Settings/cbwilsey/Local Settings/Temp/2/R_raster_tmp/cbwilsey",full.names=TRUE))
   }
 }
 
