@@ -124,8 +124,10 @@ if (run.move.ave=='y') # Make this a separate script, perhaps a function and app
   source('move.ave.file.paths.r')
   theGCMs <- c('CCSM3','CGCM3.1_t47','GISS-ER','MIROC3.2_medres','UKMO-HadCM3')
   hexmap.names <- c('ave.def.ann.','ave.fire.','ave.mtco.','ave.mtwa.') # 'ave.def.mam.'
+  rasterOptions(tmpdir="C:/Documents and Settings/cbwilsey/Local Settings/Temp/2/R_raster_tmp/cbwilsey2/")
   
-  for (i in 1:length(theGCMs))
+  # for (i in 1:length(theGCMs))
+  for (i in c(5,4))
   {
     for (n in 1:2) # 3:4 # 1:length(hexmap.names))
     {
@@ -141,7 +143,7 @@ if (run.move.ave=='y') # Make this a separate script, perhaps a function and app
 		dimensions=c(3131,2075)
         )
     }
-    file.remove(dir("C:/Documents and Settings/cbwilsey/Local Settings/Temp/2/R_raster_tmp/cbwilsey",full.names=TRUE))
+    file.remove(dir("C:/Documents and Settings/cbwilsey/Local Settings/Temp/2/R_raster_tmp/cbwilsey2",full.names=TRUE))
   }
 }
 
