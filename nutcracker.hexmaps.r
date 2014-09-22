@@ -17,10 +17,10 @@ source('plot.raster.stack.r')
 
 # Settings for this run.
 
-hexsim.wksp <- 'D:/data/wilsey/HexSim/' # 'H:/HexSim/' # 'F:/PNWCCVA_Data2/HexSim/' # 'D:/data/wilsey/HexSim/'
-hexsim.wksp2 <- 'D:\\data\\wilsey\\hexsim' # 'H:\\HexSim' # 'F:\\PNWCCVA_Data2\\HexSim' # 'D:\\data\\wilsey\\hexsim'
-output.wksp <- 'L:/Space_Lawler/Shared/Wilsey/PostDoc/HexSim/' # 'L:/Space_Lawler/Shared/Wilsey/PostDoc/HexSim/' # 'H:/HexSim/' # 'E:/HexSim/' # 'D:/data/wilsey/HexSim/' # 'F:/PNWCCVA_Data2/HexSim/' 
-output.wksp2 <- 'L:\\Space_Lawler\\Shared\\Wilsey\\PostDoc\\HexSim' # 'L:\\Space_Lawler\\Shared\\Wilsey\\PostDoc\\HexSim' # 'H:\\HexSim' # 'E:\\HexSim' # 'D:\\data\\wilsey\\hexsim' # 'F:\\PNWCCVA_Data2\\HexSim'
+hexsim.wksp <- 'F:/PNWCCVA_Data2/HexSim/' # 'H:/HexSim/' # 'F:/PNWCCVA_Data2/HexSim/' # 'D:/data/wilsey/HexSim/'
+hexsim.wksp2 <- 'F:\\PNWCCVA_Data2\\HexSim' # 'H:\\HexSim' # 'F:\\PNWCCVA_Data2\\HexSim' # 'D:\\data\\wilsey\\hexsim'
+output.wksp <- 'H:/HexSim/' # 'L:/Space_Lawler/Shared/Wilsey/PostDoc/HexSim/' # 'H:/HexSim/' # 'E:/HexSim/' # 'D:/data/wilsey/HexSim/' # 'F:/PNWCCVA_Data2/HexSim/' 
+output.wksp2 <- 'H:\\HexSim' # 'L:\\Space_Lawler\\Shared\\Wilsey\\PostDoc\\HexSim' # 'H:\\HexSim' # 'E:\\HexSim' # 'D:\\data\\wilsey\\hexsim' # 'F:\\PNWCCVA_Data2\\HexSim'
 
 spp.folder <- 'nutcracker_v1'
 
@@ -28,11 +28,12 @@ run.hex.grid.distn <- 	'n'
 run.distn <- 			'n'
 run.hex.grid <-			'y'
 run.biomes <- 			'n'
-run.move.ave <-			'y'
-run.water <- 			'n'
-run.all.huc <- 			'n'
-run.pa <- 				'n'
-run.eco.reg <- 			'n'
+run.move.ave <-			'n'
+run.canada <- 			'y'
+run.water <- 			'y'
+run.all.huc <- 			'y'
+run.pa <- 				'y'
+run.eco.reg <- 			'y'
 # run.hex.grid.lulc <- 	'n'
 # run.lulc <- 			'n'
 # run.hist.lulc <- 		'n'
@@ -45,8 +46,8 @@ startTime <- Sys.time()
 if (run.hex.grid.distn=='y')
 {
 	hex.grid <- load.hex.grid(
-		centroid.file="F:/PNWCCVA_Data2/HexSim/Workspaces/sage_grouse_v2/Spatial Data/albers_centroids_1km.dbf",# "S:/Space/Lawler/Shared/Wilsey/Postdoc/HexSim/Workspaces/sage_grouse_v2/Spatial Data/albers_centroids_1km_wgs84.dbf", # 'F:/PNWCCVA_Data2/HexSim/Workspaces/centroids84.txt',  
-		file.format='dbf',
+		centroid.file='F:/PNWCCVA_Data2/HexSim/Workspaces/sage_grouse_v1/Spatial Data/albers_test3_centroids_1km.dbf', # "F:/PNWCCVA_Data2/HexSim/Workspaces/sage_grouse_v2/Spatial Data/albers_centroids_1km.dbf",# "S:/Space/Lawler/Shared/Wilsey/Postdoc/HexSim/Workspaces/sage_grouse_v2/Spatial Data/albers_centroids_1km_wgs84.dbf", # 'F:/PNWCCVA_Data2/HexSim/Workspaces/centroids84.txt',  
+		file.format='dbf', # 'txt' # 'dbf'
 		proj4='+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=23 +lon_0=-96 +x_0=0 +y_0=0 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs'
 		# '+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0'
 		# '+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=23 +lon_0=-96 +x_0=0 +y_0=0 +ellps=GRS80 +datum=NAD83 +units=m +no_defs' 
@@ -60,8 +61,8 @@ if (run.hex.grid.distn=='y')
 
 if (run.distn=='y')
 {
-	temp <- raster("H:/SpatialData/USGS GAP national/Bra_ida_PYRAx_Model (2)/bra_ida_pyrax")
-	temp2 <- aggregate(temp, fact=30, fun=sum, expand=FALSE, na.rm=TRUE, filename="H:/SpatialData/USGS GAP national/Bra_ida_PYRAx_Model (2)/bra_ida_900")
+	temp <- raster("H:/SpatialData/USGS GAP national/Nuc_col_CLNUx_Model/Nuc_col_clnux")
+	temp2 <- aggregate(temp, fact=30, fun=sum, expand=FALSE, na.rm=TRUE, filename="H:/SpatialData/USGS GAP national/Nuc_col_CLNUx_Model/Nuc_col_clnux_900", overwrite=TRUE)
 	
 	nc.2.hxn(
 		variable=NA, # 'bra_ida_pyrax', 
@@ -70,7 +71,7 @@ if (run.distn=='y')
 		theCentroids=hex.grid[[1]],
 		# buffer=500, fun=sum,
 		max.value=Inf, 
-		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='pyra2',
+		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='nutcracker',
 		dimensions=c(3131,2075) # c(1750,1859)
 		)
 }
@@ -81,7 +82,7 @@ if (run.distn=='y')
 if (run.hex.grid=='y')
 {
 	hex.grid <- load.hex.grid(
-		centroid.file="L:/Space_Lawler/Shared/Wilsey/Postdoc/HexSim/Workspaces/nutcracker_v1/Spatial Data/centroids84.txt", 
+		centroid.file='F:/PNWCCVA_Data2/HexSim/Workspaces/centroids84.txt', # "L:/Space_Lawler/Shared/Wilsey/Postdoc/HexSim/Workspaces/nutcracker_v1/Spatial Data/centroids84.txt", 
 		# "F:/PNWCCVA_Data2/HexSim/Workspaces/sage_grouse_v2/Spatial Data/albers_centroids_1km_wgs84.dbf", # "L:/Space_Lawler/Shared/Wilsey/Postdoc/HexSim/Workspaces/sage_grouse_v2/Spatial Data/albers_centroids_1km_wgs84.dbf", 
 		# 'F:/PNWCCVA_Data2/HexSim/Workspaces/centroids84.txt',  
 		file.format='txt',
@@ -126,10 +127,11 @@ if (run.move.ave=='y') # Make this a separate script, perhaps a function and app
   hexmap.names <- c('ave.def.ann.','ave.fire.','ave.mtco.','ave.mtwa.') # 'ave.def.mam.'
   rasterOptions(tmpdir="C:/Documents and Settings/cbwilsey/Local Settings/Temp/2/R_raster_tmp/cbwilsey2/")
   
-  # for (i in 1:length(theGCMs))
-  for (i in c(5,4))
+  for (i in 1:length(theGCMs))
+  # for (i in c(5,4))
+  # for (i in 3)
   {
-    for (n in 1:2) # 3:4 # 1:length(hexmap.names))
+    for (n in 2) # 3:4 # 1:length(hexmap.names))
     {
       the.names <- build.paths2(var.index=n, theGCM=theGCMs[i])
       # print(the.names); stop('cbw')
@@ -145,6 +147,22 @@ if (run.move.ave=='y') # Make this a separate script, perhaps a function and app
     }
     file.remove(dir("C:/Documents and Settings/cbwilsey/Local Settings/Temp/2/R_raster_tmp/cbwilsey2",full.names=TRUE))
   }
+}
+
+# ===================================
+# Canada
+
+if (run.canada=='y')
+{
+	nc.2.hxn(
+		variable='nuci_colu', 
+		nc.file="H:/SpatialData/USGS GAP national/nuci_colu_CAN.nc",
+		hex.grid=hex.grid[[2]], 
+		theCentroids=hex.grid[[1]],
+		max.value=Inf, 
+		hexsim.wksp=hexsim.wksp, hexsim.wksp2=hexsim.wksp2, output.wksp=output.wksp, output.wksp2=output.wksp2, spp.folder=spp.folder, hexmap.name='canada',
+		dimensions=c(3131,2075) # c(1750,1859)
+		)
 }
 
 # ==================================================================================
