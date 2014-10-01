@@ -23,6 +23,7 @@ for (p in 1:3) # Loop through 3 model types.
 				export.hexmaps.temp(hexsim.wksp2=hexsim.wksp2,output.wksp2=output.wksp2,spp.folder=spp.folder,scenario=full.scenario,n=i,time.step=time.steps[j],hexmap.name=map.name)
 
 				temp <- read.csv(paste(output.wksp,'Workspaces/',spp.folder,'/Analysis/temp.csv',sep=''),header=TRUE)
+				file.remove(paste(output.wksp,'Workspaces/',spp.folder,'/Analysis/temp.csv',sep=''))
 				
 				temp <- data.frame(base.map[,2],temp[,2])
 				colnames(temp) <- c('space','year')
