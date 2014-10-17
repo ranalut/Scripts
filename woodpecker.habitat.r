@@ -16,13 +16,13 @@ output.wksp2 <- 'L:\\Space_Lawler\\Shared\\Wilsey\\Postdoc\\HexSim' # '\\\\cfr.w
 
 data.folder <- 'woodpecker_v1'
 spp.folder <- 'woodpecker_v1'
-ver <- 5
+ver <- 2
 markers <- rep('-a',7)
 
 theGCMs <- c('CCSM3','CGCM3.1_t47','GISS-ER','MIROC3.2_medres','UKMO-HadCM3')
 scenarios.all <- c('','clim.') # ,'veg.')
 
-for (k in 1:5) # 1:5
+for (k in 5) # 1:5) # 1:5
 {
 	index <- k
 	theGCM <- theGCMs[index]
@@ -31,7 +31,7 @@ for (k in 1:5) # 1:5
 
 	time.step.adj <- c(rep(0,5),29)
 
-	for (n in c(seq(1,110,1),1))
+	for (n in c(seq(59,110,1),1)) # seq(1,110,1)
 	{
 		time.steps <- n + time.step.adj
 		names(time.steps) <- col.names[-1]
