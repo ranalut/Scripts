@@ -39,8 +39,8 @@ post.processing.lynx <- function(workspace,scenario,models2,theGCMs,reps,spatial
 			temp$d2050s <- temp$Y2050s - temp$Y2000s
 			temp$d2090s <- temp$Y2090s - temp$Y2000s
 			
-			areas <- read.dbf(paste('h:/outputs/pnwccva_',shp[spatial.name],'_albers.dbf',sep=''),as.is=TRUE)
-			temp <- merge(temp,areas[,c('AREA_SQKM',ref.field)],by=ref.field)
+			# areas <- read.dbf(paste('h:/outputs/pnwccva_',shp[spatial.name],'_albers.dbf',sep=''),as.is=TRUE)
+			# temp <- merge(temp,areas[,c('AREA_SQKM',ref.field)],by=ref.field)
 			# print(head(temp)); stop('cbw')
 			
 			gcm.name <- match(theGCMs[i],theGCMs)
@@ -75,8 +75,8 @@ post.processing.lynx <- function(workspace,scenario,models2,theGCMs,reps,spatial
 		temp$d2050s <- temp$Y2050s - temp$Y2000s
 		temp$d2090s <- temp$Y2090s - temp$Y2000s
 		
-		areas <- read.dbf(paste('h:/outputs/pnwccva_',shp[spatial.name],'_albers.dbf',sep=''),as.is=TRUE)
-		temp <- merge(temp,areas[,c('AREA_SQKM',ref.field)],by=ref.field)
+		# areas <- read.dbf(paste('h:/outputs/pnwccva_',shp[spatial.name],'_albers.dbf',sep=''),as.is=TRUE)
+		# temp <- merge(temp,areas[,c('AREA_SQKM',ref.field)],by=ref.field)
 			
 		write.dbf(temp,paste(out.dir,out.name,'_',spatial.name,'_',models2[i],'_ave_',esri.friendly(scenario,drop.last=1),'.dbf',sep=''))
 		# print(head(temp)); stop('cbw')
@@ -106,8 +106,8 @@ post.processing.lynx <- function(workspace,scenario,models2,theGCMs,reps,spatial
 		temp$d2050s <- temp$Y2050s - temp$Y2000s
 		temp$d2090s <- temp$Y2090s - temp$Y2000s
 		
-		areas <- read.dbf(paste('h:/outputs/pnwccva_',shp[spatial.name],'_albers.dbf',sep=''),as.is=TRUE)
-		temp <- merge(temp,areas[,c('AREA_SQKM',ref.field)],by=ref.field)
+		# areas <- read.dbf(paste('h:/outputs/pnwccva_',shp[spatial.name],'_albers.dbf',sep=''),as.is=TRUE)
+		# temp <- merge(temp,areas[,c('AREA_SQKM',ref.field)],by=ref.field)
 					
 		write.dbf(temp,paste(out.dir,out.name,'_',spatial.name,'_',models2[i],'_sd_',esri.friendly(scenario,drop.last=1),'.dbf',sep=''))
 		# print(head(temp)); stop('cbw')
