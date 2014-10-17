@@ -20,6 +20,26 @@ export.hexmaps.temp <- function(hexsim.wksp2='F:\\PNWCCVA_Data2\\HexSim',output.
 	shell(command)
 }
 
+export.hexmaps.hab.temp <- function(hexsim.wksp2,output.wksp2,spp.folder,scenario,hexmap.name,time.step)
+{
+	this.workspace <- paste(output.wksp2,'\\Workspaces\\',spp.folder,sep='')
+	
+	command <- paste(
+		# function call
+		substr(hexsim.wksp2,1,2),' && cd ',hexsim.wksp2,
+		'\\currentHexSim && HexSimCommandLine.exe -exportCSV ',
+		# workspace
+		this.workspace,' "',
+		# hexmap folder
+		this.workspace,'\\Spatial Data\\Hexagons\\',scenario,'\\',scenario,'.',time.step,'.hxn" ',
+		# output csv
+		this.workspace,'\\Analysis\\temp.csv',
+		sep=''
+	)
+	print(command)
+	shell(command)
+}
+
 export.hexmaps <- function(hexsim.wksp2='F:\\PNWCCVA_Data2\\HexSim',spp.folder,scenario,n=1,hexmap.name) # ,time.step)
 {
 	this.workspace <- paste(hexsim.wksp2,'\\Workspaces\\',spp.folder,sep='')
