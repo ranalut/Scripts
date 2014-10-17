@@ -14,7 +14,7 @@ reps <- 5
 parameters <- list(list(1,'eco','ECO_ID_U',c(17026:17097)), list(2,'huc','PNWCCVA_ID',c(1:1549)))
 spatial.info <- parameters[[map]]
 
-run.consolidate <- 	'y'
+run.consolidate <- 	'n'
 run.post.proc <-	'y'
 
 if (run.consolidate=='y')
