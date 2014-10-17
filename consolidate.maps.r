@@ -9,10 +9,11 @@ base.map <- read.csv(paste(output.wksp,'Workspaces/',spp.folder,'/Analysis/',par
 base.map[1,2] <- 0
 base.map$Step_1 <= round(base.map$Step_1)
 
-for (p in 1:3) # Loop through 3 model types.
+for (p in 1:length(model.types[[1]])) # Loop through 3 model types.
 {
 	for (k in theGCMs)
 	{
+		# if (map==1 & k=='CCSM3') { next(k) }
 		full.scenario <- paste(scenario, model.types[[1]][p],k,sep='')
 		print(full.scenario)
 		
