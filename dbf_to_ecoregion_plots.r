@@ -6,26 +6,32 @@ eco <- read.dbf('C:/Users/cwilsey/Box Sync/PNWCCVA/Outputs/pnwccva_represented_e
 species <- 'wolverine'
 gcm <- c('ccsm3','cgcm3','giss','hadcm3','miroc')
 scenario <- c('gulo_023_a2')
-ecoregions <- unique(eco$ECO_NUM)
-output <- matrix(NA,nrow=length(ecoregions),ncol=7)
-colnames(output) <- c('eco_name','eco_num',gcm)
+ecoregions <- unique(eco$ECO_CODE)
+output <- as.data.frame(matrix(NA,nrow=length(ecoregions),ncol=7))
+colnames(output) <- c('eco_name','eco_code',gcm)
+# print(head(output)); stop('cbw')
 
 for (i in 1:5)
 {
   file_name <- paste("C:/Users/cwilsey/Box Sync/PNWCCVA/Outputs/",species,'/',species,'_eco_full_',gcm[i],'_',scenario,'.dbf',sep='')
   temp <- read.dbf(file_name,as.is=TRUE)
-  temp <- merge(eco,temp)
+  # print(colnames(temp))
+  temp <- merge(eco,temp,all.x=TRUE,all.y=FALSE)
+  # print(colnames(temp))
+  # stop('cbw')
   
   for (j in 1:length(ecoregions))
   {
-    print(c(as.vector(temp[temp$ECO_NUM==ecoregions[j],c('ECO_NAME','ECO_NUM','d2090s')])))
-    stop('cbw')
-    output[i,c(1,2,(2+i))] <- c(as.vector(temp[temp$ECO_NUM==ecoregions[j],c('ECO_NAME','ECO_NUM','d2090s')]))
-    print(output)
-    output[i,(2+i)] <- output[i,(2+i)]/temp[temp$ECO_NUM==ecoregions[j],c('AREA_SQKM')]
-    print(output)
-    stop('cbw')
+    area <- temp[temp$ECO_CODE==ecoregions[j],'AREA_SQKM']
+    output[j,(2+i)] <- round(100*as.numeric(temp[temp$ECO_CODE==ecoregions[j],'d2090s'])/area,5)
+    output[j,'eco_name'] <- temp[temp$ECO_CODE==ecoregions[j],'ECO_NAME']
+    output[j,'eco_code'] <- temp[temp$ECO_CODE==ecoregions[j],'ECO_CODE']
+    # print(output)
+    # stop('cbw')
   }
+  # stop('cbw')
 }
 
+print(head(output))
+boxplot(t(output[,3:7]))
 
