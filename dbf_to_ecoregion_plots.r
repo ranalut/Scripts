@@ -1,6 +1,7 @@
 
 
 library(foreign)
+library(ggplot2)
 
 eco <- read.dbf('C:/Users/cwilsey/Box Sync/PNWCCVA/Outputs/pnwccva_represented_ecoregions_carnivores.dbf',as.is=TRUE)
 species <- 'wolverine'
@@ -32,6 +33,11 @@ for (i in 1:5)
   # stop('cbw')
 }
 
-print(head(output))
-boxplot(t(output[,3:7]))
+# print(head(output))
+# boxplot(t(output[,3:7]))
 
+output2 <- data.frame(eco_name=rep(output$eco_name,each=5),eco_code=rep(output$eco_code,each=5),change=c(apply(output[,3:7],1,as.vector)))
+
+p <- ggplot(output2, aes(factor(eco_code), change)) + aes_string(x="Ecological",y="Change") #  in Individuals / 100 km2"
+p + geom_boxplot() + theme(axis.text.x = element_text(size = 12, angle = 45,hjust=1)) + theme(axis.title.x = element_text(size = 12))
+# + geom_jitter()
