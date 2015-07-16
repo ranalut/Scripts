@@ -2,6 +2,7 @@
 
 library(foreign)
 library(ggplot2)
+library(gridExtra)
 
 eco <- read.dbf('C:/Users/cwilsey/Box Sync/PNWCCVA/Outputs/pnwccva_represented_ecoregions_carnivores.dbf',as.is=TRUE)
 
@@ -51,16 +52,19 @@ for (n in 1:length(species))
 
   output3 <- data.frame(species=rep(output2$species,each=5),sens=rep(output2$sens,each=5),model=rep(gcm,length(output2$species)),change=c(apply(output2[,5:9],1,as.vector)))
   
-  png(paste('C:/Users/cwilsey/Box Sync/PNWCCVA/2015 Outputs/sens_eco_0524_change_fig_2.png',sep=''),width=960)
-    par(mfrow=c(1,3))
-  
+  plots <- list()
+
     for (i in 1:length(species))
     {
       temp <- output3[output3$species==species[i],]
-      p <- ggplot(temp) + geom_point(aes(factor(sens),change,colour=factor(model)),alpha=0.75,size=4) + guides(colour=guide_legend(title="GCM")) + theme(axis.text.x = element_text(size = 12, angle = 45,hjust=1)) + theme(axis.title.x = element_text(size = 14)) + xlab("Scenario") + ylab("Change in Individuals / 100 km2")
-      plot(p)
+      plots[[i]] <- ggplot(temp) + geom_point(aes(factor(sens),change,colour=factor(model)),alpha=0.75,size=4) + guides(colour=guide_legend(title="GCM")) + theme(axis.text.x = element_text(size = 12, angle = 45,hjust=1)) + theme(axis.title.x = element_text(size = 14)) + xlab("Scenario") + ylab("Change in Individuals / 100 km2")
+      # plot(p)
     }
-  dev.off()
+
+png(paste('C:/Users/cwilsey/Box Sync/PNWCCVA/2015 Outputs/sens_eco_0524_change_fig_2.png',sep=''),height=960,width=480)
+par(mfrow=c(3,1))
+  grid.arrange(plots[[1]],plots[[2]],plots[[3]], nrow=3, ncol=1)
+dev.off()
 
 # p + geom_boxplot() + theme(axis.text.x = element_text(size = 12, angle = 45,hjust=1)) + theme(axis.title.x = element_text(size = 12)) + xlab("Ecoregion") + ylab("Change in Individuals / 100 km2")
 
