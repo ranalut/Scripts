@@ -71,5 +71,8 @@ m_w2_n <- lmer(d2020s ~ gcm + (1 + sens|ECO_CODE), data=w, REML=FALSE)
 anova(m_w1_n,m_w1) # Likelihood ratio tests. Both models are significant.
 anova(m_w2_n,m_w2)
 
+plot(m_w2)
+coefficients(m_w2)
+
 # Excerpt from Winter 2013 tutorial...
 # Moreover, researchers in ecology (Schielzeth & Forstmeier, 2009), psycholinguistics (Barr, Levy, Scheepers, & Tilly, 2013) and other fields have shown via simulations that mixed models without random slopes are anticonservative or, in other words, they have a relatively high Type I error rate (they                                                                 tend to find a lot of significant results which are actually due to chance).Barr et al. (2013) recommend that you should "keep it maximal" with respect to your random effects structure, at least for controlled experiments. This means that you include all random slopes that are justified by your experimental design . and you do this for all fixed effects that are important for the overall interpretation of your study.
