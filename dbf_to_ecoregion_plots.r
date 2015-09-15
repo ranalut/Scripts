@@ -46,8 +46,8 @@ for (n in 1:length(species))
   temp <- output[,-1]
   temp[,2:6] <- sign(temp[,2:6])
   temp$trend <- apply(temp[,2:6],1,sum)
-  temp$min.pop <- temp$Y2000s > 10
-  print(table(temp[,c('trend','min.pop')]))
+  temp$min.dens <- temp$Y2000s > dens_thresh[n]
+  print(table(temp[,c('trend','min.dens')]))
   
   # stop('cbw')
   # boxplot(t(output[,3:7]))
