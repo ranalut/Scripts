@@ -6,6 +6,7 @@ library(ggplot2)
 library(gridExtra)
 library(lme4)
 library(MuMIn)
+library(geoR)
 
 # ================================================
 # Table load and formatting...
@@ -32,18 +33,36 @@ hist(ly$d2050s_dens)
 # shapiro.test(ly$d2050s_dens) # significantly different from normal
 hist(ly$d2090s_dens)
 # stop('cbw')
+# ly$bc_d2090s_dens <- (ly$d2090s_dens)^(boxcoxfit(ly$d2090s_dens, add.to.data=10)$lambda[1]) # lambda2 = TRUE,
+# hist(ly$bc_d2090s_dens)
+# shapiro.test(ly$bc_d2090s_dens) # significantly different from normal
+# stop('cbw')
 
-# m_ly1 <- lmer(d2050s ~ sens + gcm + (1 | ECO_CODE), data=ly, REML=FALSE) 
-# m_ly1_n <- lmer(d2050s ~ gcm + (1 | ECO_CODE), data=ly, REML=FALSE) 
+m_ly1 <- lmer(d2050s ~ sens + gcm + (1 | ECO_CODE), data=ly, REML=FALSE) 
+qqnorm(resid(m_ly1), main="Q-Q plot for residuals")
+qqline(resid(m_ly1),col='red')
+print(AIC(m_ly1))
+m_ly1_n <- lmer(d2050s ~ gcm + (1 | ECO_CODE), data=ly, REML=FALSE) 
+qqnorm(resid(m_ly1_n), main="Q-Q plot for residuals")
+qqline(resid(m_ly1_n),col='red')
+print(AIC(m_ly1))
+m_ly3 <- lmer(d2050s ~ sens + (1 | ECO_CODE), data=ly, REML=FALSE) 
+qqnorm(resid(m_ly3), main="Q-Q plot for residuals")
+qqline(resid(m_ly3),col='red')
+print(AIC(m_ly3))
+
+stop('cbw')
+
 # m_ly2 <- lmer(d2050s_dens ~ sens + gcm + (1 + sens|ECO_CODE), data=ly, REML=FALSE)
 # m_ly2_n <- lmer(d2050s_dens ~ gcm + (1 + sens|ECO_CODE), data=ly, REML=FALSE)
-m_ly2 <- lmer(d2090s_dens ~ sens + gcm + (1 + sens|ECO_CODE), data=ly, REML=FALSE)
-m_ly2_n <- lmer(d2090s_dens ~ gcm + (1 + sens|ECO_CODE), data=ly, REML=FALSE)
+# m_ly2 <- lmer(d2090s_dens ~ sens + gcm + (1 + sens|ECO_CODE), data=ly, REML=FALSE)
+# m_ly2_n <- lmer(d2090s_dens ~ gcm + (1 + sens|ECO_CODE), data=ly, REML=FALSE)
 
 plot(m_ly2)
 qqnorm(resid(m_ly2), main="Q-Q plot for residuals")
 qqline(resid(m_ly2),col='red')
-# stop('cbw')
+shapiro.test(resid(m_ly2)) # significantly different from normal
+stop('cbw')
 
 write.csv(as.data.frame(summary(m_ly2)[10]),"D:/Box Sync/PNWCCVA/MS_MesoCarnivores/Results/lynx_lmer_coef_2090s.csv")
 sink("D:/Box Sync/PNWCCVA/MS_MesoCarnivores/Results/lynx_lmer_2090s.txt")
