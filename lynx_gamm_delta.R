@@ -1,8 +1,5 @@
 
-
 library(foreign)
-library(ggplot2)
-library(gridExtra)
 library(lme4)
 library(MuMIn)
 library(geoR)
@@ -20,11 +17,12 @@ ctrl <- gam.control(nthreads=1,irls.reg=0.0,epsilon = 1e-07, maxit = 50000, mgcv
 # source('~/github/scripts/meso_carn_delta_table.r')
 # stop('cbw')
 
-output2 <- read.csv("D:/Box Sync/PNWCCVA/MS_MesoCarnivores/Results/delta_table.csv",header=TRUE,stringsAsFactors=TRUE,row.names = 1)
+output2 <- read.csv("D:/Box Sync/PNWCCVA/MS_MesoCarnivores/Results/delta_table_2.csv",header=TRUE,stringsAsFactors=TRUE,row.names = 1)
 output2$dum <- 1
 output2$sens <- factor(output2$sens)
 output2$gcm <- factor(output2$gcm)
 # output2$ECO_CODE <- factor(output2$ECO_CODE)
+species <- c('lynx','wolverine','fisher')
 
 # ===========================================
 # Lynx
@@ -34,26 +32,39 @@ ly <- output2[output2$species=='lynx',]
 ly$d2050s_dens <- 100 * ly$d2050s/ly$AREA_SQKM
 ly$d2090s_dens <- 100 * ly$d2090s/ly$AREA_SQKM
 
-# Drop ECO_CODEs for which population doesn't begin above threshold density.
-ly <- ly[100*ly$Y2000s/ly$AREA_SQKM > as.numeric(dens_thresh['lynx']),]
-
 # =====================================================
 # Data response is not normally distributed
 # Wasn't able to transform data to Gaussian. Tried sqrt, cube root, and Box-Cox.
 # =====================================================
 # hist(ly$d2050s_dens)
 # shapiro.test(ly$d2050s_dens) # significantly different from normal
-# hist(ly$d2090s_dens)
+hist(ly$d2090s_dens)
 # stop('cbw')
-# ly$bc_d2090s_dens <- (ly$d2090s_dens)^(boxcoxfit(ly$d2090s_dens, add.to.data=10)$lambda[1]) # lambda2 = TRUE,
-# hist(ly$bc_d2090s_dens)
-# shapiro.test(ly$bc_d2090s_dens) # significantly different from normal
+bc <- boxcoxfit(ly$d2090s_dens, lambda2=TRUE)
+ly$bc_d2090s_dens <- (bc$lambda[2] + ly$d2090s_dens)^(bc$lambda[1]) 
+hist(ly$bc_d2090s_dens, breaks=20)
+shapiro.test(ly$bc_d2090s_dens) # significantly different from normal
 # stop('cbw')
 
-ly_full <- gam(d2090s_dens ~  sens * gcm + s(ECO_CODE, bs="re", by=dum), gamma=1.4, na.action=na.omit, control=ctrl, family=gaussian(), select=TRUE, data=ly, method="ML")
-print(AIC(ly_full)) # 205.2783 
-gam.check(ly_full) # 
-shapiro.test(resid(ly_full)) # Significantly different.
+# =====================================================
+# Fixed effects: scenarios (sens) and gcm
+# Random effects: ecoregion (ECO_CODE)
+ly_01 <- gam(bc_d2090s_dens ~  sens * gcm + s(ECO_CODE, bs="re", by=dum), gamma=1.4, na.action=na.omit, control=ctrl, family=gaussian(), select=TRUE, data=ly, method="ML")
+print(AIC(ly_01)) # -33.22
+shapiro.test(resid(ly_01)) # Significantly different.
+
+ly_02 <- gam(bc_d2090s_dens ~  sens + gcm + s(ECO_CODE, bs="re", by=dum), gamma=1.4, na.action=na.omit, control=ctrl, family=gaussian(), select=TRUE, data=ly, method="ML")
+print(AIC(ly_02)) # -26.54
+shapiro.test(resid(ly_02)) # Significantly different.
+
+ly_03 <- gam(bc_d2090s_dens ~  gcm + s(ECO_CODE, bs="re", by=dum), gamma=1.4, na.action=na.omit, control=ctrl, family=gaussian(), select=TRUE, data=ly, method="ML")
+print(AIC(ly_03)) # -26.49
+shapiro.test(resid(ly_03)) # Significantly different.
+
+ly_04 <- gam(bc_d2090s_dens ~  sens + s(ECO_CODE, bs="re", by=dum), gamma=1.4, na.action=na.omit, control=ctrl, family=gaussian(), select=TRUE, data=ly, method="ML")
+print(AIC(ly_04)) # -231.64
+shapiro.test(resid(ly_04)) # Significantly different.
+
 
 ly_ar <- gam(d2090s_dens ~  sens * gcm + s(ECO_CODE, bs="re", by=dum), gamma=1.4, correlation = corAR1(form=~1|ECO_CODE), na.action=na.omit, control=ctrl, family=gaussian(), select=TRUE, data=ly, method="ML")
 print(AIC(ly_ar)) # 205.2783 
@@ -84,7 +95,7 @@ shapiro.test(resid(ly_4)) # Significantly different.
 # Add smoothers
 # ==================================
 # This won't run...
-ly_2a <- gam(d2090s_dens ~  gcm + s(ECO_CODE, k=6) + s(ECO_CODE, bs="re", by=dum) , gamma=1.4, na.action=na.omit, control=ctrl, family=gaussian(), select=TRUE, data=ly, method="ML")
+ly_2a <- gam(d2090s_dens ~  gcm + s(ECO_CODE, k=10) + s(ECO_CODE, bs="re", by=dum ), gamma=1.4, na.action=na.omit, control=ctrl, family=gaussian(), select=TRUE, data=ly, method="ML")
 print(AIC(ly_2a)) # 204.5321 
 gam.check(ly_2a) # 
 shapiro.test(resid(ly_2a)) # Significantly different.

@@ -2,8 +2,6 @@
 # This is the script I used to calculate statistics in the Feb16 version of the manuscript.
 
 library(foreign)
-library(ggplot2)
-library(gridExtra)
 library(lme4)
 library(MuMIn)
 library(geoR)
@@ -14,11 +12,11 @@ library(geoR)
 # source('~/github/scripts/meso_carn_delta_table.r')
 # stop('cbw')
 
-output2 <- read.csv("D:/Box Sync/PNWCCVA/MS_MesoCarnivores/Results/delta_table.csv",header=TRUE,stringsAsFactors=TRUE,row.names = 1)
+output2 <- read.csv("D:/Box Sync/PNWCCVA/MS_MesoCarnivores/Results/delta_table_2.csv",header=TRUE,stringsAsFactors=TRUE,row.names = 1)
 
 output2$sens <- factor(output2$sens)
 output2$gcm <- factor(output2$gcm)
-# output2$ECO_CODE <- factor(output2$ECO_CODE)
+output2$ECO_CODE <- factor(output2$ECO_CODE)
 
 # ===========================================
 # Lynx
@@ -27,9 +25,8 @@ output2$gcm <- factor(output2$gcm)
 ly <- output2[output2$species=='lynx',]
 ly$d2050s_dens <- 100 * ly$d2050s/ly$AREA_SQKM
 ly$d2090s_dens <- 100 * ly$d2090s/ly$AREA_SQKM
-ly <- ly[100*ly$Y2000s/ly$AREA_SQKM > as.numeric(dens_thresh['lynx']),]
 
-hist(ly$d2050s_dens)
+# hist(ly$d2050s_dens)
 # shapiro.test(ly$d2050s_dens) # significantly different from normal
 hist(ly$d2090s_dens)
 # stop('cbw')
@@ -37,44 +34,48 @@ hist(ly$d2090s_dens)
 # hist(ly$bc_d2090s_dens)
 # shapiro.test(ly$bc_d2090s_dens) # significantly different from normal
 # stop('cbw')
+bc <- boxcoxfit(ly$d2090s_dens, lambda2=TRUE)
+ly$bc_d2090s_dens <- (bc$lambda[2] + ly$d2090s_dens)^(bc$lambda[1]) 
+hist(ly$bc_d2090s_dens)
 
-m_ly1 <- lmer(d2050s ~ sens + gcm + (1 | ECO_CODE), data=ly, REML=FALSE) 
+m_ly1 <- lmer(bc_d2090s_dens ~ sens + gcm + (1 | ECO_CODE), data=ly, REML=FALSE)
 qqnorm(resid(m_ly1), main="Q-Q plot for residuals")
 qqline(resid(m_ly1),col='red')
-print(AIC(m_ly1))
-m_ly1_n <- lmer(d2050s ~ gcm + (1 | ECO_CODE), data=ly, REML=FALSE) 
-qqnorm(resid(m_ly1_n), main="Q-Q plot for residuals")
-qqline(resid(m_ly1_n),col='red')
-print(AIC(m_ly1))
-m_ly3 <- lmer(d2050s ~ sens + (1 | ECO_CODE), data=ly, REML=FALSE) 
-qqnorm(resid(m_ly3), main="Q-Q plot for residuals")
-qqline(resid(m_ly3),col='red')
-print(AIC(m_ly3))
+print(AIC(m_ly1)) # 23.48
+print(shapiro.test(resid(m_ly1)))
+# stop('cbw')
 
-stop('cbw')
-
-# m_ly2 <- lmer(d2050s_dens ~ sens + gcm + (1 + sens|ECO_CODE), data=ly, REML=FALSE)
-# m_ly2_n <- lmer(d2050s_dens ~ gcm + (1 + sens|ECO_CODE), data=ly, REML=FALSE)
-# m_ly2 <- lmer(d2090s_dens ~ sens + gcm + (1 + sens|ECO_CODE), data=ly, REML=FALSE)
-# m_ly2_n <- lmer(d2090s_dens ~ gcm + (1 + sens|ECO_CODE), data=ly, REML=FALSE)
-
-plot(m_ly2)
+m_ly2 <- lmer(bc_d2090s_dens ~ gcm + (1 | ECO_CODE), data=ly, REML=FALSE) 
 qqnorm(resid(m_ly2), main="Q-Q plot for residuals")
 qqline(resid(m_ly2),col='red')
-shapiro.test(resid(m_ly2)) # significantly different from normal
-stop('cbw')
-
-write.csv(as.data.frame(summary(m_ly2)[10]),"D:/Box Sync/PNWCCVA/MS_MesoCarnivores/Results/lynx_lmer_coef_2090s.csv")
-sink("D:/Box Sync/PNWCCVA/MS_MesoCarnivores/Results/lynx_lmer_2090s.txt")
-# anova(m_ly1_n,m_ly1) # Likelihood ratio tests. Both models are significant.
-cat('\n')
-print(summary(m_ly2)); cat('\n')
-print(anova(m_ly2_n,m_ly2)); cat('\n')
-print(coefficients(m_ly2)); cat('\n')
-print(r.squaredLR(m_ly2,null=m_ly2_n)); cat('\n')
-print(r.squaredGLMM(m_ly2))
-sink()
+print(AIC(m_ly2)) # 23.48
+print(shapiro.test(resid(m_ly2)))
 # stop('cbw')
+
+m_ly3 <- lmer(bc_d2090s_dens ~ sens + (1 | ECO_CODE), data=ly, REML=FALSE) 
+qqnorm(resid(m_ly3), main="Q-Q plot for residuals")
+qqline(resid(m_ly3),col='red')
+print(AIC(m_ly3)) # 272.78
+print(shapiro.test(resid(m_ly3)))
+# stop('cbw')
+
+m_ly4 <- lmer(bc_d2090s_dens ~ sens * gcm + (1 | ECO_CODE), data=ly, REML=FALSE)
+qqnorm(resid(m_ly4), main="Q-Q plot for residuals")
+qqline(resid(m_ly4),col='red')
+print(AIC(m_ly4)) # 17.31
+print(shapiro.test(resid(m_ly4)))
+# stop('cbw')
+
+write.csv(as.data.frame(summary(m_ly4)[10]),"D:/Box Sync/PNWCCVA/MS_MesoCarnivores/Results/lynx_lmer_coef_bc_d2090s_dens.csv")
+sink("D:/Box Sync/PNWCCVA/MS_MesoCarnivores/Results/lynx_lmer_bc_d2090s_dens.txt")
+cat('\n')
+print(summary(m_ly4)); cat('\n')
+print(anova(m_ly1,m_ly4)); cat('\n')
+print(coefficients(m_ly4)); cat('\n')
+print(r.squaredLR(m_ly4,null=m_ly1)); cat('\n')
+print(r.squaredGLMM(m_ly1))
+sink()
+stop('cbw')
 # =========================================
 # Wolverine 
 # =========================================
@@ -82,33 +83,57 @@ sink()
 w <- output2[output2$species=='wolverine',]
 w$d2050s_dens <- 100 * w$d2050s/w$AREA_SQKM
 w$d2090s_dens <- 100 * w$d2090s/w$AREA_SQKM
-w <- w[100*w$Y2000s/w$AREA_SQKM > as.numeric(dens_thresh['wolverine']),]
 
-hist(w$d2050s_dens)
-# shapiro.test(w$d2050s_dens) # significantly different from normal, doesn't matter
+# hist(w$d2050s_dens)
+# shapiro.test(w$d2050s_dens) # significantly different from normal
 hist(w$d2090s_dens)
 # stop('cbw')
+# w$bc_d2090s_dens <- (w$d2090s_dens)^(boxcoxfit(w$d2090s_dens, add.to.data=10)$lambda[1]) # lambda2 = TRUE,
+# hist(w$bc_d2090s_dens)
+# shapiro.test(w$bc_d2090s_dens) # significantly different from normal
+# stop('cbw')
+bc <- boxcoxfit(w$d2090s_dens, lambda2=TRUE)
+w$bc_d2090s_dens <- (bc$lambda[2] + w$d2090s_dens)^(bc$lambda[1]) 
+hist(w$bc_d2090s_dens)
 
-# m_w1 <- lmer(d2050s ~ sens + gcm + (1 | ECO_CODE), data=w, REML=FALSE) 
-# m_w1_n <- lmer(d2050s ~ gcm + (1 | ECO_CODE), data=w, REML=FALSE) 
-# m_w2 <- lmer(d2050s_dens ~ sens + gcm + (1 + sens|ECO_CODE), data=w, REML=FALSE)
-# m_w2_n <- lmer(d2050s_dens ~ gcm + (1 + sens|ECO_CODE), data=w, REML=FALSE)
-m_w2 <- lmer(d2090s_dens ~ sens + gcm + (1 + sens|ECO_CODE), data=w, REML=FALSE)
-m_w2_n <- lmer(d2090s_dens ~ gcm + (1 + sens|ECO_CODE), data=w, REML=FALSE)
+m_w1 <- lmer(bc_d2090s_dens ~ sens + gcm + (1 | ECO_CODE), data=w, REML=FALSE)
+qqnorm(resid(m_w1), main="Q-Q plot for residuals")
+qqline(resid(m_w1),col='red')
+print(AIC(m_w1)) # 23.48
+print(shapiro.test(resid(m_w1)))
+# stop('cbw')
 
-plot(m_w2)
+m_w2 <- lmer(bc_d2090s_dens ~ gcm + (1 | ECO_CODE), data=w, REML=FALSE) 
 qqnorm(resid(m_w2), main="Q-Q plot for residuals")
 qqline(resid(m_w2),col='red')
-write.csv(as.data.frame(summary(m_w2)[10]),"D:/Box Sync/PNWCCVA/MS_MesoCarnivores/Results/wolverine_lmer_coef_2090s.csv")
-sink("D:/Box Sync/PNWCCVA/MS_MesoCarnivores/Results/wolverine_lmer_2090s.txt")
-# anova(m_w1_n,m_w1) # Likelihood ratio tests. Both models are significant.
-print(summary(m_w2))
-print(anova(m_w2_n,m_w2))
-print(coefficients(m_w2))
-print(r.squaredLR(m_w2,null=m_w2_n)); cat('\n')
-print(r.squaredGLMM(m_w2))
-sink()
+print(AIC(m_w2)) # 23.48
+print(shapiro.test(resid(m_w2)))
 # stop('cbw')
+
+m_w3 <- lmer(bc_d2090s_dens ~ sens + (1 | ECO_CODE), data=w, REML=FALSE) 
+qqnorm(resid(m_w3), main="Q-Q plot for residuals")
+qqline(resid(m_w3),col='red')
+print(AIC(m_w3)) # 272.78
+print(shapiro.test(resid(m_w3)))
+# stop('cbw')
+
+m_w4 <- lmer(bc_d2090s_dens ~ sens * gcm + (1 | ECO_CODE), data=w, REML=FALSE)
+qqnorm(resid(m_w4), main="Q-Q plot for residuals")
+qqline(resid(m_w4),col='red')
+print(AIC(m_w4)) # 17.31
+print(shapiro.test(resid(m_w4)))
+# stop('cbw')
+
+write.csv(as.data.frame(summary(m_w4)[10]),"D:/Box Sync/PNWCCVA/MS_MesoCarnivores/Results/gulo_lmer_coef_bc_d2090s_dens.csv")
+sink("D:/Box Sync/PNWCCVA/MS_MesoCarnivores/Results/gulo_lmer_bc_d2090s_dens.txt")
+cat('\n')
+print(summary(m_w4)); cat('\n')
+print(anova(m_w1,m_w4)); cat('\n')
+print(coefficients(m_w4)); cat('\n')
+print(r.squaredLR(m_w4,null=m_w1)); cat('\n')
+print(r.squaredGLMM(m_w1))
+sink()
+stop('cbw')
 
 # ============================================
 # Fisher
