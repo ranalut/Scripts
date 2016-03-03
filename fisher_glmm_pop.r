@@ -9,10 +9,10 @@ library(tidyr)
 # ================================================
 # Table load and formatting...
 # ================================================
-# source('~/github/scripts/meso_carn_delta_table.r')
+# source('~/github/scripts/meso_carn_all_pop_table.r')
 # stop('cbw')
 
-output2 <- read.csv("D:/Box Sync/PNWCCVA/MS_MesoCarnivores/Results/delta_table_2.csv",header=TRUE,stringsAsFactors=TRUE,row.names = 1)
+output2 <- read.csv("D:/Box Sync/PNWCCVA/MS_MesoCarnivores/Results/all_pop_table_1.csv",header=TRUE,stringsAsFactors=TRUE,row.names = 1)
 output2$dum <- 1
 output2$sens <- factor(output2$sens)
 output2$gcm <- factor(output2$gcm)
@@ -26,17 +26,50 @@ species <- c('lynx','wolverine','fisher')
 ly <- output2[output2$species=='fisher',]
 # ly$d2050s_dens <- 100 * ly$d2050s/ly$AREA_SQKM
 # ly$d2090s_dens <- 100 * ly$d2090s/ly$AREA_SQKM
-
-ly <- gather(ly, year, pop, 4:7)
+# stop('cbw')
+ly <- gather(ly, year, pop, 11:109) # 4:7
 ly$year <- as.character(ly$year)
 ly$year <- as.numeric(substr(ly$year,2,5))
-# hist(log(test$pop))
+hist(ly$pop)
+hist(log(ly$pop))
 # min(unique(test$pop))
-stop('cbw')
+# stop('cbw')
 
 # =====================================================
 # Fixed effects: scenarios (sens) and gcm
 # Random effects: ecoregion (ECO_CODE)
+
+sink('D:/Box Sync/PNWCCVA/MS_MesoCarnivores/Results/fisher_lmer_aic.txt')
+cat('AIC','call','\n',sep='\t')
+mod <- glmer(pop ~ (1|ECO_CODE), family=poisson(), data=ly)
+cat(AIC(mod),deparse(formula(mod)),'\n',sep='\t')
+
+mod <- update(mod, pop ~ gcm + (1|ECO_CODE))
+cat(AIC(mod),deparse(formula(mod)),'\n',sep='\t')
+
+mod <- update(mod, pop ~ sens + (1|ECO_CODE))
+cat(AIC(mod),deparse(formula(mod)),'\n',sep='\t')
+
+mod <- update(mod, pop ~ sens + gcm + (1|ECO_CODE))
+cat(AIC(mod),deparse(formula(mod)),'\n',sep='\t')
+
+mod <- update(mod, pop ~ year + sens + gcm + (1|ECO_CODE))
+cat(AIC(mod),deparse(formula(mod)),'\n',sep='\t')
+
+mod <- update(mod, pop ~ year + I(year^2)+ sens + gcm + (1|ECO_CODE))
+cat(AIC(mod),deparse(formula(mod)),'\n',sep='\t')
+
+mod <- update(mod, pop ~ year*sens + gcm + (1|ECO_CODE))
+cat(AIC(mod),deparse(formula(mod)),'\n',sep='\t')
+
+mod <- update(mod, pop ~ year*gcm + sens + (1|ECO_CODE))
+cat(AIC(mod),deparse(formula(mod)),'\n',sep='\t')
+
+mod <- update(mod, pop ~ year*gcm + year*sens + (1|ECO_CODE))
+cat(AIC(mod),deparse(formula(mod)),'\n',sep='\t')
+
+sink()
+
 ly_01 <- glmer(pop ~  sens * gcm + (1|ECO_CODE), na.action=na.omit, family=poisson(), data=ly)
 print(AIC(ly_01)) # Poisson  28909.54
 
