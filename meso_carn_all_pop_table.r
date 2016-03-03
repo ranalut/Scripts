@@ -32,17 +32,19 @@ for (n in 1:length(species))
       temp <- merge(eco,temp,all.x=TRUE,all.y=FALSE)
       # print(colnames(temp))
       # stop('cbw')
+      extract_columns <- c('ECO_NAME','ECO_CODE','AREA_SQKM','Y2000s','Y2020s','Y2050s','Y2090s','d2020s','d2050s','d2090s',paste('Y',seq(2000,2098,1),sep=''))
+      col_index <- match(extract_columns,colnames(temp))
       
       if (n==1 & t==1 & i==1)
       { 
-        output <- temp[,c('ECO_NAME','ECO_CODE','AREA_SQKM','Y2000s','Y2020s','Y2050s','Y2090s','d2020s','d2050s','d2090s')]
+        output <- temp[,col_index]
         output$species <- rep(species[n],dim(output)[1])
         output$sens <- rep(sens[[n]][t],dim(output)[1])
         output$gcm <- rep(gcm[i],dim(output)[1])
       }
       else
       {
-        temp2 <- temp[,c('ECO_NAME','ECO_CODE','AREA_SQKM','Y2000s','Y2020s','Y2050s','Y2090s','d2020s','d2050s','d2090s')]
+        temp2 <- temp[,col_index]
         temp2$species <- rep(species[n],dim(temp2)[1])
         temp2$sens <- rep(sens[[n]][t],dim(temp2)[1])
         temp2$gcm <- rep(gcm[i],dim(temp2)[1])
@@ -53,7 +55,7 @@ for (n in 1:length(species))
     # stop('cbw')
   }
   
-  # Drop species that are never predicted presences in any park at any time
+  # Drop eco regions that are never above min. density threshold
   drop_abs <- function(x,pred_table=output,thresh_value=dens_thresh[n])
   {
     temp <- pred_table[pred_table$ECO_CODE==x,]
@@ -88,4 +90,4 @@ for (n in 1:length(species))
 
 output2 <- data.frame(output2)
 
-write.csv(output2,"D:/Box Sync/PNWCCVA/MS_MesoCarnivores/Results/delta_table_3.csv")
+write.csv(output2,"D:/Box Sync/PNWCCVA/MS_MesoCarnivores/Results/all_pop_table_1.csv")
