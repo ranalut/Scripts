@@ -5,6 +5,7 @@ library(MuMIn)
 library(geoR)
 library(mgcv)
 library(tidyr)
+library(ggplot2)
 
 # ================================================
 # Table load and formatting...
@@ -34,8 +35,12 @@ hist(ly$pop)
 hist(log(ly$pop))
 bc <- boxcoxfit(ly$pop)
 hist(ly$pop^(bc$lambda[1]))
-ly$pop <- log(ly$pop)
 # ly$pop <- ly$pop^(bc$lambda[1]) 
+ly$pop <- log(ly$pop)
+
+p <- ggplot(ly, aes(year, pop))
+p <- p + geom_point(aes(colour = factor(ECO_CODE)))
+plot(p)
 
 # min(unique(test$pop))
 # stop('cbw')
@@ -85,7 +90,9 @@ qqnorm(resid(mod), main="Q-Q plot for residuals")
 qqline(resid(mod),col='red')
 summary(mod)
 r.squaredGLMM(mod)
-# Still not normal residuals, even with a Poisson.
+
+
+
 stop('cbw')
 #################################################33
 
