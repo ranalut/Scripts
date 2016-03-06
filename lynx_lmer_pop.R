@@ -22,10 +22,10 @@ output2$ECO_CODE <- factor(output2$ECO_CODE)
 species <- c('lynx','wolverine','fisher')
 
 # ===========================================
-# Fisher
+# Wolverine
 # ===========================================
 
-ly <- output2[output2$species=='fisher',]
+ly <- output2[output2$species=='lynx',]
 # ly$d2050s_dens <- 100 * ly$d2050s/ly$AREA_SQKM
 # ly$d2090s_dens <- 100 * ly$d2090s/ly$AREA_SQKM
 # stop('cbw')
@@ -33,15 +33,15 @@ ly <- gather(ly, year, pop, 11:109) # 4:7
 ly$year <- as.character(ly$year)
 ly$year <- as.numeric(substr(ly$year,2,5))
 hist(ly$pop)
-hist(log(ly$pop))
+hist(log((ly$pop+1)))
 # bc <- boxcoxfit(ly$pop)
 # hist(ly$pop^(bc$lambda[1]))
 # ly$pop <- ly$pop^(bc$lambda[1]) 
-ly$pop <- log(ly$pop) # Proceeding with the log then bootstrapping coef.
+ly$pop <- log((ly$pop+1)) # Proceeding with the log then bootstrapping coef.
 
-# p <- ggplot(ly, aes(year, pop))
-# p <- p + geom_point(aes(colour = factor(ECO_CODE)))
-# plot(p)
+p <- ggplot(ly, aes(year, pop))
+p <- p + geom_line(aes(colour = factor(ECO_CODE)))
+plot(p)
 
 # min(unique(test$pop))
 # stop('cbw')
@@ -50,7 +50,7 @@ ly$pop <- log(ly$pop) # Proceeding with the log then bootstrapping coef.
 # Fixed effects: scenarios (sens) and gcm
 # Random effects: ecoregion (ECO_CODE)
 
-# sink('D:/Box Sync/PNWCCVA/MS_MesoCarnivores/Results/fisher_lmer_aic.txt',append = TRUE)
+# sink('D:/Box Sync/PNWCCVA/MS_MesoCarnivores/Results/lynx_lmer_aic.txt',append = TRUE)
 # cat('AIC','call','\n',sep='\t')
 # mod <- lmer(pop ~ (1|ECO_CODE), data=ly)
 # cat(AIC(mod),deparse(formula(mod)),'\n',sep='\t')
@@ -79,14 +79,16 @@ ly$pop <- log(ly$pop) # Proceeding with the log then bootstrapping coef.
 # mod <- update(mod, pop ~ year*gcm + year*sens + (1|ECO_CODE))
 # cat(AIC(mod),deparse(formula(mod)),'\n',sep='\t')
 # 
+# # Top model
 # mod <- update(mod, pop ~ year*gcm + year*sens + I(year^2) + (1|ECO_CODE))
 # cat(AIC(mod),deparse(formula(mod)),'\n',sep='\t')
 # 
 # sink()
+# stop('cbw')
 
 # Top-ranking model by AIC...
 mod <- lmer(pop ~ (1|ECO_CODE), data=ly)
-mod <- update(mod, pop ~ year*gcm + sens + (1|ECO_CODE))
+mod <- update(mod, pop ~ year*gcm + year*sens + I(year^2) + (1|ECO_CODE))
 cat(AIC(mod),deparse(formula(mod)),'\n',sep='\t')
 qqnorm(resid(mod), main="Q-Q plot for residuals")
 qqline(resid(mod),col='red')
@@ -97,8 +99,8 @@ r.squaredGLMM(mod)
 conf_int <- confint(mod, parm="beta_", boot.type="perc", level = 0.95, nsim=3)
 # stop('cbw')
 
-write.csv(fixef(mod),"D:/Box Sync/PNWCCVA/MS_MesoCarnivores/Results/fisher_log_lmer_coef.csv")
-write.csv(conf_int,"D:/Box Sync/PNWCCVA/MS_MesoCarnivores/Results/fisher_log_lmer_95_ci_n3.csv")
+write.csv(fixef(mod),"D:/Box Sync/PNWCCVA/MS_MesoCarnivores/Results/lynx_log_lmer_coef.csv")
+write.csv(conf_int,"D:/Box Sync/PNWCCVA/MS_MesoCarnivores/Results/lynx_log_lmer_95_ci_n3.csv")
 
 # Need to plot 95% confidence intervals for each parameter to see if they overlap with zero and with one another to see if any group is higher than another.
 
