@@ -1,9 +1,14 @@
 
 # This version is only set to do the fixed effects with no interactions
 
+# Need to run this...
+# Install "reshape" from CRAN
+# install.packages("coefplot2", repos="http://www.math.mcmaster.ca/bolker/R", type="source")
+
 library(foreign)
 library(ggplot2)
 library(gridExtra)
+library(coefplot2)
 
 species <- c('wolverine','fisher','lynx')
 species_titles <- c('Wolverine','Fisher','Canada lynx')
@@ -21,26 +26,26 @@ for (n in 1:length(species))
   temp2 <- read.csv(file_name,stringsAsFactors=FALSE)
   temp <- cbind(temp[,2],temp2[,2:3])
   all_fixef <- temp2[,1]
+  n_fe <- length(all_fixef)
   
-  output <- as.data.frame(matrix(NA,ncol=6,nrow=5*n_sens))
-  colnames(output) <- c('species','scenario','gcm','estimate','low','high')
+  output <- as.data.frame(matrix(NA,ncol=5,nrow=n_fe))
+  colnames(output) <- c('species','parameter','estimate','low','high')
   
-  o_sens <- sens[[n]][order(sens[[n]])]
-  o_gcm <- gcm[order(gcm)]
-  # stop('cbw')
   
-  for (t in 1:n_sens)
+  
+  ref_value <- temp[1,1]
+  
+  for (t in 1:n_fe)
   {
-    if (t==1) { output[1,] <- c(species[n],o_sens[t],o_gcm[1],round(c(temp[1,1],temp[1,2],temp[1,3]),4)) }
-    else { output[(5*(t-1)+1),] <- c(species[n],o_sens[t],o_gcm[1],round(c(temp[1,1]+temp[t,1],temp[t,2],temp[t,3]),4)) }
-    
-    for (i in 2:5)
+    if (t==1) { output[1,] <- c(species[n],all_fixef[1],temp[,1:3]) }
+    else
     {
-      if (t==1) { output[(5*(t-1)+i),] <- c(species[n],o_sens[t],o_gcm[i],round(c(temp[1,1]+temp[(n_sens+i-1),1],temp[(n_sens+i-1),2],temp[(n_sens+i-1),3]),4)) }
-      else { output[(5*(t-1)+i),] <- c(species[n],o_sens[t],o_gcm[i],round(c(temp[1,1]+temp[t,1]+ temp[(n_sens+i-1),1],temp[(n_sens+i-1),2],temp[(n_sens+i-1),3]),4)) }
+      adj_values <- temp[t,] + ref_value
+      output[t,] <- c(species[n],all_fixef[t],adj_values)  
     }
-  stop('cbw')
   }
+  print(output); stop('cbw')
+
 # stop('cbw')
 
 if ((n-1)==0) { output2 <- output }
@@ -48,6 +53,7 @@ else { output2 <- rbind(output2,output) }
 }
 # print(head(output))
 # boxplot(t(output[,3:7]))
+stop('cbw')
 output2[,4:6] <- apply(X=output2[,4:6],MARGIN=2,FUN=as.numeric)
 # stop('cbw')
 

@@ -104,3 +104,20 @@ write.csv(conf_int,"D:/Box Sync/PNWCCVA/MS_MesoCarnivores/Results/wolverine_log_
 
 # Need to plot 95% confidence intervals for each parameter to see if they overlap with zero and with one another to see if any group is higher than another.
 
+df <- cbind(fixef(mod),conf_int)
+colnames(df) <- c('value','lower','upper')
+temp <- df[1,]
+unit <- matrix(df[1,1],nrow=dim(df)[1]-1,ncol=dim(df)[2])
+# df_rel <- df-unit
+# df_rel
+# df <- data.frame(df[-1,])
+df <- unit + df[-1,]
+df <- data.frame(rbind(temp,df))
+rownames(df)[1] <- 'intercept'# 'gcmccsm3,sens35'
+
+# Need to plot 95% confidence intervals for each parameter to see if they overlap with zero and with one another to see if any group is higher than another.
+
+p <- ggplot(df, aes(x=rownames(df), y=value)) + 
+  geom_errorbar(aes(ymin=lower, ymax=upper), width=.1) +
+  geom_line() + geom_point() + ylab('value relative to intercept: gcmccsm3, sens35') + xlab('coefficient') + coord_flip()
+plot(p)
