@@ -1,6 +1,8 @@
 
 # This is the script I used to calculate statistics in the Feb16 version of the manuscript.
 
+
+
 library(foreign)
 library(tidyr)
 
@@ -8,7 +10,7 @@ library(tidyr)
 # Table load and formatting...
 # ================================================
 
-eco <- read.dbf('D:/Box Sync/PNWCCVA/Outputs/pnwccva_represented_ecoregions_carnivores.dbf',as.is=TRUE)
+eco <- read.dbf('../Box Sync/PNWCCVA/Outputs/pnwccva_represented_ecoregions_carnivores.dbf',as.is=TRUE)
 
 species <- c('lynx','wolverine','fisher')
 scenario <- c('_lynx_050','_gulo_023_a2','_fisher_14')
@@ -26,7 +28,7 @@ for (n in 1:length(species))
   {
     for (i in 1:5)
     {
-      file_name <- paste("D:/Box Sync/PNWCCVA/Outputs/",path[n],sens[[n]][t],'_',gcm[i],scenario[n],'.dbf',sep='')
+      file_name <- paste("../Box Sync/PNWCCVA/Outputs/",path[n],sens[[n]][t],'_',gcm[i],scenario[n],'.dbf',sep='')
       temp <- read.dbf(file_name,as.is=TRUE)
       # print(colnames(temp))
       temp <- merge(eco,temp,all.x=TRUE,all.y=FALSE)
@@ -90,4 +92,4 @@ for (n in 1:length(species))
 
 output2 <- data.frame(output2)
 
-write.csv(output2,"D:/Box Sync/PNWCCVA/MS_MesoCarnivores/Results/all_pop_table_1.csv")
+write.csv(output2,"../Box Sync/PNWCCVA/MS_MesoCarnivores/Results/all_pop_table_1.csv")
