@@ -23,7 +23,7 @@ species <- c('lynx','wolverine','fisher')
 scenario <- c('_lynx_050','_gulo_023_a2','_fisher_14')
 sens <- list(c('50','35'), c('full','swe','biomes'),c('full','temp','swe','biomes'))
 path <- c('lynx/lynx_huc_','wolverine/wolverine_huc_','fisher/fisher_huc_') 
-dens_thresh <- c(0.1,0.1,1)
+dens_thresh <- c(0.5,0.12,1.8) # see comment in ms version from 15feb16 for how these thresholds were selected.
 names(dens_thresh) <- species
 gcm <- c('ccsm3','cgcm3','giss','hadcm3','miroc')
 
@@ -71,6 +71,7 @@ output2 <- data.frame(output2)
 output3 <- output2
 output3[,c('Y2000s','Y2020s','Y2050s','Y2090s')] <- 100 * output3[,c('Y2000s','Y2020s','Y2050s','Y2090s')] / matrix(output3[,'AREA_SQKM_'],ncol=3,nrow=dim(output3)[1])
 
+#############################################
 # Area
 output4 <- gather(output3, key=year, value=density, -PNWCCVA_ID, -AREA_SQKM_, -species, -sens, -gcm)
 spp <- species
@@ -89,13 +90,24 @@ bar_table3 <- filter(bar_table2, year!='Y2000s')
 bar_table3$delta <- bar_table3$AREA_SQKM_ - temp$AREA_SQKM_
 bar_table3$p_delta <- bar_table3$delta / temp$AREA_SQKM_
 
-p <- ggplot(bar_table3, aes(year, p_delta, fill=gcm)) + geom_bar(stat='identity', position='dodge') + facet_wrap(~ species, nrow=3, scales='free') + ylab('% change in area') + scale_fill_brewer(palette="Set1")
+bar_table4 <- aggregate(delta ~ species + year, data=bar_table3, FUN=mean)
+print(bar_table4)
 
-png("D:/Box Sync/PNWCCVA/MS_MesoCarnivores/pd_acreages.png",height=600)
+# stop('cbw')
+
+# p <- ggplot(bar_table3, aes(year, p_delta, fill=gcm)) + geom_bar(stat='identity', position='dodge') + facet_wrap(~ species, nrow=3, scales='free') + ylab('% change in area') + scale_fill_brewer(palette="Set1")
+
+p <- ggplot(bar_table3, aes(year, delta)) + geom_point(aes(colour=gcm)) + facet_wrap(~ species, nrow=3, scales='free') + ylab('change in area') + scale_colour_brewer(palette="Set1") + theme(panel.background = element_blank()) # ,strip.text.x = element_blank())
+p <- p + geom_point(data=bar_table4, aes(year, delta, colour='all mean', shape=95), size=8) + scale_shape_identity()  
+p
+
+png("D:/Box Sync/PNWCCVA/MS_MesoCarnivores/Results/pd_acreages2.png",height=600)
   plot(p)
 dev.off()
-write.csv(bar_table3,"D:/Box Sync/PNWCCVA/MS_MesoCarnivores/delta_acreages.csv")
+write.csv(bar_table3,"D:/Box Sync/PNWCCVA/MS_MesoCarnivores/Results/delta_acreages2.csv")
+stop('cbw')
 
+###################################################
 # Population
 output4 <- gather(output3, key=year, value=density, -PNWCCVA_ID, -AREA_SQKM_, -species, -sens, -gcm)
 output4 <- mutate(output4, pop = AREA_SQKM_ * density / 1000)
@@ -116,11 +128,11 @@ bar_table3$p_delta <- bar_table3$delta / temp$pop
 
 p <- ggplot(bar_table3, aes(year, p_delta, fill=gcm)) + geom_bar(stat='identity', position='dodge') + facet_wrap(~ species, nrow=3, scales='free') + ylab('% change in population') + scale_fill_brewer(palette="Set1")
 
-png("D:/Box Sync/PNWCCVA/MS_MesoCarnivores/pd_population.png",height=600)
+png("D:/Box Sync/PNWCCVA/MS_MesoCarnivores/Results/pd_population2.png",height=600)
   plot(p)
 dev.off()
 
-write.csv(bar_table3,"D:/Box Sync/PNWCCVA/MS_MesoCarnivores/delta_population.csv")
+write.csv(bar_table3,"D:/Box Sync/PNWCCVA/MS_MesoCarnivores/Results/delta_population2.csv")
 
 stop('cbw')
 
