@@ -87,25 +87,19 @@ bar_table2 <- filter(bar_table, (sens=='50' | sens=='full')) # & species=='lynx'
 temp <- filter(bar_table2, year=='Y2000s')
 temp <- rbind(temp,temp,temp)
 bar_table3 <- filter(bar_table2, year!='Y2000s')
+bar_table3$year <- substr(bar_table3$year,2,6)
 bar_table3$delta <- bar_table3$AREA_SQKM_ - temp$AREA_SQKM_
 bar_table3$p_delta <- bar_table3$delta / temp$AREA_SQKM_
-
 bar_table4 <- aggregate(delta ~ species + year, data=bar_table3, FUN=mean)
-print(bar_table4)
 
-# stop('cbw')
-
-# p <- ggplot(bar_table3, aes(year, p_delta, fill=gcm)) + geom_bar(stat='identity', position='dodge') + facet_wrap(~ species, nrow=3, scales='free') + ylab('% change in area') + scale_fill_brewer(palette="Set1")
-
-p <- ggplot(bar_table3, aes(year, delta)) + geom_point(aes(colour=gcm)) + facet_wrap(~ species, nrow=3, scales='free') + ylab('change in area') + scale_colour_brewer(palette="Set1") + theme(panel.background = element_blank()) # ,strip.text.x = element_blank())
-p <- p + geom_point(data=bar_table4, aes(year, delta, colour='all mean', shape=95), size=8) + scale_shape_identity()  
+p <- ggplot(bar_table3, aes(year, delta)) +  geom_jitter(aes(colour=gcm), position = position_jitter(w = 0.075, h = 0.2), size=4) + layer(data = bar_table4, mapping = aes(year, delta), geom = "point", shape=95, size = 12, color = "black") + facet_wrap(~ species, nrow=3, scales='free') + ylab('change in area') + scale_colour_brewer(palette="Set1") + theme(panel.background = element_blank()) 
 p
 
-png("D:/Box Sync/PNWCCVA/MS_MesoCarnivores/Results/pd_acreages2.png",height=600)
+png("D:/Box Sync/PNWCCVA/MS_MesoCarnivores/Results/d_acreages2.png",height=500)
   plot(p)
 dev.off()
 write.csv(bar_table3,"D:/Box Sync/PNWCCVA/MS_MesoCarnivores/Results/delta_acreages2.csv")
-stop('cbw')
+# stop('cbw')
 
 ###################################################
 # Population
@@ -123,16 +117,19 @@ bar_table2 <- filter(bar_table, (sens=='50' | sens=='full')) # & species=='lynx'
 temp <- filter(bar_table2, year=='Y2000s')
 temp <- rbind(temp,temp,temp)
 bar_table3 <- filter(bar_table2, year!='Y2000s')
+bar_table3$year <- substr(bar_table3$year,2,6)
 bar_table3$delta <- bar_table3$pop - temp$pop
 bar_table3$p_delta <- bar_table3$delta / temp$pop
+bar_table4 <- aggregate(delta ~ species + year, data=bar_table3, FUN=mean)
 
-p <- ggplot(bar_table3, aes(year, p_delta, fill=gcm)) + geom_bar(stat='identity', position='dodge') + facet_wrap(~ species, nrow=3, scales='free') + ylab('% change in population') + scale_fill_brewer(palette="Set1")
+# p <- ggplot(bar_table3, aes(year, p_delta, fill=gcm)) + geom_bar(stat='identity', position='dodge') + facet_wrap(~ species, nrow=3, scales='free') + ylab('% change in population') + scale_fill_brewer(palette="Set1")
 
-png("D:/Box Sync/PNWCCVA/MS_MesoCarnivores/Results/pd_population2.png",height=600)
+p <- ggplot(bar_table3, aes(year, delta)) +  geom_jitter(aes(colour=gcm), position = position_jitter(w = 0.075, h = 0.2), size=4) + layer(data = bar_table4, mapping = aes(year, delta), geom = "point", shape=95, size = 12, color = "black") + facet_wrap(~ species, nrow=3, scales='free') + ylab('change in area') + scale_colour_brewer(palette="Set1") + theme(panel.background = element_blank()) 
+p
+
+png("D:/Box Sync/PNWCCVA/MS_MesoCarnivores/Results/d_population2.png",height=500)
   plot(p)
 dev.off()
 
 write.csv(bar_table3,"D:/Box Sync/PNWCCVA/MS_MesoCarnivores/Results/delta_population2.csv")
-
-stop('cbw')
 
