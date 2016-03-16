@@ -91,30 +91,20 @@ bar_table3$year <- substr(bar_table3$year,2,6)
 bar_table3$delta <- bar_table3$AREA_SQKM_ - temp$AREA_SQKM_
 bar_table3$p_delta <- bar_table3$delta / temp$AREA_SQKM_
 bar_table4 <- aggregate(p_delta ~ species + year, data=bar_table3, FUN=mean)
-stop('cbw')
+# stop('cbw')
 
 p <- ggplot() + 
-  geom_bar(data=bar_table4, aes(x=year, y=p_delta), stat='identity',width=0.35, colour="#636363", fill="#cccccc") + ylim(-0.5,0.2) + 
+  geom_bar(data=bar_table4, aes(x=year, y=p_delta), stat='identity',width=0.35, colour="#636363", fill="#cccccc") + ylim(-0.6,0.3) + 
   facet_wrap(~ species, nrow=3, scales='free') + 
-  layer(data=bar_table3, mapping=aes(x=year,y=p_delta,fill=gcm),geom = "point", shape=95, size = 12, scale_colour_brewer(palette="Set1")) + 
-  theme(panel.background = element_blank()) 
-# , strip.background = element_blank()) , strip.text.x = element_blank())
+  geom_jitter(data=bar_table3, aes(x=year, y=p_delta, colour=gcm), position = position_jitter(w = 0.05, h = 0.2), size=4) + scale_colour_brewer(palette="Set1") + ylab('percent change in area') + theme(legend.key = element_rect(fill = NA), panel.background = element_blank(), panel.grid.minor.y = element_blank(),  panel.grid.major.y=element_line(colour = "#cccccc")) 
+# , strip.background = element_blank()) , strip.text.x = element_blank())  +
 p
 
-p <- ggplot() + geom_bar(data=bar_table4, aes(x=year, y=p_delta, ymax=0.01, ymin=-0.5), stat='identity',width=0.75) + facet_wrap(~ species, nrow=3, scales='free') + geom_point(data=bar_table3, aes(x=year,y=p_delta,fill=gcm)) + scale_colour_brewer(palette="Set1") + theme(panel.background = element_blank())
-p
-stop('cbw')
-# + theme_bw() colour="#bdbdbd") + geom_jitter(aes(colour=gcm), position = position_jitter(w = 0.075, h = 0.2), size=4) + facet_wrap(~ species, nrow=3, scales='free') + ylab('percent change in area') + theme_classic()
-
-
-p <- ggplot(bar_table3, aes(year, delta)) +  geom_jitter(aes(colour=gcm), position = position_jitter(w = 0.075, h = 0.2), size=4) + layer(data = bar_table4, mapping = aes(year, delta), geom = "point", shape=95, size = 12, color = "black") + facet_wrap(~ species, nrow=3, scales='free') + ylab('change in area') + scale_colour_brewer(palette="Set1") + theme(panel.background = element_blank()) 
-p
-
-png("D:/Box Sync/PNWCCVA/MS_MesoCarnivores/Results/d_acreages3.png",height=500)
+png("D:/Box Sync/PNWCCVA/MS_MesoCarnivores/Results/pd_acreages3.png",height=500)
   plot(p)
 dev.off()
 write.csv(bar_table3,"D:/Box Sync/PNWCCVA/MS_MesoCarnivores/Results/delta_acreages3.csv")
-stop('cbw')
+# stop('cbw')
 
 ###################################################
 # Population
@@ -135,16 +125,18 @@ bar_table3 <- filter(bar_table2, year!='Y2000s')
 bar_table3$year <- substr(bar_table3$year,2,6)
 bar_table3$delta <- bar_table3$pop - temp$pop
 bar_table3$p_delta <- bar_table3$delta / temp$pop
-bar_table4 <- aggregate(delta ~ species + year, data=bar_table3, FUN=mean)
+bar_table4 <- aggregate(p_delta ~ species + year, data=bar_table3, FUN=mean)
 
-# p <- ggplot(bar_table3, aes(year, p_delta, fill=gcm)) + geom_bar(stat='identity', position='dodge') + facet_wrap(~ species, nrow=3, scales='free') + ylab('% change in population') + scale_fill_brewer(palette="Set1")
-
-p <- ggplot(bar_table3, aes(year, delta)) +  geom_jitter(aes(colour=gcm), position = position_jitter(w = 0.075, h = 0.2), size=4) + layer(data = bar_table4, mapping = aes(year, delta), geom = "point", shape=95, size = 12, color = "black") + facet_wrap(~ species, nrow=3, scales='free') + ylab('change in area') + scale_colour_brewer(palette="Set1") + theme(panel.background = element_blank()) 
+p <- ggplot() + 
+  geom_bar(data=bar_table4, aes(x=year, y=p_delta), stat='identity',width=0.35, colour="#636363", fill="#cccccc") + ylim(-0.6,0.3) + 
+  facet_wrap(~ species, nrow=3, scales='free') + 
+  geom_jitter(data=bar_table3, aes(x=year, y=p_delta, colour=gcm), position = position_jitter(w = 0.05, h = 0.2), size=4) + scale_colour_brewer(palette="Set1") + ylab('percent change in population') + theme(legend.key = element_rect(fill = NA), panel.background = element_blank(), panel.grid.minor.y = element_blank(),  panel.grid.major.y=element_line(colour = "#cccccc")) 
+# , strip.background = element_blank()) , strip.text.x = element_blank())  +
 p
 
-png("D:/Box Sync/PNWCCVA/MS_MesoCarnivores/Results/d_population2.png",height=500)
+png("D:/Box Sync/PNWCCVA/MS_MesoCarnivores/Results/pd_population3.png",height=500)
   plot(p)
 dev.off()
 
-write.csv(bar_table3,"D:/Box Sync/PNWCCVA/MS_MesoCarnivores/Results/delta_population2.csv")
+write.csv(bar_table3,"D:/Box Sync/PNWCCVA/MS_MesoCarnivores/Results/delta_population3.csv")
 
