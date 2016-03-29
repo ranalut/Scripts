@@ -16,7 +16,7 @@ library(effects)
 # source('~/github/scripts/meso_carn_all_pop_table.r')
 # stop('cbw')
 
-output2 <- read.csv("../Box Sync/PNWCCVA/MS_MesoCarnivores/Results/all_pop_table_1.csv",header=TRUE,stringsAsFactors=TRUE,row.names = 1)
+output2 <- read.csv("D:/Box Sync/PNWCCVA/MS_MesoCarnivores/Results/all_pop_table_1.csv",header=TRUE,stringsAsFactors=TRUE,row.names = 1)
 output2$dum <- 1
 output2$sens <- factor(output2$sens)
 output2$gcm <- factor(output2$gcm)
@@ -52,7 +52,7 @@ ly$pop <- log(ly$pop) # Proceeding with the log then bootstrapping coef.
 # Fixed effects: scenarios (sens) and gcm
 # Random effects: ecoregion (ECO_CODE)
 
-# sink('../Box Sync/PNWCCVA/MS_MesoCarnivores/Results/fisher_lmer_aic.txt',append = TRUE)
+# sink('D:/Box Sync/PNWCCVA/MS_MesoCarnivores/Results/fisher_lmer_aic.txt',append = TRUE)
 # cat('AIC','call','\n',sep='\t')
 # mod <- lmer(pop ~ (1|ECO_CODE), data=ly)
 # cat(AIC(mod),deparse(formula(mod)),'\n',sep='\t')
@@ -96,26 +96,27 @@ summary(mod)
 r.squaredGLMM(mod)
 # R2m         R2c 
 # 0.001009723 0.995712264
-write.csv(fixef(mod),"../Box Sync/PNWCCVA/MS_MesoCarnivores/Results/fisher_log_lmer_coef.csv")
+stop('cbw')
+write.csv(fixef(mod),"D:/Box Sync/PNWCCVA/MS_MesoCarnivores/Results/fisher_log_lmer_coef.csv")
 
 #############################################
 # Non-bootstrapped 95% CI
 fe <- data.frame(summary(mod)$coefficients)
 fe$lower <- fe$Estimate - 1.96*fe$Std..Error
 fe$upper <- fe$Estimate + 1.96*fe$Std..Error
-write.csv(fe,"../Box Sync/PNWCCVA/MS_MesoCarnivores/Results/fisher_log_lmer_coef_ci95.csv")
+write.csv(fe,"D:/Box Sync/PNWCCVA/MS_MesoCarnivores/Results/fisher_log_lmer_coef_ci95.csv")
 fe <- fe[-1,]
 p <- ggplot(fe, aes(x=rownames(fe), y=Estimate)) + 
   geom_errorbar(aes(ymin=lower, ymax=upper), width=.1) +
   geom_line() + geom_point() + ylab('value (intercept=esA1b,HabitatForest)') + xlab('coefficient') + coord_flip()
 plot(p)
-ggsave("../Box Sync/PNWCCVA/MS_MesoCarnivores/Results/fisher_log_lmer_coef_ci95.png", width = 7, height = 5)
+ggsave("D:/Box Sync/PNWCCVA/MS_MesoCarnivores/Results/fisher_log_lmer_coef_ci95.png", width = 7, height = 5)
 
 ###########################################
 # Bootstrap confidence intervals
 conf_int <- confint(mod, parm="beta_", boot.type="perc", level = 0.95, nsim=1000)
 # stop('cbw')
-write.csv(conf_int,"../Box Sync/PNWCCVA/MS_MesoCarnivores/Results/fisher_log_lmer_95_ci_n1000.csv")
+write.csv(conf_int,"D:/Box Sync/PNWCCVA/MS_MesoCarnivores/Results/fisher_log_lmer_95_ci_n1000.csv")
 
 df <- as.data.frame(cbind(fixef(mod),conf_int))
 colnames(df) <- c('value','lower','upper')
@@ -126,21 +127,26 @@ p <- ggplot(df, aes(x=rownames(df), y=value)) +
   geom_line() + geom_point() + ylab('value relative to intercept: gcmccsm3, sensbiomes') + xlab('coefficient') + coord_flip()
 plot(p)
 
-ggsave("../Box Sync/PNWCCVA/MS_MesoCarnivores/Results/fisher_log_lmer_95_ci_n1000.png",width=7,height=5)
+ggsave("D:/Box Sync/PNWCCVA/MS_MesoCarnivores/Results/fisher_log_lmer_95_ci_n1000.png",width=7,height=5)
 
 ######################################################
 # Bootstrapped CIs are the same as model-based CIs, continue with model-based
 # because multiple comparisons are easier using established methods (and packages)
-png("../Box Sync/PNWCCVA/MS_MesoCarnivores/Results/fisher_log_lmer_effects.png", width = 960, height = 480)
-plot(effect(c('year','gcm'),mod=mod))
+png("D:/Box Sync/PNWCCVA/MS_MesoCarnivores/1_Results/fisher_log_lmer_effects.png", width = 960, height = 480)
+  # plot(effect(c('year','gcm'),mod=mod),multiline = TRUE)
+  df <- data.frame(effect(c('year','gcm'),mod=mod))
+  ggplot(df)+geom_line(aes(year,fit,linetype=gcm))+theme_bw()+
+    xlab("year")+ylab("ln(population)") 
 dev.off()
 
-png("../Box Sync/PNWCCVA/MS_MesoCarnivores/Results/fisher_log_lmer_effects2.png", width = 960, height = 480)
-plot(effect(c('sens'),mod=mod))
+png("D:/Box Sync/PNWCCVA/MS_MesoCarnivores/1_Results/fisher_log_lmer_effects2.png", width = 960, height = 480)
+  df <- data.frame(effect(c('sens'),mod=mod))
+  ggplot(df)+geom_point(aes(sens, fit))+theme_bw()+
+  xlab("year")+ylab("ln(population)") 
 dev.off()
 
 test <- testInteractions(mod, pairwise="gcm", slope="year")
 test2 <- testInteractions(mod, pairwise="sens")
 test <- rbind(test,test2)
 
-write.csv(test,"../Box Sync/PNWCCVA/MS_MesoCarnivores/Results/fisher_log_lmer_test_interaction.csv")
+write.csv(test,"D:/Box Sync/PNWCCVA/MS_MesoCarnivores/Results/fisher_log_lmer_test_interaction.csv")

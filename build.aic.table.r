@@ -6,5 +6,30 @@
 # Calulate AIC weights
 # write table.
 
-lynx <- read.table("D:/Box Sync/PNWCCVA/MS_MesoCarnivores/Results/lynx_lmer_aic.txt",header=TRUE,sep='\t')
-lynx <- readLines("D:/Box Sync/PNWCCVA/MS_MesoCarnivores/Results/lynx_lmer_aic.txt")
+vector_paste <- function(x) { paste(x[2:length(x)],collapse='') }
+
+build.aic.table <- function(species,path)
+{
+  aic <- read.table(paste(path,species,"_lmer_aic.txt",sep=''),header=TRUE,sep='\t',row.names=NULL,stringsAsFactors=FALSE,skip=1)
+  temp <- apply(aic,1,FUN=vector_paste)
+  aic[,2] <- temp
+  aic <- aic[,1:2]
+  colnames(aic) <- c('aic','call')
+  # aic <- aic[-1,]
+  
+  aic <- aic[order(aic$aic),]
+  best <- aic$aic[1]
+  # print(best)
+  # print(aic$aic)
+  aic$delta <- aic$aic - best
+  aic$weight <- best / aic$aic
+  
+  aic <- aic[,c('call','aic','delta','weight')]
+  write.csv(aic,paste(path,species,"_lmer_aic_table.csv",sep=''))
+}
+
+meso <- c('fisher','lynx','wolverine')
+for (i in meso)
+{
+  build.aic.table(species=i,path="D:/Box Sync/PNWCCVA/MS_MesoCarnivores/Results/")
+}
