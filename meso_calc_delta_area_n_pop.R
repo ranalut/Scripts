@@ -89,14 +89,14 @@ temp <- rbind(temp,temp,temp)
 bar_table3 <- filter(bar_table2, year!='Y2000s')
 bar_table3$year <- substr(bar_table3$year,2,6)
 bar_table3$delta <- bar_table3$AREA_SQKM_ - temp$AREA_SQKM_
-bar_table3$p_delta <- bar_table3$delta / temp$AREA_SQKM_
+bar_table3$p_delta <- 100 * bar_table3$delta / temp$AREA_SQKM_
 bar_table4 <- aggregate(p_delta ~ species + year, data=bar_table3, FUN=mean)
 # stop('cbw')
 
-p <- ggplot() + 
-  geom_bar(data=bar_table4, aes(x=year, y=p_delta), stat='identity',width=0.35, colour="#636363", fill="#cccccc") + ylim(-0.6,0.3) + 
+p <- ggplot() + geom_hline(yintercept = 0) +
+  geom_bar(data=bar_table4, aes(x=year, y=p_delta), stat='identity',width=0.35, colour="#636363", fill="#cccccc") + ylim(-60,30) + 
   facet_wrap(~ species, nrow=3, scales='free') + 
-  geom_jitter(data=bar_table3, aes(x=year, y=p_delta, colour=gcm), position = position_jitter(w = 0.075, h = 0), size=4) + scale_colour_brewer(palette="Set1") + ylab('percent change in area') + theme(legend.key = element_rect(fill = NA), panel.background = element_blank(), panel.grid.minor.y = element_blank(),  panel.grid.major.y=element_line(colour = "#cccccc"), strip.background = element_blank(), strip.text.x = element_text(size = 16)) 
+  geom_jitter(data=bar_table3, aes(x=year, y=p_delta, colour=gcm), position = position_jitter(w = 0.075, h = 0), size=4) + scale_colour_brewer(palette="Set1") + ylab('percent change in area') + theme(legend.key = element_rect(fill = NA), panel.background = element_blank(), panel.grid.minor.y = element_blank(),  panel.grid.major.y=element_blank(), strip.background = element_blank(), strip.text.x = element_text(size = 16)) 
 # , strip.background = element_blank()) , strip.text.x = element_blank())  +
 p
 # stop('cbw')
@@ -126,13 +126,13 @@ temp <- rbind(temp,temp,temp)
 bar_table3 <- filter(bar_table2, year!='Y2000s')
 bar_table3$year <- substr(bar_table3$year,2,6)
 bar_table3$delta <- bar_table3$pop - temp$pop
-bar_table3$p_delta <- bar_table3$delta / temp$pop
+bar_table3$p_delta <- 100 * bar_table3$delta / temp$pop
 bar_table4 <- aggregate(p_delta ~ species + year, data=bar_table3, FUN=mean)
 
-p <- ggplot() + 
-  geom_bar(data=bar_table4, aes(x=year, y=p_delta), stat='identity',width=0.35, colour="#636363", fill="#cccccc") + ylim(-0.6,0.3) + 
+p <- ggplot() + geom_hline(yintercept = 0) +
+  geom_bar(data=bar_table4, aes(x=year, y=p_delta), stat='identity',width=0.35, colour="#636363", fill="#cccccc") + ylim(-60,30) + 
   facet_wrap(~ species, nrow=3, scales='free') + 
-  geom_jitter(data=bar_table3, aes(x=year, y=p_delta, colour=gcm), position = position_jitter(w = 0.075, h = 0), size=4) + scale_colour_brewer(palette="Set1") + ylab('percent change in population') + theme(legend.key = element_rect(fill = NA), panel.background = element_blank(), panel.grid.minor.y = element_blank(),  panel.grid.major.y=element_line(colour = "#cccccc"), strip.background = element_blank(), strip.text.x = element_text(size = 16)) 
+  geom_jitter(data=bar_table3, aes(x=year, y=p_delta, colour=gcm), position = position_jitter(w = 0.075, h = 0), size=4) + scale_colour_brewer(palette="Set1") + ylab('percent change in population size') + theme(legend.key = element_rect(fill = NA), panel.background = element_blank(), panel.grid.minor.y = element_blank(),  panel.grid.major.y=element_blank(), strip.background = element_blank(), strip.text.x = element_text(size = 16)) 
 # , strip.background = element_blank()) , strip.text.x = element_blank())  +
 p
 

@@ -7,6 +7,10 @@ library(geoR)
 library(mgcv)
 library(tidyr)
 library(ggplot2)
+library(scales)
+library(effects)
+library(phia)
+library(effects)
 
 # ================================================
 # Table load and formatting...
@@ -107,7 +111,8 @@ p <- ggplot(fe, aes(x=rownames(fe), y=Estimate)) +
   geom_errorbar(aes(ymin=lower, ymax=upper), width=.1) +
   geom_line() + geom_point() + ylab('value (intercept=esA1b,HabitatForest)') + xlab('coefficient') + coord_flip()
 plot(p)
-ggsave("D:/Box Sync/PNWCCVA/MS_MesoCarnivores/1_Results/lynx_log_lmer_coef_ci95.png", width = 7, height = 5)
+ggsave("D:/Box Sync/PNWCCVA/MS_MesoCarnivores/1_Results/lynx_log_lmer_coef_ci95.png",plot=p, width = 7, height = 5)
+
 
 ###########################################
 # Bootstrap confidence intervals
@@ -130,20 +135,21 @@ ggsave("D:/Box Sync/PNWCCVA/MS_MesoCarnivores/1_Results/lynx_log_lmer_coef_ci95.
 # Bootstrapped CIs are the same as model-based CIs, continue with model-based
 # because multiple comparisons are easier using established methods (and packages)
 model <- mod
-png("D:/Box Sync/PNWCCVA/MS_MesoCarnivores/1_Results/lynx_log_lmer_effects.png", width = 960, height = 480)
 # plot(effect(c('year','gcm'),mod=mod),multiline = TRUE)
 df <- data.frame(effect(c('year','gcm'),mod=model))
-p <- ggplot(df)+geom_line(aes(year,fit,linetype=gcm))+theme_bw()+
-  xlab("year")+ylab("ln(population)") 
-  p
-dev.off()
+df$fit2 <- exp(df$fit)+1
+df$lower2 <- exp(df$lower)+1
+df$upper2 <- exp(df$upper)+1
+p <- ggplot(df) + geom_smooth(aes(year,fit2,linetype=gcm,ymin=lower2, ymax=upper2),size=1.25,stat='identity') + theme_bw(base_size = 12) + xlab("year") + ylab("mean population in an ecoregion")
+ggsave("D:/Box Sync/PNWCCVA/MS_MesoCarnivores/1_Results/lynx_log_lmer_effects.png",plot=p, width = 4, height = 3)
 
-png("D:/Box Sync/PNWCCVA/MS_MesoCarnivores/1_Results/lynx_log_lmer_effects2.png", width = 960, height = 480)
-  df <- data.frame(effect(c('year','sens'),mod=model))
-  p <- ggplot(df)+geom_line(aes(year, fit,linetype=sens))+theme_bw()+
-  xlab("year")+ylab("ln(population)") 
-  p
-dev.off()
+df <- data.frame(effect(c('year','sens'),mod=model))
+df$fit2 <- exp(df$fit)+1
+df$lower2 <- exp(df$lower)+1
+df$upper2 <- exp(df$upper)+1
+p <- ggplot(df)+geom_smooth(aes(year, fit2,linetype=sens,ymin=lower2, ymax=upper2),size=1.25,stat='identity')+theme_bw(base_size = 12) +
+xlab("year")+ylab("mean population in an ecoregion") + labs(linetype='scenario')
+ggsave("D:/Box Sync/PNWCCVA/MS_MesoCarnivores/1_Results/lynx_log_lmer_effects2.png",plot=p, width = 4, height = 3)
 
 
 test <- testInteractions(mod, pairwise="gcm", slope="year")

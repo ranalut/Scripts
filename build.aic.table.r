@@ -28,8 +28,11 @@ build.aic.table <- function(species,path)
   write.csv(aic,paste(path,species,"_lmer_aic_table.csv",sep=''))
 }
 
-meso <- c('fisher','lynx','wolverine')
-for (i in meso)
-{
-  build.aic.table(species=i,path="D:/Box Sync/PNWCCVA/MS_MesoCarnivores/Results/")
-}
+# meso <- c('fisher','lynx','wolverine')
+# for (i in meso)
+# {
+#   build.aic.table(species=i,path="D:/Box Sync/PNWCCVA/MS_MesoCarnivores/Results/")
+# }
+
+# build.aic.table(species='whwo',path="D:/Box Sync/PNWCCVA/MS_Woodpecker/Results/")
+# Seems there's an extra field at the end which produces NAs. Deleted by hand
