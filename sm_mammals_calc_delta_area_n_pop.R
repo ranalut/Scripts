@@ -44,14 +44,14 @@ for (n in 1:length(species))
       
       if (n==1 & t==1 & i==1)
       { 
-        output <- temp[,c('PNWCCVA_ID','AREA_SQKM_','Y2000','Y2020','Y2050','Y2090')]
+        output <- temp[,c('PNWCCVA_ID','AREA_SQKM_','Y2000','Y2020','Y2050','Y2100')]
         output$species <- rep(species[n],dim(output)[1])
         output$sens <- rep(sens[[n]][t],dim(output)[1])
         output$gcm <- rep(gcm[i],dim(output)[1])
       }
       else
       {
-        temp2 <- temp[,c('PNWCCVA_ID','AREA_SQKM_','Y2000','Y2020','Y2050','Y2090')]
+        temp2 <- temp[,c('PNWCCVA_ID','AREA_SQKM_','Y2000','Y2020','Y2050','Y2100')]
         temp2$species <- rep(species[n],dim(temp2)[1])
         temp2$sens <- rep(sens[[n]][t],dim(temp2)[1])
         temp2$gcm <- rep(gcm[i],dim(temp2)[1])
@@ -69,7 +69,7 @@ for (n in 1:length(species))
 output2 <- data.frame(output2)
 
 output3 <- output2
-# output3[,c('Y2000','Y2020','Y2050','Y2090')] <- output3[,c('Y2000','Y2020','Y2050','Y2090')] / matrix(output3[,'AREA_SQKM_'],ncol=3,nrow=dim(output3)[1])
+# output3[,c('Y2000','Y2020','Y2050','Y2100')] <- output3[,c('Y2000','Y2020','Y2050','Y2100')] / matrix(output3[,'AREA_SQKM_'],ncol=3,nrow=dim(output3)[1])
 # stop('cbw')
 
 #############################################
@@ -98,7 +98,7 @@ bar_table4 <- aggregate(p_delta ~ species + year, data=bar_table3, FUN=mean)
 p <- ggplot() + 
   geom_bar(data=bar_table4, aes(x=year, y=p_delta), stat='identity',width=0.35, colour="#636363", fill="#cccccc") + # ylim(-0.6,0.3) + 
   facet_wrap(~ species, nrow=3, scales='free') + 
-  geom_jitter(data=bar_table3, aes(x=year, y=p_delta, colour=gcm), position = position_jitter(w = 0.05, h = 0.2), size=4) + scale_colour_brewer(palette="Set1") + ylab('percent change in area') + theme(legend.key = element_rect(fill = NA), panel.background = element_blank(), panel.grid.minor.y = element_blank(),  panel.grid.major.y=element_line(colour = "#cccccc")) 
+  geom_jitter(data=bar_table3, aes(x=year, y=p_delta, colour=gcm), position = position_jitter(w = 0.05, h = 0), size=4) + scale_colour_brewer(palette="Set1") + ylab('percent change in area') + theme(legend.key = element_rect(fill = NA), panel.background = element_blank(), panel.grid.minor.y = element_blank(),  panel.grid.major.y=element_line(colour = "#cccccc")) 
 # , strip.background = element_blank()) , strip.text.x = element_blank())  +
 p
 
