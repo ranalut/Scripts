@@ -102,16 +102,16 @@ write.csv(fixef(mod),"D:/Box Sync/PNWCCVA/MS_MesoCarnivores/1_Results/lynx_log_l
 
 #############################################
 # Non-bootstrapped 95% CI
-fe <- data.frame(summary(mod)$coefficients)
-fe$lower <- fe$Estimate - 1.96*fe$Std..Error
-fe$upper <- fe$Estimate + 1.96*fe$Std..Error
-write.csv(fe,"D:/Box Sync/PNWCCVA/MS_MesoCarnivores/1_Results/lynx_log_lmer_coef_ci95.csv")
-fe <- fe[-1,]
-p <- ggplot(fe, aes(x=rownames(fe), y=Estimate)) + 
-  geom_errorbar(aes(ymin=lower, ymax=upper), width=.1) +
-  geom_line() + geom_point() + ylab('value (intercept=esA1b,HabitatForest)') + xlab('coefficient') + coord_flip()
-plot(p)
-ggsave("D:/Box Sync/PNWCCVA/MS_MesoCarnivores/1_Results/lynx_log_lmer_coef_ci95.png",plot=p, width = 7, height = 5)
+# fe <- data.frame(summary(mod)$coefficients)
+# fe$lower <- fe$Estimate - 1.96*fe$Std..Error
+# fe$upper <- fe$Estimate + 1.96*fe$Std..Error
+# write.csv(fe,"D:/Box Sync/PNWCCVA/MS_MesoCarnivores/1_Results/lynx_log_lmer_coef_ci95.csv")
+# fe <- fe[-1,]
+# p <- ggplot(fe, aes(x=rownames(fe), y=Estimate)) + 
+#   geom_errorbar(aes(ymin=lower, ymax=upper), width=.1) +
+#   geom_line() + geom_point() + ylab('value (intercept=esA1b,HabitatForest)') + xlab('coefficient') + coord_flip()
+# plot(p)
+# ggsave("D:/Box Sync/PNWCCVA/MS_MesoCarnivores/1_Results/lynx_log_lmer_coef_ci95.png",plot=p, width = 7, height = 5)
 
 
 ###########################################
@@ -134,26 +134,43 @@ ggsave("D:/Box Sync/PNWCCVA/MS_MesoCarnivores/1_Results/lynx_log_lmer_coef_ci95.
 ######################################################
 # Bootstrapped CIs are the same as model-based CIs, continue with model-based
 # because multiple comparisons are easier using established methods (and packages)
-model <- mod
-# plot(effect(c('year','gcm'),mod=mod),multiline = TRUE)
-df <- data.frame(effect(c('year','gcm'),mod=model))
-df$fit2 <- exp(df$fit)+1
-df$lower2 <- exp(df$lower)+1
-df$upper2 <- exp(df$upper)+1
-p <- ggplot(df) + geom_smooth(aes(year,fit2,linetype=gcm,ymin=lower2, ymax=upper2),size=1.25,stat='identity') + theme_bw(base_size = 12) + xlab("year") + ylab("mean population in an ecoregion")
-ggsave("D:/Box Sync/PNWCCVA/MS_MesoCarnivores/1_Results/lynx_log_lmer_effects.png",plot=p, width = 4, height = 3)
 
-df <- data.frame(effect(c('year','sens'),mod=model))
-df$fit2 <- exp(df$fit)+1
-df$lower2 <- exp(df$lower)+1
-df$upper2 <- exp(df$upper)+1
-p <- ggplot(df)+geom_smooth(aes(year, fit2,linetype=sens,ymin=lower2, ymax=upper2),size=1.25,stat='identity')+theme_bw(base_size = 12) +
-xlab("year")+ylab("mean population in an ecoregion") + labs(linetype='scenario')
-ggsave("D:/Box Sync/PNWCCVA/MS_MesoCarnivores/1_Results/lynx_log_lmer_effects2.png",plot=p, width = 4, height = 3)
-
-
+###########################
+# Tests and slopes
 test <- testInteractions(mod, pairwise="gcm", slope="year")
 test2 <- testInteractions(mod, pairwise="sens",slope="year")
 test <- rbind(test,test2)
 
 write.csv(test,"D:/Box Sync/PNWCCVA/MS_MesoCarnivores/1_Results/lynx_log_lmer_test_interaction.csv")
+
+#################
+# Slopes (Betas) and CIs
+
+test <- testInteractions(mod, pairwise="gcm", slope="year",adjustment='holm')
+test2 <- testInteractions(mod, pairwise="sens",slope="year",adjustment='holm')
+test <- rbind(test,test2)
+
+write.csv(test,"D:/Box Sync/PNWCCVA/MS_MesoCarnivores/1_Results/lynx_log_lmer_test_interaction.csv")
+
+im <- interactionMeans(mod,factors='gcm',slope="year")
+im$year <- exp(im$year) - 1
+im$'std. error' <- exp(im$'std. error') - 1
+im$lower <- im$year - 1.96*im$'std. error'
+im$upper <- im$year + 1.96*im$'std. error'
+# plot(im,errorbar='ci95') # Could do this in ggplot2
+write.csv(im,"D:/Box Sync/PNWCCVA/MS_MesoCarnivores/1_Results/lynx_log_lmer_slopes1.csv")
+
+p <- ggplot(im, aes(x=gcm, y=year)) + geom_bar(stat='identity',width=0.35, colour="#636363", fill="#cccccc") + geom_errorbar(aes(ymin=lower, ymax=upper),width=0.25) + geom_hline(yintercept = 0) + ylab('mean decline per year') + theme(panel.background = element_blank(), panel.grid.minor.y = element_blank(),  panel.grid.major.y=element_blank()) 
+ggsave("D:/Box Sync/PNWCCVA/MS_MesoCarnivores/1_Results/lynx_log_lmer_slopes1.png",plot=p, width = 4, height = 3)
+
+im <- interactionMeans(mod,factors='sens',slope="year")
+im$year <- exp(im$year) - 1
+im$'std. error' <- exp(im$'std. error') - 1
+im$lower <- im$year - 1.96*im$'std. error'
+im$upper <- im$year + 1.96*im$'std. error'
+# plot(im,errorbar='ci95')
+write.csv(im,"D:/Box Sync/PNWCCVA/MS_MesoCarnivores/1_Results/lynx_log_lmer_slopes2.csv")
+
+p <- ggplot(im, aes(x=sens, y=year)) + geom_bar(stat='identity',width=0.35, colour="#636363", fill="#cccccc") + geom_errorbar(aes(ymin=lower, ymax=upper),width=0.25) + geom_hline(yintercept = 0) + ylab('mean decline per year') + xlab('scenario') + theme(panel.background = element_blank(), panel.grid.minor.y = element_blank(),  panel.grid.major.y=element_blank()) 
+ggsave("D:/Box Sync/PNWCCVA/MS_MesoCarnivores/1_Results/lynx_log_lmer_slopes2.png",plot=p, width = 4, height = 3)
+
