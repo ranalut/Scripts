@@ -30,6 +30,7 @@ gcm <- c('ccsm3','cgcm3','giss','hadcm3','miroc')
 for (n in 1:length(species))
 {
   cat('start',species[n],'\n')
+  output <- NULL
   
   for (t in 1:length(sens[[n]]))
   {
@@ -114,7 +115,7 @@ output4 <- gather(output3, key=year, value=density, -PNWCCVA_ID, -AREA_SQKM_, -s
 output4 <- mutate(output4, pop = AREA_SQKM_ * density / 1000)
 spp <- species
 output5 <- list()
-for (i in 1:3) { output5[[i]] <- filter(output4, species==spp[i] & density >= dens_thresh[i]) }
+for (i in 1:3) { output5[[i]] <- filter(output4, species==spp[i] & density >= dens_thresh[i]) } # What is the value of this and what does it do for the step below with rbind(temp,temp,...)
 output6 <- do.call(rbind, output5)
 
 bar_table <- aggregate(pop ~ species + sens + gcm + year ,data=output6, FUN=sum)

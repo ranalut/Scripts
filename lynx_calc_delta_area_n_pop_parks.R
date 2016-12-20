@@ -20,22 +20,23 @@ setwd('C:/Users/cwilsey.NAS/Box Sync/PNWCCVA/')
 
 myColors <- c('#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00')
 parks <- list('Rainier','North Cascades','Olympic')
+park_hucs <- list(c(666,691,677),c(504,525,577),c(601,625,639,633,593))
 
 # eco <- read.dbf('./Outputs/pnwccva_represented_ecoregions_carnivores.dbf',as.is=TRUE)
-# huc <- read.dbf('./Outputs/pnwccva_watersheds_carnivores.dbf',as.is=TRUE)
-pa <- read.dbf('./Outputs/pnwccva_protected_areas_carnivores.dbf',as.is=TRUE)
-indices <- unlist(lapply(parks,grep, pa$NAME))
-pa <- pa[indices,]
+huc <- read.dbf('./Outputs/pnwccva_watersheds_carnivores.dbf',as.is=TRUE)
+# pa <- read.dbf('./Outputs/pnwccva_protected_areas_carnivores.dbf',as.is=TRUE)
+indices <- unlist(lapply(unlist(park_hucs),grep, huc$PNWCCVA_ID))
+huc <- huc[indices,]
 
 species <- c('lynx','wolverine','fisher')
 scenario <- c('_lynx_050','_gulo_023_a2','_fisher_14')
 sens <- list(c('50','35'), c('full','swe','biomes'),c('full','temp','swe','biomes'))
-path <- c('lynx/lynx_pa_','wolverine/wolverine_pa_','fisher/fisher_pa_') 
+path <- c('lynx/lynx_huc_','wolverine/wolverine_huc_','fisher/fisher_huc_') 
 dens_thresh <- c(0.5,0.12,1.8) # see comment in ms version from 15feb16 for how these thresholds were selected.
 names(dens_thresh) <- species
 gcm <- c('ccsm3','cgcm3','giss','hadcm3','miroc')
 
-n <- 3 # 2 is wolverine, 3 is fisher
+n <- 1 # 2 is wolverine, 3 is fisher
 
   cat('start',species[n],'\n')
   output <- NULL
@@ -47,20 +48,20 @@ n <- 3 # 2 is wolverine, 3 is fisher
       file_name <- paste("./Outputs/",path[n],sens[[n]][t],'_',gcm[i],scenario[n],'.dbf',sep='')
       temp <- read.dbf(file_name,as.is=TRUE)
       # print(colnames(temp))
-      temp <- merge(pa,temp,all.x=TRUE,all.y=FALSE) # , by='OBJECT_ID')
+      temp <- merge(huc,temp,all.x=TRUE,all.y=FALSE) # , by='OBJECT_ID')
       # print(colnames(temp))
       # stop('cbw')
       
       if (n==2 & t==1 & i==1) # Change b/c lynx has not summary for protected areas
       { 
-        output <- temp[,c('NAME','AREA_SQKM','Y2000s','Y2020s','Y2050s','Y2090s')]
+        output <- temp[,c('PNWCCVA_ID','AREA_SQKM_','Y2000s','Y2020s','Y2050s','Y2090s')]
         output$species <- rep(species[n],dim(output)[1])
         output$sens <- rep(sens[[n]][t],dim(output)[1])
         output$gcm <- rep(gcm[i],dim(output)[1])
       }
       else
       {
-        temp2 <- temp[,c('NAME','AREA_SQKM','Y2000s','Y2020s','Y2050s','Y2090s')]
+        temp2 <- temp[,c('PNWCCVA_ID','AREA_SQKM_','Y2000s','Y2020s','Y2050s','Y2090s')]
         temp2$species <- rep(species[n],dim(temp2)[1])
         temp2$sens <- rep(sens[[n]][t],dim(temp2)[1])
         temp2$gcm <- rep(gcm[i],dim(temp2)[1])
@@ -73,19 +74,19 @@ n <- 3 # 2 is wolverine, 3 is fisher
   # stop('cbw')
 
 output2 <- data.frame(output)
-
+names_key <- data.frame(NAME=c(rep(parks[[1]],3),rep(parks[[2]],3),rep(parks[[3]],5)),PNWCCVA_ID=unlist(park_hucs))
+output2 <- merge(output2, names_key)
+output2 <- output2[,-1]
 ###################################################
 # Population
-output3 <- gather(output2, key=year, value=count, -NAME, -AREA_SQKM, -species, -sens, -gcm)
-# park_areas <- output4[1:7,1:2]
-# park_areas <- ddply(park_areas,.(NAME),summarize, AREA_SQKM=sum(AREA_SQKM))
+output3 <- gather(output2, key=year, value=count, -NAME, -AREA_SQKM_, -species, -sens, -gcm)
 output4 <- ddply(output3, 
                  .(NAME,species,sens,gcm,year), 
                  summarize, 
-                 AREA_SQKM=sum(AREA_SQKM),
+                 AREA_SQKM_=sum(AREA_SQKM_),
                  count=sum(count)
                  )
-output4 <- mutate(output4, density = 100 * count / AREA_SQKM)
+output4 <- mutate(output4, density = 100 * count / AREA_SQKM_)
 temp <- output4[seq(1,dim(output4)[1],4),]
 output4$start <- rep(temp$count,each=4)
 output4$delta <- output4$count - output4$start

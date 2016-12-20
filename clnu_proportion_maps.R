@@ -12,16 +12,16 @@ setwd('C:/Users/cwilsey.NAS/Box Sync/PNWCCVA/')
 # Spatial Data
 political <- readShapePoly(fn='./PNWCCVA_GeoDatabases/Other GIS/admin_states.shp',proj4string=CRS('+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0'),verbose=TRUE)
  
-study.area <- readOGR(dsn='./PNWCCVA_GeoDatabases/PNWCCVA_white-headed_woodpecker.gdb',layer="pnwccva_full_study_area")
+study.area <- readOGR(dsn='./PNWCCVA_GeoDatabases/PNWCCVA_clarks_nutcracker.gdb',layer="pnwccva_full_study_area")
  
-huc <- readOGR(dsn='./PNWCCVA_GeoDatabases/PNWCCVA_white-headed_woodpecker.gdb',layer="pnwccva_watersheds_full")
+huc <- readOGR(dsn='./PNWCCVA_GeoDatabases/PNWCCVA_clarks_nutcracker.gdb',layer="pnwccva_watersheds_full")
 shapefiles <- list(pol=political,sa=study.area,huc=huc)
 
 ################################################
 # Inputs
-species <- c('white_headed_woodpecker')
+species <- c('clarks_nutcracker')
 gcms <- 'ave' # c('ccsm3','cgcm3','giss','hadcm3','miroc') # 'ave'
-dbf_names <- c('_whwo_14_hab_v2')
+dbf_names <- c('_hab_v2')
 scenarios <- c('full')
 years <- c('Y2000','Y2020','Y2050','Y2100')
 
@@ -68,7 +68,7 @@ plot.dens <- function(spp, gcm, scenario, dbf_name, breaks, year, spatial_data=s
 
   ###############################################
   # Plot
-  png(paste("./MS_Woodpecker/Plots/",spp,'_',gcm,'_',year,".png",sep=''),width=240,height=200)
+  png(paste("./MS_nutcracker/Plots/",spp,'_',gcm,'_',year,".png",sep=''),width=240,height=200)
   par(mar=c(0,0,0,0))
   plot(spatial_data[['pol']], col=rgb(189,189,189,max=255), xlim=c(-136,-102), ylim=c(38,58)) #, cex.axis=1.25)
   plot(map, add=TRUE, col=map@data$colors, border=FALSE)
